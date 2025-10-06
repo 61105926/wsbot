@@ -18,15 +18,11 @@ Luego, selecciona el mes de la boleta de pago que necesites. 🗓️
 
 const answerActions = {
   "1": getMonthsFlow,
- 
-};
-const path = require('path');
 
-const imagePath = path.resolve(__dirname, '../images', 'bot.png');
-//console.log(imagePath);
+};
 
 export const menuFlow = addKeyword([EVENTS.WELCOME, "menu"])
-  .addAnswer(menuAnswer, { media: imagePath })
+  .addAnswer(menuAnswer)  // Sin imagen para evitar error en producción
   .addAction({ capture: true }, async (ctx, { gotoFlow }) => {
 
     const flow =
