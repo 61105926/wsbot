@@ -1,0 +1,36 @@
+import { addKeyword, EVENTS } from "@builderbot/bot";
+
+import { invalidFlow } from "./invalidFlow";
+import { getMonthsFlow } from "./getMonthsFlow";
+
+const menuAnswer = `
+😊 *¡Gracias por comunicarte con RRHH!* 😊
+
+📄 *Solicitud de Boletas de Pago* 📄
+
+Para solicitar tu boleta de pago, por favor escribe el *número 1*.
+
+*1. Boleta de Pago 📑*
+
+Luego, selecciona el mes de la boleta de pago que necesites. 🗓️
+
+`;
+
+const answerActions = {
+  "1": getMonthsFlow,
+ 
+};
+const path = require('path');
+
+const imagePath = path.resolve(__dirname, '../images', 'bot.png');
+//console.log(imagePath);
+
+export const menuFlow = addKeyword([EVENTS.WELCOME, "menu"])
+  .addAnswer(menuAnswer, { media: imagePath })
+  .addAction({ capture: true }, async (ctx, { gotoFlow }) => {
+
+    const flow =
+      answerActions[ctx.body as keyof typeof answerActions] || invalidFlow;
+
+    gotoFlow(flow);
+  });

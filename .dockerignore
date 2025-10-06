@@ -1,0 +1,8 @@
+node_modules
+dist
+
+*_sessions
+baileys.log
+bot.qr.png
+core.class.log
+queue.class.log

@@ -1,0 +1,50 @@
+[02/10/2025, 03:13:16 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Marco Condori | Teléfono: 59177711124
+[02/10/2025, 03:13:21 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Emilia Ayala | Teléfono: 59177711124
+[02/10/2025, 03:13:26 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Jose Ayarde | Teléfono: 59177711124
+[02/10/2025, 03:13:32 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Ronald Cabrera | Teléfono: 59177711124
+[02/10/2025, 03:22:24 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Marco Condori | Teléfono: 59177711124
+[02/10/2025, 03:22:25 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Emilia Ayala | Teléfono: 59177711124
+[02/10/2025, 03:22:26 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Jose Ayarde | Teléfono: 59177711124
+[02/10/2025, 03:22:27 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Ronald Cabrera | Teléfono: 59177711124
+[02/10/2025, 03:22:28 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Mario Sanjines | Teléfono: 59177711124
+[02/10/2025, 03:22:29 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Cristian Perez | Teléfono: 59177711124
+[02/10/2025, 03:22:30 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Jesus Marca | Teléfono: 59177711124
+[02/10/2025, 03:22:31 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Juana Campos | Teléfono: 59177711124
+[02/10/2025, 03:22:33 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Claudia Saavedra | Teléfono: 59177711124
+[02/10/2025, 03:45:40 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Marco Condori | Teléfono: 59177711124
+[02/10/2025, 03:45:46 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Emilia Ayala | Teléfono: 59177711124
+[02/10/2025, 03:45:51 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Jose Ayarde | Teléfono: 59177711124
+[02/10/2025, 03:45:56 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Ronald Cabrera | Teléfono: 59177711124
+[02/10/2025, 03:46:25 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Marco Condori | Teléfono: 59177711124
+[02/10/2025, 03:46:26 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Emilia Ayala | Teléfono: 59177711124
+[02/10/2025, 03:46:28 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Jose Ayarde | Teléfono: 59177711124
+[02/10/2025, 03:46:29 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Ronald Cabrera | Teléfono: 59177711124
+[02/10/2025, 03:46:30 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Mario Sanjines | Teléfono: 59177711124
+[02/10/2025, 03:46:32 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Cristian Perez | Teléfono: 59177711124
+[02/10/2025, 03:46:33 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Jesus Marca | Teléfono: 59177711124
+[02/10/2025, 03:46:34 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Juana Campos | Teléfono: 59177711124
+[02/10/2025, 03:46:35 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Claudia Saavedra | Teléfono: 59177711124
+[02/10/2025, 03:46:36 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Marcos Ramos | Teléfono: 59177711124
+[02/10/2025, 03:46:37 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Erick Armijo | Teléfono: 59177711124
+[02/10/2025, 03:46:38 p. m.] ✅ MENSAJE_MASIVO_ENVIADO | Empleado: Yver Campos | Teléfono: 59177711124
+[02/10/2025, 04:55:43 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Alejandra Rodriguez | Teléfono: 59176900085 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:55:45 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: William Zamorano | Teléfono: 59169884520 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:55:47 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Marco Condori | Teléfono: 59177788070 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:55:49 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Juan Bejarano | Teléfono: 59175746637 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:00 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Emilia Ayala | Teléfono: 59162183129 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:04 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Jose Ayarde | Teléfono: 59175001417 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:08 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Ronald Cabrera | Teléfono: 59175001418 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:10 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Mario Sanjines | Teléfono: 59176249867 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:12 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Cristian Perez | Teléfono: 591null | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:16 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Jesus Marca | Teléfono: 59162421150 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:19 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Juana Campos | Teléfono: 59175015813 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:21 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Claudia Saavedra | Teléfono: 59162167117 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:24 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Marcos Ramos | Teléfono: 59162421141 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:28 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Erick Armijo | Teléfono: 59177060865 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:30 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Yver Campos | Teléfono: 59174163734 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 04:56:34 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Daniela Caurey | Teléfono: 59163605265 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 05:31:33 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Alejandra Rodriguez | Teléfono: 59176900085 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 05:31:35 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: William Zamorano | Teléfono: 59169884520 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 05:31:37 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Marco Condori | Teléfono: 59177788070 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 05:31:39 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Juan Bejarano | Teléfono: 59175746637 | Error: Cannot read properties of undefined (reading 'id')
+[02/10/2025, 05:31:44 p. m.] ❌ MENSAJE_MASIVO_ERROR | Empleado: Emilia Ayala | Teléfono: 59162183129 | Error: Cannot read properties of undefined (reading 'id')

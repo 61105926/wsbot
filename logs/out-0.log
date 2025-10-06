@@ -1,0 +1,17 @@
+2025-10-06T16:03:54: ✅ Server running on port 3005
+2025-10-06T16:03:54: 🛜  HTTP Server ON 
+2025-10-06T16:03:54: [GET]: http://localhost:3005/status
+[GET]: http://localhost:3005/regionales
+[GET]: http://localhost:3005/progress
+[GET]: http://localhost:3005/
+[POST]: http://localhost:3005/sendRegionalMessages
+[POST]: http://localhost:3005/sendPayslipLinks
+[POST]: http://localhost:3005/pause
+[POST]: http://localhost:3005/resume
+[POST]: http://localhost:3005/cancel
+[POST]: http://localhost:3005/reset
+2025-10-06T16:03:54: 
+2025-10-06T16:03:56: ✅ Connected Provider
+2025-10-06T16:03:56: Tell a contact on your WhatsApp to write "hello"...
+2025-10-06T16:03:56: 
+2025-10-06T16:04:02: ✅ WhatsApp Connection Status - READY to send messages

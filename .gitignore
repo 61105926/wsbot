@@ -1,0 +1,16 @@
+.env
+
+node_modules
+dist
+
+tmp
+
+boleta.pdf
+
+*_sessions
+baileys.log
+bot.qr.png
+core.class.log
+queue.class.log
+
+

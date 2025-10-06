@@ -1,0 +1,30 @@
+[18/09/2025, 02:11:16 p. m.] ✅ BOLETA_ENVIADA | Empleado: Usuario desconocido | ID: N/A | Teléfono: 59177711124 | Mes: AGOSTO   2025
+[18/09/2025, 02:15:32 p. m.] ✅ BOLETA_ENVIADA | Empleado: Usuario desconocido | ID: N/A | Teléfono: 59177711124 | Mes: AGOSTO   2025
+[18/09/2025, 02:19:27 p. m.] ✅ BOLETA_ENVIADA | Empleado: Usuario desconocido | ID: N/A | Teléfono: 59177711124 | Mes: AGOSTO   2025
+[18/09/2025, 02:23:05 p. m.] ✅ BOLETA_ENVIADA | Empleado: Usuario desconocido | ID: N/A | Teléfono: 59177711124 | Mes: AGOSTO   2025
+[18/09/2025, 02:37:30 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: SEPTIEMBRE   2024 | Total usuarios: 1
+[18/09/2025, 02:37:30 p. m.] ❌ ENVIO_MASIVO_BOLETAS_ERROR | Mes: 2024-09 | Error: res.status is not a function
+[18/09/2025, 02:39:57 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: SEPTIEMBRE   2024 | Total usuarios: 1
+[18/09/2025, 02:40:04 p. m.] ✅ BOLETA_ENVIADA | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: SEPTIEMBRE   2024
+[18/09/2025, 02:40:04 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: SEPTIEMBRE   2024 | Éxitos: 1 | Errores: 0
+[18/09/2025, 03:54:22 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO 2025
+[18/09/2025, 03:54:22 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO 2025 | Total usuarios: 1
+[18/09/2025, 03:54:29 p. m.] ✅ BOLETA_ENVIADA | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: AGOSTO 2025
+[18/09/2025, 03:54:29 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: AGOSTO 2025 | Éxitos: 1 | Errores: 0
+[18/09/2025, 03:58:39 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO 2025
+[18/09/2025, 03:58:39 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO 2025 | Total usuarios: 1
+[18/09/2025, 03:58:46 p. m.] ✅ BOLETA_ENVIADA | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: AGOSTO 2025
+[18/09/2025, 03:58:46 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: AGOSTO 2025 | Éxitos: 1 | Errores: 0
+[18/09/2025, 04:18:17 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO 2025
+[18/09/2025, 04:18:18 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO 2025 | Total usuarios: 1
+[18/09/2025, 04:18:24 p. m.] ✅ BOLETA_ENVIADA | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: AGOSTO 2025
+[18/09/2025, 04:18:24 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: AGOSTO 2025 | Éxitos: 1 | Errores: 0
+[18/09/2025, 07:23:01 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO   2025 | Total usuarios: 1
+[18/09/2025, 07:23:14 p. m.] ✅ BOLETA_ENVIADA | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: AGOSTO   2025
+[18/09/2025, 07:23:14 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: AGOSTO   2025 | Éxitos: 1 | Errores: 0
+[18/09/2025, 07:23:38 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: OCTUBRE   2025 | Total usuarios: 1
+[18/09/2025, 07:23:42 p. m.] ❌ BOLETA_ERROR | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: OCTUBRE   2025 | Error: Request failed with status code 404
+[18/09/2025, 07:23:42 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: OCTUBRE   2025 | Éxitos: 0 | Errores: 1
+[18/09/2025, 07:37:26 p. m.] 🚀 ENVIO_MASIVO_BOLETAS_INICIADO | Mes: AGOSTO   2025 | Total usuarios: 1
+[18/09/2025, 07:37:33 p. m.] ✅ BOLETA_ENVIADA | Empleado: Gabriel Queso | ID: 665 | Teléfono: 59177711124 | Mes: AGOSTO   2025
+[18/09/2025, 07:37:33 p. m.] ✅ ENVIO_MASIVO_BOLETAS_COMPLETADO | Mes: AGOSTO   2025 | Éxitos: 1 | Errores: 0
