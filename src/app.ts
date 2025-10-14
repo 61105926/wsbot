@@ -29,25 +29,19 @@ import { tmpCleanupService } from "./services/tmpCleanup.service";
 import cors from "cors";
 
 // Manejador global de errores no capturados
-process.on('uncaughtException', (error: Error) => {
-  // Ignorar errores de lectura del archivo QR que ya no existe
-  if (error.message.includes('bot.qr.png') && error.message.includes('ENOENT')) {
-    console.log('⚠️  QR file read error ignored (connection already established)');
-    return;
-  }
-  // Para otros errores, mostrar el error pero no detener el proceso
-  console.error('❌ Uncaught Exception:', error);
-});
 
-// Manejador de promesas rechazadas no capturadas
-process.on('unhandledRejection', (reason: any) => {
-  console.error('❌ Unhandled Rejection:', reason);
-});
 
 const main = async () => {
-   const provider = createProvider(BaileysProvider,{
-    version: [2, 3000, 1023223821]
-  });
+  
+
+  const provider = createProvider(BaileysProvider, {
+
+  version: [2, 3000, 1025190524],
+  browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
+  writeMyself: "both",
+  experimentalStore: true, // Significantly reduces resource consumption
+  timeRelease: 86400000 // Cleans up data every 24 hours (in milliseconds)
+});
   // Registrar provider para trackear conexión
   connectionStatus.setProvider(provider);
 
