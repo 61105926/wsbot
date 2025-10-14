@@ -1,4 +1,8 @@
-// Service para trackear el estado de conexión del bot
+import { loggers } from "../utils/logger";
+
+/**
+ * Service para trackear el estado de conexión del bot
+ */
 class ConnectionStatus {
   private static instance: ConnectionStatus;
   private connected: boolean = false;
@@ -16,11 +20,38 @@ class ConnectionStatus {
   setProvider(provider: any) {
     this.provider = provider;
 
-    // Dar tiempo para que WhatsApp se conecte
-    setTimeout(() => {
-      this.connected = true;
-      console.log('✅ WhatsApp Connection Status - READY to send messages');
-    }, 8000); // 8 segundos para asegurar que WhatsApp esté conectado
+    // Escuchar eventos de conexión del provider
+    try {
+      // Baileys emite eventos de actualización de conexión
+      provider.on('connection.update', (update: any) => {
+        // Cuando la conexión está abierta
+        if (update.connection === 'open') {
+          this.connected = true;
+          loggers.whatsappConnected();
+        }
+
+        // Cuando se cierra la conexión
+        if (update.connection === 'close') {
+          this.connected = false;
+          loggers.whatsappDisconnected();
+        }
+      });
+
+      // Fallback: si no hay eventos después de 10 segundos, asumir conectado
+      setTimeout(() => {
+        if (!this.connected) {
+          this.connected = true;
+          loggers.whatsappConnected();
+        }
+      }, 10000);
+
+    } catch (error) {
+      // Si hay error escuchando eventos, usar fallback con timeout
+      setTimeout(() => {
+        this.connected = true;
+        loggers.whatsappConnected();
+      }, 8000);
+    }
   }
 
   isConnected(): boolean {

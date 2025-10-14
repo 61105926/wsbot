@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch src src/app.ts",
-    "start": "node dist/app.js",
+    "dev": "NODE_OPTIONS='--max-old-space-size=4096 --expose-gc' nodemon --watch src src/app.ts",
+    "start": "NODE_OPTIONS='--max-old-space-size=4096 --expose-gc' node dist/app.js",
     "start:pm2": "npx pm2 start ecosystem.config.js",
     "stop:pm2": "npx pm2 stop wsbot",
     "restart:pm2": "npx pm2 restart wsbot",
@@ -20,13 +20,17 @@
     "@builderbot/bot": "^1.2.1",
     "@builderbot/provider-baileys": "^1.2.1",
     "axios": "^1.6.8",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
     "path": "^0.12.7",
-    "sharp": "^0.33.5"
+    "sharp": "^0.33.5",
+    "winston": "^3.18.3",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/multer": "^1.4.11",
     "@types/node-cron": "^3.0.11",
     "nodemon": "^3.1.0",

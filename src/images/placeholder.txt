@@ -1,0 +1,8 @@
+# Placeholder para imágenes
+
+Si necesitas agregar imágenes estáticas para los flows, colócalas aquí.
+
+Ejemplo:
+- document.png
+- logo.png
+- etc.

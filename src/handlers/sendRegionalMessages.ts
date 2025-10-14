@@ -1,116 +1,90 @@
-import { AdvancedQueue } from "../classes/AdvancedQueue";
 import { getUsersByRegions } from "../services/getUsersByRegion";
-import { Bot } from "./bot,interface";
+import { Bot } from "./bot.interface";
 import { connectionStatus } from "../services/connectionStatus";
+import { sendSuccess, asyncHandler } from "../utils/response";
+import { validateDTO, SendRegionalMessagesDTO } from "../dto/request.dto";
+import { bulkMessageService } from "../services/bulkMessage.service";
+import { MessageBuilderService } from "../services/messageBuilder.service";
+import { TIMEOUTS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "../config/constants";
+import { BotNotAvailableError, WhatsAppNotConnectedError, QueueBusyError, NotFoundError } from "../errors/CustomErrors";
+import { logger, loggers } from "../utils/logger";
+import { UserWithRegional } from "../dto/models.dto";
 
-const queue = AdvancedQueue.instance();
-
-export const sendRegionalMessagesHandler = async (
-  bot: Bot,
-  req: any,
-  res: any
-) => {
+const handler = async (bot: Bot, req: any, res: any) => {
+  // Validar que el bot esté disponible
   if (!bot) {
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "No hay un número conectado al servidor" }));
-    return;
+    throw new BotNotAvailableError();
   }
 
-  // Verificar si WhatsApp está conectado
+  // Verificar conexión de WhatsApp
   if (!connectionStatus.isConnected()) {
-    res.writeHead(503, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      error: "WhatsApp no está conectado. Por favor espera a que el bot se conecte antes de enviar mensajes.",
-      connected: false
-    }));
-    return;
+    throw new WhatsAppNotConnectedError();
   }
 
-  try {
-    const { messages, regions }: { messages: string; regions: string } = req.body;
-    const file = req.file;
+  // Validar datos de entrada
+  const { messages, regions } = validateDTO(SendRegionalMessagesDTO, req.body);
+  const file = req.file;
 
-    // Parsear los datos recibidos
-    const parsedMessages = JSON.parse(messages);
-    const parsedRegions = JSON.parse(regions);
+  logger.info("Iniciando envío de mensajes regionales", {
+    regions,
+    totalMessages: messages.length,
+    hasFile: !!file
+  });
 
-    console.log("📨 Iniciando envío de mensajes regionales");
-    console.log("📍 Regiones:", parsedRegions);
-    console.log("📝 Mensajes:", parsedMessages.length);
-    console.log("🖼️ Imagen:", file ? file.filename : "Sin imagen");
+  // Verificar si ya hay un proceso activo
+  if (bulkMessageService.isProcessing()) {
+    throw new QueueBusyError();
+  }
 
-    // Verificar si ya hay un proceso activo
-    if (queue.isProcessing()) {
-      res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: "Ya hay un proceso de envío en curso" })
-      );
-      return;
-    }
+  // Obtener usuarios de las regionales seleccionadas
+  const users = await getUsersByRegions(regions);
 
-    // Obtener usuarios de las regionales seleccionadas
-    const users = await getUsersByRegions(parsedRegions);
-    console.log("👥 Usuarios encontrados:", users.length);
+  if (users.length === 0) {
+    throw new NotFoundError(ERROR_MESSAGES.NO_USERS_IN_REGION);
+  }
 
-    if (users.length === 0) {
-      res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: "No se encontraron usuarios en las regionales seleccionadas" })
-      );
-      return;
-    }
+  loggers.batchStarted(users.length, 'mensajes regionales');
 
-    // Iniciar nuevo lote
-    queue.startBatch(users.length);
+  // Procesar lote de usuarios
+  await bulkMessageService.processBatch<UserWithRegional>(
+    users,
+    async (user: UserWithRegional) => {
+      logger.info(`Procesando mensajes para ${user.fullName} (${user.regional})`);
 
-    // Agregar tareas a la cola
-    for (const user of users) {
-      queue.add(async () => {
-        // Delay de 10-13 segundos entre usuarios (RIESGO EXTREMO DE BLOQUEO)
-        const randomDelay = Math.floor(Math.random() * 3000) + 10000; // 10-13 segundos
-        await new Promise((resolve) => setTimeout(resolve, randomDelay));
+      // Enviar cada mensaje
+      for (let index = 0; index < messages.length; index++) {
+        const message = MessageBuilderService.replaceVariables(messages[index], {
+          nombre: user.fullName,
+          link: user.linkURL
+        });
 
-        console.log(`📤 Enviando a ${user.fullName} (${user.regional})`);
-
-        try {
-          for (let index = 0; index < parsedMessages.length; index++) {
-            const message = parsedMessages[index]
-              .replace("{{nombre}}", user.fullName)
-              .replace("{{link}}", user.linkURL);
-
-            // Timeout de 30 segundos para enviar el mensaje
-            await Promise.race([
-              // Si es el primer mensaje y hay imagen, enviarla
-              index === 0 && file
-                ? bot.sendMessage(user.phone, message, { media: file.path })
-                : bot.sendMessage(user.phone, message, {}),
-              new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Timeout al enviar mensaje')), 30000)
-              )
-            ]);
-          }
-
-          console.log(`✅ Enviado a ${user.fullName}`);
-        } catch (error: any) {
-          console.error(`❌ Error enviando a ${user.fullName}:`, error.message || error);
-          // No lanzar el error para continuar con los siguientes usuarios
+        // Si es el primer mensaje y hay archivo, enviarlo con el archivo
+        if (index === 0 && file) {
+          await bulkMessageService.sendWithTimeout(
+            () => bot.sendMessage(user.phone, message, { media: file.path }),
+            TIMEOUTS.SEND_MESSAGE_TIMEOUT
+          );
+        } else {
+          await bulkMessageService.sendWithTimeout(
+            () => bot.sendMessage(user.phone, message, {}),
+            TIMEOUTS.SEND_MESSAGE_TIMEOUT
+          );
         }
+      }
 
-        return;
-      });
+      loggers.messageSent(user, 'mensajes regionales');
+    },
+    {
+      batchName: 'mensajes regionales'
     }
+  );
 
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        message: "Envío masivo iniciado",
-        totalUsers: users.length,
-        regions: parsedRegions
-      })
-    );
-  } catch (error) {
-    console.error("❌ Error en sendRegionalMessages:", error);
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Error en el servidor" }));
-  }
+  // Responder al cliente
+  sendSuccess(res, {
+    message: SUCCESS_MESSAGES.BULK_SEND_STARTED,
+    totalUsers: users.length,
+    regions
+  });
 };
+
+export const sendRegionalMessagesHandler = asyncHandler(handler);

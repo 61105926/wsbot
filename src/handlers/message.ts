@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Bot } from "./bot,interface";
+import { Bot } from "./bot.interface";
 
 export const messageHandler = async (bot: Bot, req: any, res: any) => {
   if (!bot) {

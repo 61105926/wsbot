@@ -14,11 +14,13 @@ export async function getRegionales(): Promise<string[]> {
     const response = await axios.get(API_URL);
     const items = response.data as ResponseAPI[];
 
-    // Extraer regionales únicas
+    // Extraer regionales únicas normalizando a mayúsculas
     const regionalesSet = new Set<string>();
     items.forEach((item) => {
       if (item.data.regional) {
-        regionalesSet.add(item.data.regional);
+        // Normalizar a mayúsculas para evitar duplicados (LPZ, lpz, Lpz -> LPZ)
+        const normalizedRegional = item.data.regional.trim().toUpperCase();
+        regionalesSet.add(normalizedRegional);
       }
     });
 

@@ -94,6 +94,17 @@ export class AdvancedQueue<T = any> {
         this.processQueue().catch((err) =>
           console.error("Error processing queue:", err)
         );
+      } else if (this.queue.length === 0 && this.totalTasks > 0) {
+        // Batch completado, limpiar estado
+        console.log(`✅ Batch ${this.batchId} completado: ${this.completedTasks}/${this.totalTasks} exitosos, ${this.failedTasks} fallidos`);
+
+        // Liberar memoria después de completar el batch
+        if (global.gc) {
+          setTimeout(() => {
+            global.gc!();
+            console.log("🗑️ Memoria limpiada después de completar batch");
+          }, 1000);
+        }
       }
     }
   }
@@ -138,6 +149,12 @@ export class AdvancedQueue<T = any> {
     this.completedTasks = 0;
     this.failedTasks = 0;
     console.log("🧹 Queue reset");
+
+    // Forzar garbage collection si está disponible
+    if (global.gc) {
+      global.gc();
+      console.log("🗑️ Garbage collection ejecutado");
+    }
   }
 
   // Obtener datos de progreso

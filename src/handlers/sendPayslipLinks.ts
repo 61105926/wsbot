@@ -1,182 +1,120 @@
-import { AdvancedQueue } from "../classes/AdvancedQueue";
 import { getAllUsers } from "../services/getAllUsers";
-import { Bot } from "./bot,interface";
+import { Bot } from "./bot.interface";
 import { connectionStatus } from "../services/connectionStatus";
+import { sendSuccess, asyncHandler } from "../utils/response";
+import { validateDTO, SendPayslipLinksDTO } from "../dto/request.dto";
+import { bulkMessageService } from "../services/bulkMessage.service";
+import { MessageBuilderService } from "../services/messageBuilder.service";
+import { API_CONFIG } from "../config/config";
+import { TIMEOUTS, ERROR_MESSAGES, SUCCESS_MESSAGES, PATHS } from "../config/constants";
+import { BotNotAvailableError, WhatsAppNotConnectedError, QueueBusyError, NotFoundError } from "../errors/CustomErrors";
+import { logger, loggers } from "../utils/logger";
+import { User } from "../dto/models.dto";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
 
-const queue = AdvancedQueue.instance();
-
-export const sendPayslipLinksHandler = async (
-  bot: Bot,
-  req: any,
-  res: any
-) => {
+const handler = async (bot: Bot, req: any, res: any) => {
+  // Validar que el bot esté disponible
   if (!bot) {
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "No hay un número conectado al servidor" }));
-    return;
+    throw new BotNotAvailableError();
   }
 
-  // Verificar si WhatsApp está conectado
+  // Verificar conexión de WhatsApp
   if (!connectionStatus.isConnected()) {
-    res.writeHead(503, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      error: "WhatsApp no está conectado. Por favor espera a que el bot se conecte antes de enviar mensajes.",
-      connected: false
-    }));
-    return;
+    throw new WhatsAppNotConnectedError();
   }
 
-  try {
-    const { month }: { month: string } = req.body;
+  // Validar datos de entrada
+  const { month } = validateDTO(SendPayslipLinksDTO, req.body);
 
-    // Validar formato del mes (YYYYMM)
-    if (!month || !/^\d{6}$/.test(month)) {
-      res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: "Formato de mes inválido. Use YYYYMM (ejemplo: 202409)" })
+  loggers.batchStarted(0, `boletas ${month}`);
+
+  // Verificar si ya hay un proceso activo
+  if (bulkMessageService.isProcessing()) {
+    throw new QueueBusyError();
+  }
+
+  // Obtener todos los usuarios
+  const users = await getAllUsers();
+
+  if (users.length === 0) {
+    throw new NotFoundError(ERROR_MESSAGES.NO_USERS_FOUND);
+  }
+
+  loggers.batchStarted(users.length, `boletas ${month}`);
+
+  // Procesar lote de usuarios
+  await bulkMessageService.processBatch<User>(
+    users,
+    async (user: User) => {
+      logger.info(`Procesando boleta para ${user.fullName}`);
+
+      // Construir URL de API
+      const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
+        API_CONFIG.PAYSLIP_API_BASE,
+        user.phone,
+        month
       );
-      return;
-    }
 
-    console.log("📄 Iniciando envío de boletas masivas");
-    console.log("📅 Mes:", month);
+      // Construir nombre de archivo
+      const fileName = MessageBuilderService.buildPayslipFileName(user, month);
 
-    // Verificar si ya hay un proceso activo
-    if (queue.isProcessing()) {
-      res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: "Ya hay un proceso de envío en curso" })
-      );
-      return;
-    }
+      // Construir mensaje
+      const message = MessageBuilderService.buildPayslipMessage(user, month);
 
-    // Obtener todos los usuarios
-    const users = await getAllUsers();
-    console.log("👥 Usuarios encontrados:", users.length);
+      // Descargar PDF usando streams para no cargar todo en memoria
+      logger.http(`Descargando PDF desde: ${payslipUrl}`);
 
-    if (users.length === 0) {
-      res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: "No se encontraron usuarios" })
-      );
-      return;
-    }
+      const tmpDir = path.join(__dirname, `../../${PATHS.TMP_DIR}`);
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir, { recursive: true });
+      }
 
-    // Iniciar nuevo lote
-    queue.startBatch(users.length);
+      const pdfPath = path.join(tmpDir, fileName);
 
-    // Agregar tareas a la cola
-    for (const user of users) {
-      queue.add(async () => {
-        // Delay de 10-13 segundos entre usuarios (RIESGO EXTREMO DE BLOQUEO)
-        const randomDelay = Math.floor(Math.random() * 3000) + 10000; // 10-13 segundos
-        await new Promise((resolve) => setTimeout(resolve, randomDelay));
-
-        console.log(`📤 Enviando boleta a ${user.fullName} (${user.phone})`);
-
-        try {
-          console.log(`🔄 Iniciando envío para ${user.fullName}...`);
-
-          // Obtener el link de la boleta directamente con el formato nuevo
-          // Quitar prefijo 591 - la API espera solo 8 dígitos
-          const phoneNumber = user.phone.substring(3);
-          const payslipLink = `http://190.171.225.68/api/boleta?numero=${phoneNumber}&fecha=${month}`;
-
-          // Convertir mes YYYYMM a nombre del mes
-          const year = month.substring(0, 4);
-          const monthNum = parseInt(month.substring(4, 6));
-          const monthNames = [
-            'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
-            'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'
-          ];
-          const monthName = monthNames[monthNum - 1];
-          const monthNameCapitalized = monthName.charAt(0) + monthName.slice(1).toLowerCase();
-
-          // Nombre del archivo PDF: "Nombre Mes Año.pdf"
-          const fileName = `${user.fullName} ${monthNameCapitalized} ${year}.pdf`;
-
-          // Variaciones de saludo (aleatorio)
-          const saludos = [
-            `Estimad@ *${user.fullName}*,`,
-            `Hola *${user.fullName}*,`,
-            `Buen día *${user.fullName}*,`,
-            `Saludos *${user.fullName}*,`
-          ];
-          const saludo = saludos[Math.floor(Math.random() * saludos.length)];
-
-          // Variaciones de despedida (aleatorio)
-          const despedidas = [
-            '¡Saludos!',
-            'Gracias.',
-            'Que tenga buen día.',
-            'Saludos cordiales.'
-          ];
-          const despedida = despedidas[Math.floor(Math.random() * despedidas.length)];
-
-          // Mensaje con variaciones aleatorias
-          const message = `📄 *Boleta de Pago – ${monthNameCapitalized} ${year}*\n\n${saludo}\n\nPonemos a tu disposición tu boleta de pago correspondiente al mes de ${monthNameCapitalized.toLowerCase()} ${year}.\n\n\n💼 *MINOIL S.A.*\n_Recursos Humanos_\n\n${despedida}`;
-
-          console.log(`📥 Descargando PDF desde: ${payslipLink}`);
-
-          // Descargar el PDF de la API
-          const pdfResponse = await axios.get(payslipLink, {
-            responseType: 'arraybuffer',
-            timeout: 30000
-          });
-
-          // Guardar el PDF temporalmente con el nombre final
-          const tmpDir = path.join(__dirname, '../../tmp');
-          if (!fs.existsSync(tmpDir)) {
-            fs.mkdirSync(tmpDir, { recursive: true });
-          }
-
-          // Usar el fileName como nombre del archivo temporal
-          const pdfPath = path.join(tmpDir, fileName);
-          fs.writeFileSync(pdfPath, pdfResponse.data);
-
-          console.log(`📁 PDF guardado en: ${pdfPath}`);
-
-          // MENSAJE ÚNICO: Enviar texto + PDF juntos (timeout 40s)
-          console.log(`📤 Enviando mensaje + PDF a ${user.fullName}...`);
-          await Promise.race([
-            bot.sendMessage(user.phone, message, { media: pdfPath }),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('Timeout al enviar mensaje')), 40000)
-            )
-          ]);
-
-          // Eliminar archivo temporal
-          try {
-            fs.unlinkSync(pdfPath);
-          } catch (e) {
-            // Ignorar error si no se puede eliminar
-          }
-
-          console.log(`✅ Boleta enviada a ${user.fullName} - ${fileName}`);
-        } catch (error: any) {
-          console.error(`❌ Error enviando a ${user.fullName}:`, error.message || error);
-          // No lanzar el error para continuar con los siguientes usuarios
-        }
-
-        return;
+      // Usar stream para descargar y guardar directamente
+      const writer = fs.createWriteStream(pdfPath);
+      const pdfResponse = await axios.get(payslipUrl, {
+        responseType: 'stream',
+        timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
       });
-    }
 
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        status: "success",
-        message: "Envío masivo de boletas iniciado",
-        month: month,
-        totalUsers: users.length
-      })
-    );
-  } catch (error) {
-    console.error("❌ Error en sendPayslipLinks:", error);
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Error en el servidor" }));
-  }
+      await new Promise<void>((resolve, reject) => {
+        pdfResponse.data.pipe(writer);
+        writer.on('finish', () => resolve());
+        writer.on('error', reject);
+      });
+
+      // Enviar mensaje con PDF
+      await bulkMessageService.sendWithTimeout(
+        () => bot.sendMessage(user.phone, message, { media: pdfPath }),
+        TIMEOUTS.SEND_DOCUMENT_TIMEOUT
+      );
+
+      // Eliminar archivo temporal inmediatamente después de enviar
+      try {
+        if (fs.existsSync(pdfPath)) {
+          fs.unlinkSync(pdfPath);
+          logger.debug(`Archivo temporal eliminado: ${fileName}`);
+        }
+      } catch (e) {
+        logger.warn(`No se pudo eliminar archivo temporal: ${fileName}`, e);
+      }
+
+      loggers.messageSent(user, 'boleta');
+    },
+    {
+      batchName: 'boletas'
+    }
+  );
+
+  // Responder al cliente
+  sendSuccess(res, {
+    message: SUCCESS_MESSAGES.PAYSLIP_SEND_STARTED,
+    month,
+    totalUsers: users.length
+  });
 };
+
+export const sendPayslipLinksHandler = asyncHandler(handler);

@@ -1,70 +1,142 @@
 import { addKeyword, EVENTS } from "@builderbot/bot";
 import axios from "axios";
 import fs from "fs/promises";
-import { join } from "path";
+import path from "path";
+import { API_CONFIG } from "../config/config";
+import { TIMEOUTS, PATHS } from "../config/constants";
+import { FLOW_MESSAGES } from "../config/flowMessages";
+import { MessageBuilderService } from "../services/messageBuilder.service";
+import { logger } from "../utils/logger";
+import {
+  getMonthDictionary,
+  getStringDate,
+  dateToYYYYMM,
+  isNumericString,
+  buildMonthsList
+} from "../utils/flowHelpers";
 
+/**
+ * Flow para selección y envío de boletas de pago por mes
+ */
 
-function getStringDate(date: Date): string {
-  const formattedDate = date.toLocaleDateString("es", { month: "long", year: "numeric" });
-  const [month, year] = formattedDate.split("de");
-  return `${month.toUpperCase()} ${year}`;
-}
-
-
-function getMonthDictionary() {
-  const today = new Date();
-  const months = [];
-  const currentMonth = today.getMonth() - 1;
-  const startMonthIndex = today.getDate() <= 2 ? 1 : 0;
-
-  for (let i = startMonthIndex; i < startMonthIndex + 7; i++) {
-    months.push(new Date(today.getFullYear(), currentMonth - i, 1));
-  }
-
-  return new Map(months.map((date, index) => [(index + 1).toString(), date]));
-}
-
-const monthsAnswer = `
-📋 *Meses disponibles* 📋
-${Array.from(getMonthDictionary().entries()).map(([key, date]) => `${key}. ${getStringDate(date)}\n`).join('')}
+const monthsAnswer = `${FLOW_MESSAGES.MONTHS.TITLE}
+${buildMonthsList()}
 `;
 
 export const getMonthsFlow = addKeyword([EVENTS.ACTION])
   .addAnswer(monthsAnswer)
   .addAction({ capture: true }, async (ctx, { flowDynamic, gotoFlow }) => {
     const input = ctx.body.trim();
-    const monthsDicc = getMonthDictionary();
-    
-    const isValidNumber = /^\d+$/.test(input);
-    const isValidMonth = monthsDicc.has(input);
 
-    if (isValidNumber && isValidMonth) {
-      const date = monthsDicc.get(input) || new Date();
-      const phoneSanitizied = ctx.from.slice(3);
+    logger.info('Usuario seleccionando mes', {
+      flow: 'getMonths',
+      phone: ctx.from,
+      input
+    });
 
-      const selectedMonth = ('0' + (date.getMonth() + 1)).slice(-2);
-      const selectedYear = date.getFullYear();
-      const dateParsed = `${selectedYear}${selectedMonth}`;
+    // Validar entrada
+    if (!isNumericString(input)) {
+      logger.warn('Entrada inválida en getMonthsFlow', {
+        phone: ctx.from,
+        input
+      });
 
-      try {
-        await flowDynamic([{ body: "📥 Enviando documento..." }]);
-        const { data: doc } = await axios.get(`http://190.171.225.68/api/boleta?numero=${phoneSanitizied}&fecha=${dateParsed}`, {
-          responseType: 'arraybuffer',
-          headers: { 'Accept': 'application/pdf' }
-        });
-
-        const fileName = `${getStringDate(date)}.pdf`;
-        await fs.writeFile(fileName, doc);
-
-        await flowDynamic([{ media: join(process.cwd(), fileName).replace(/\\/g, "/") }]);
-      } catch (error) {
-        console.error('Error:', error);
-        await flowDynamic([{ body: "Tu número no se encuentra registrado. Por favor, comunícate con Recursos Humanos (RRHH)." }]);
-      }
-    } else {
-      await flowDynamic([{ body: "Opción inválida. Por favor, selecciona un número de mes válido." }]);
-      
-      ctx.flowState = { showMonthsList: true }; // Forzar a mostrar la lista en caso de entrada inválida
+      await flowDynamic([{ body: FLOW_MESSAGES.ERRORS.INVALID_MONTH }]);
       return gotoFlow(getMonthsFlow);
+    }
+
+    const monthsDict = getMonthDictionary();
+
+    if (!monthsDict.has(input)) {
+      logger.warn('Mes no disponible seleccionado', {
+        phone: ctx.from,
+        input
+      });
+
+      await flowDynamic([{ body: FLOW_MESSAGES.ERRORS.INVALID_MONTH }]);
+      return gotoFlow(getMonthsFlow);
+    }
+
+    // Obtener fecha seleccionada
+    const selectedDate = monthsDict.get(input)!;
+    const monthCode = dateToYYYYMM(selectedDate);
+
+    logger.info('Descargando boleta para usuario', {
+      flow: 'getMonths',
+      phone: ctx.from,
+      month: monthCode
+    });
+
+    try {
+      await flowDynamic([{ body: FLOW_MESSAGES.PROMPTS.SENDING_DOCUMENT }]);
+
+      // Construir URL usando servicio
+      const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
+        API_CONFIG.PAYSLIP_API_BASE,
+        ctx.from,
+        monthCode
+      );
+
+      // Construir nombre de archivo
+      const fileName = `${getStringDate(selectedDate)}.pdf`;
+      const tmpDir = path.join(__dirname, `../../${PATHS.TMP_DIR}`);
+      const tmpPath = path.join(tmpDir, fileName);
+
+      // Asegurar que existe el directorio temporal
+      try {
+        await fs.mkdir(tmpDir, { recursive: true });
+      } catch (e) {
+        // Directorio ya existe
+      }
+
+      logger.http('Descargando PDF desde API', {
+        url: payslipUrl,
+        fileName
+      });
+
+      // Descargar PDF con timeout
+      const { data: pdfData } = await axios.get(payslipUrl, {
+        responseType: 'arraybuffer',
+        headers: { 'Accept': 'application/pdf' },
+        timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
+      });
+
+      // Guardar temporalmente
+      await fs.writeFile(tmpPath, pdfData);
+
+      logger.info('Enviando PDF al usuario', {
+        phone: ctx.from,
+        fileName
+      });
+
+      // Enviar documento
+      await flowDynamic([{ media: tmpPath }]);
+
+      // ✅ CRÍTICO: Limpiar archivo temporal
+      try {
+        await fs.unlink(tmpPath);
+        logger.debug('Archivo temporal eliminado', { path: tmpPath });
+      } catch (cleanupError) {
+        logger.warn('No se pudo eliminar archivo temporal', {
+          path: tmpPath,
+          error: cleanupError
+        });
+      }
+
+      logger.info('Boleta enviada exitosamente', {
+        phone: ctx.from,
+        month: monthCode
+      });
+
+    } catch (error: any) {
+      logger.error('Error al procesar boleta en flow', {
+        flow: 'getMonths',
+        phone: ctx.from,
+        month: monthCode,
+        error: error.message || error,
+        stack: error.stack
+      });
+
+      await flowDynamic([{ body: FLOW_MESSAGES.ERRORS.USER_NOT_FOUND }]);
     }
   });

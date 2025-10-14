@@ -1,6 +1,6 @@
 import { InMemoryQueue } from "../classes/Queue";
 import { getAllUsers } from "../services/getAllUsers";
-import { Bot } from "./bot,interface";
+import { Bot } from "./bot.interface";
 
 const wsQueue = InMemoryQueue.instance();
 

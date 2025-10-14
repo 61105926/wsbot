@@ -7,6 +7,7 @@ import { invalidFlow } from "./flows/invalidFlow";
 import { menuFlow } from "./flows/menu.flow";
 import { sendDocumentFlow } from "./flows/sendDocumentFlow";
 import { getMonthsFlow } from "./flows/getMonthsFlow";
+import { vacationRequestFlow } from "./flows/vacationRequestFlow";
 
 import { uploadFile } from "./middlewares/fileMiddleware";
 import {
@@ -23,6 +24,25 @@ import { pauseHandler, resumeHandler, cancelHandler, resetHandler } from "./hand
 import { regionalesHandler } from "./handlers/regionales";
 import { statusBotHandler } from "./handlers/statusBot";
 import { connectionStatus } from "./services/connectionStatus";
+import { getVacationConfigHandler, updateVacationConfigHandler, toggleVacationConfigHandler } from "./handlers/vacationConfig";
+import { tmpCleanupService } from "./services/tmpCleanup.service";
+import cors from "cors";
+
+// Manejador global de errores no capturados
+process.on('uncaughtException', (error: Error) => {
+  // Ignorar errores de lectura del archivo QR que ya no existe
+  if (error.message.includes('bot.qr.png') && error.message.includes('ENOENT')) {
+    console.log('⚠️  QR file read error ignored (connection already established)');
+    return;
+  }
+  // Para otros errores, mostrar el error pero no detener el proceso
+  console.error('❌ Uncaught Exception:', error);
+});
+
+// Manejador de promesas rechazadas no capturadas
+process.on('unhandledRejection', (reason: any) => {
+  console.error('❌ Unhandled Rejection:', reason);
+});
 
 const main = async () => {
    const provider = createProvider(BaileysProvider,{
@@ -38,12 +58,21 @@ const main = async () => {
       getCardIDFlow,
       sendDocumentFlow,
       getMonthsFlow,
+      vacationRequestFlow,
     ]),
     database: new MemoryDB(),
     provider: provider,
   });
 
   httpServer(PORT);
+
+  // Configurar CORS para permitir peticiones desde el frontend
+  provider.server.use(cors({
+    origin: ['http://localhost:3002', 'http://190.171.225.68'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 
   // Status del bot
   provider.server.get("/status", handleCtx(statusBotHandler));
@@ -61,6 +90,15 @@ const main = async () => {
   provider.server.post("/resume", handleCtx(resumeHandler));
   provider.server.post("/cancel", handleCtx(cancelHandler));
   provider.server.post("/reset", handleCtx(resetHandler));
+
+  // Configuración de vacaciones
+  provider.server.get("/vacation-config", handleCtx(getVacationConfigHandler));
+  provider.server.post("/vacation-config", handleCtx(updateVacationConfigHandler));
+  provider.server.post("/vacation-config/toggle", handleCtx(toggleVacationConfigHandler));
+
+  // Iniciar limpieza automática de archivos temporales
+  // Limpia archivos más antiguos de 60 minutos cada 30 minutos
+  tmpCleanupService.startAutoCleanup(30, 60);
 
   console.log("✅ Server running on port", PORT);
 };
