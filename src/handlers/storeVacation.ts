@@ -92,7 +92,8 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
       // Crear enlace directo a la pestaña de aprobación
       // El manager_id se codifica en base64 para crear el enlace único
       const managerIdBase64 = Buffer.from(payload.manager_id).toString('base64');
-      const enlaceAprobacion = `http://190.171.225.68/#/vacaciones?emp=${managerIdBase64}&view=aprobar`;
+      const FRONTEND_URL = process.env.FRONTEND_URL || 'https://hrx.minoil.com.bo';
+      const enlaceAprobacion = `${FRONTEND_URL}/#/vacaciones?emp=${managerIdBase64}&view=aprobar`;
 
       const mensajeJefe = `🔔 *TU SUBORDINADO ESTÁ SOLICITANDO VACACIONES*
 

@@ -234,3 +234,11 @@
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:02:25"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:03:40"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:03:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:41:23"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-16 16:44:07"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-16 16:44:17"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"2","phone":"59177711124","timestamp":"2025-10-16 16:45:09"}}
+{"level":"info","message":"Usuario solicitando vacaciones","metadata":{"flow":"vacationRequest","phone":"59177711124","timestamp":"2025-10-16 16:45:10"}}
+{"level":"info","message":"URL de vacaciones generada","metadata":{"encodedPhone":"Nzc3MTExMjQ=","phone":"59177711124","phoneNumber":"77711124","timestamp":"2025-10-16 16:45:10","urlLength":54}}
+{"level":"info","message":"Link de vacaciones enviado exitosamente","metadata":{"phone":"59177711124","timestamp":"2025-10-16 16:45:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:45:14"}}
