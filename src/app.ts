@@ -25,6 +25,8 @@ import { regionalesHandler } from "./handlers/regionales";
 import { statusBotHandler } from "./handlers/statusBot";
 import { connectionStatus } from "./services/connectionStatus";
 import { getVacationConfigHandler, updateVacationConfigHandler, toggleVacationConfigHandler } from "./handlers/vacationConfig";
+import { storeVacationHandler } from "./handlers/storeVacation";
+import { vacationNotificationHandler } from "./handlers/vacationNotification";
 import { tmpCleanupService } from "./services/tmpCleanup.service";
 import cors from "cors";
 
@@ -89,6 +91,12 @@ const main = async () => {
   provider.server.get("/vacation-config", handleCtx(getVacationConfigHandler));
   provider.server.post("/vacation-config", handleCtx(updateVacationConfigHandler));
   provider.server.post("/vacation-config/toggle", handleCtx(toggleVacationConfigHandler));
+
+  // Almacenar solicitudes de vacaciones
+  provider.server.post("/api/store-vacation", handleCtx(storeVacationHandler));
+
+  // Notificaciones de vacaciones (aprobación/rechazo)
+  provider.server.post("/api/vacation-notification", handleCtx(vacationNotificationHandler));
 
   // Iniciar limpieza automática de archivos temporales
   // Limpia archivos más antiguos de 60 minutos cada 30 minutos

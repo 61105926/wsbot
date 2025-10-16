@@ -76,3 +76,161 @@
 {"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-14 14:33:13"}}
 {"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-14 14:33:20"}}
 {"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-14 14:33:30"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 14:42:04"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 14:42:06"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:42:06","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:42:06"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 14:42:06","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 14:42:07"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:42:07","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:42:08"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 14:42:08","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 14:42:08"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:42:08","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"2","phone":"59177711124","timestamp":"2025-10-14 14:42:30"}}
+{"level":"info","message":"Usuario solicitando vacaciones","metadata":{"flow":"vacationRequest","phone":"59177711124","timestamp":"2025-10-14 14:42:30"}}
+{"level":"info","message":"URL de vacaciones generada","metadata":{"encodedPhone":"Nzc3MTExMjQ=","phone":"59177711124","phoneNumber":"77711124","timestamp":"2025-10-14 14:42:30","urlLength":50}}
+{"level":"info","message":"Link de vacaciones enviado exitosamente","metadata":{"phone":"59177711124","timestamp":"2025-10-14 14:42:31"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:42:34"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-14 14:50:12"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-14 14:50:22"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-14 14:50:30"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-14 14:50:40"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-14 14:51:34"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-14 14:51:44"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 14:51:54"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:11:13"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:15:32"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:15:51"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:22:28"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:23:27"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:35:16"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:35:26"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:35:57"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 15:55:43"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 15:55:43","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 16:00:39"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 16:00:59"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:18:12"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:18:17"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:18:21"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:21:56"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:22:14"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:22:26"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:22:35"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:23:05"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:23:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:27:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-10-14 17:27:10"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 17:27:10","updatedBy":"admin"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 17:27:42"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 17:27:49"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 17:27:52"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-14 17:30:21"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-15 17:27:28"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-15 17:27:38"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-15 17:27:38"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-15 17:28:32"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-15 17:28:42"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:29:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:29:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:29:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:29:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:30:16"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:30:16"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:30:16"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:30:16"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:31:18"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:31:19"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:31:19"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:31:19"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"2","phone":"59177711124","timestamp":"2025-10-15 17:32:21"}}
+{"level":"info","message":"Usuario solicitando vacaciones","metadata":{"flow":"vacationRequest","phone":"59177711124","timestamp":"2025-10-15 17:32:21"}}
+{"level":"info","message":"URL de vacaciones generada","metadata":{"encodedPhone":"Nzc3MTExMjQ=","phone":"59177711124","phoneNumber":"77711124","timestamp":"2025-10-15 17:32:21","urlLength":50}}
+{"level":"info","message":"Link de vacaciones enviado exitosamente","metadata":{"phone":"59177711124","timestamp":"2025-10-15 17:32:21"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:32:30"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"hola","phone":"59177711124","timestamp":"2025-10-15 17:33:03"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"hola","phone":"59177711124","timestamp":"2025-10-15 17:33:03"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59177711124","timestamp":"2025-10-15 17:33:03"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:36:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:36:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:36:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:36:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:36:39"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:36:49"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760564216169","tiene_reemplazantes":true,"timestamp":"2025-10-15 17:36:56","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"Solicitud de vacaciones\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-10-27\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760564216169","timestamp":"2025-10-15 17:36:56"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760564216169","timestamp":"2025-10-15 17:36:56"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:37:22"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:37:22"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:37:22"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-15 17:37:22"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 08:45:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 08:45:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 08:45:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 08:45:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:23:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:23:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:23:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:23:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:27:53"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:27:53"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:27:53"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:27:53"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:28:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:28:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:28:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 09:28:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 12:00:14"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 12:00:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 12:00:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 12:00:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 13:00:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 13:00:17"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 13:00:17"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 13:00:17"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 14:02:32"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 14:44:55"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760640315715","tiene_reemplazantes":true,"timestamp":"2025-10-16 14:45:15","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"descanso\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-10-28\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760640315715","timestamp":"2025-10-16 14:45:15"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760640315715","timestamp":"2025-10-16 14:45:36"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 14:46:00"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 14:46:00"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:39:06"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-16 15:41:41"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-16 15:41:51"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":3,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760643760520","tiene_reemplazantes":true,"timestamp":"2025-10-16 15:42:40","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"nuevo\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-10-29\",\"turno\":\"COMPLETO\",\"observacion\":null},{\"fecha\":\"2025-10-30\",\"turno\":\"COMPLETO\",\"observacion\":null},{\"fecha\":\"2025-10-31\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760643760520","timestamp":"2025-10-16 15:42:40"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760643760520","timestamp":"2025-10-16 15:42:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:42:55"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:47:46"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760644079698","tiene_reemplazantes":true,"timestamp":"2025-10-16 15:47:59","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"nuevo\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-01\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760644079698","timestamp":"2025-10-16 15:47:59"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760644079698","timestamp":"2025-10-16 15:47:59"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:48:21"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760644121594","tiene_reemplazantes":true,"timestamp":"2025-10-16 15:48:41","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"df\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-03\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760644121594","timestamp":"2025-10-16 15:48:41"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760644121594","timestamp":"2025-10-16 15:48:41"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760644148295","tiene_reemplazantes":true,"timestamp":"2025-10-16 15:49:08","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"df\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-04\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760644148295","timestamp":"2025-10-16 15:49:08"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760644148295","timestamp":"2025-10-16 15:49:08"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:51:45"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:51:45"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:52:58"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:52:58"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:53:24"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:53:24"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:53:41"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:53:45"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1760644444741","tiene_reemplazantes":true,"timestamp":"2025-10-16 15:54:04","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"nuevo\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-05\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1760644444741","timestamp":"2025-10-16 15:54:04"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"enlace":"http://190.171.225.68/#/vacaciones?emp=NjM=&view=aprobar","manager_phone":"59177711124","solicitud_id":"665-1760644444741","timestamp":"2025-10-16 15:54:04"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 15:54:08"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"APROBADO","id_solicitud":"14","reemplazantes":2,"timestamp":"2025-10-16 15:54:30"}}
+{"level":"info","message":"✅ Notificación de aprobación enviada al empleado","metadata":{"emp_id":"665","phone_prueba":"59177711124","solicitud_id":"14","timestamp":"2025-10-16 15:54:30"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"phone_prueba":"59177711124","reemplazante":"Reemplazante de Prueba 1","solicitud_id":"14","timestamp":"2025-10-16 15:54:32"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"phone_prueba":"59177711124","reemplazante":"Reemplazante de Prueba 2","solicitud_id":"14","timestamp":"2025-10-16 15:54:35"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:02:25"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:02:25"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:03:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-16 16:03:40"}}
