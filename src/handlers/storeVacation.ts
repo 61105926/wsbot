@@ -1,6 +1,7 @@
 import { Bot } from './bot.interface';
 import { sendJSON, asyncHandler } from '../utils/response';
 import { logger } from '../utils/logger';
+import { getUserByID } from '../services/getUserByID';
 
 interface VacationDetail {
   fecha: string;
@@ -84,20 +85,66 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
       logger.warn('⚠️ Bot no disponible, no se puede enviar notificación de WhatsApp');
     } else {
       try {
+      // Obtener el nombre del empleado
+      let nombreEmpleado = payload.emp_id; // Fallback al ID si no se puede obtener el nombre
+      try {
+        const userData = await getUserByID(payload.emp_id);
+        // La API devuelve un array, buscar el empleado con el empID correcto
+        if (Array.isArray(userData) && userData.length > 0) {
+          const empleado = userData.find((item: any) => item.data?.empID === payload.emp_id);
+          if (empleado?.data?.fullName) {
+            nombreEmpleado = empleado.data.fullName;
+            logger.info('Nombre del empleado obtenido', {
+              emp_id: payload.emp_id,
+              nombre: nombreEmpleado
+            });
+          }
+        }
+      } catch (error: any) {
+        logger.warn('No se pudo obtener el nombre del empleado, usando ID', {
+          emp_id: payload.emp_id,
+          error: error.message
+        });
+      }
+
+      // Obtener el teléfono del manager para codificarlo en base64
+      let managerPhoneBase64 = Buffer.from(payload.manager_id).toString('base64'); // Fallback al manager_id
+      try {
+        const managerData = await getUserByID(payload.manager_id);
+        // La API devuelve un array, buscar el manager con el empID correcto
+        if (Array.isArray(managerData) && managerData.length > 0) {
+          const manager = managerData.find((item: any) => item.data?.empID === payload.manager_id);
+          if (manager?.data?.phone) {
+            // Codificar el teléfono del manager en base64
+            managerPhoneBase64 = Buffer.from(manager.data.phone).toString('base64');
+            logger.info('Teléfono del manager obtenido y codificado', {
+              manager_id: payload.manager_id,
+              phone: manager.data.phone,
+              encoded: managerPhoneBase64
+            });
+          }
+        }
+      } catch (error: any) {
+        logger.warn('No se pudo obtener el teléfono del manager, usando manager_id', {
+          manager_id: payload.manager_id,
+          error: error.message
+        });
+      }
+
       // Formatear las fechas solicitadas
       const fechasTexto = payload.detalle
         .map((d, idx) => `${idx + 1}. ${d.fecha} - ${d.tipo_dia || 'Día completo'}`)
         .join('\n');
 
       // Crear enlace directo a la pestaña de aprobación
-      // El manager_id se codifica en base64 para crear el enlace único
-      const managerIdBase64 = Buffer.from(payload.manager_id).toString('base64');
+      // El teléfono del manager se codifica en base64 para el parámetro 'data'
+      // El frontend usa 'data' para consultar solicitudes pendientes del jefe
       const FRONTEND_URL = process.env.FRONTEND_URL || 'https://hrx.minoil.com.bo';
-      const enlaceAprobacion = `${FRONTEND_URL}/#/vacaciones?emp=${managerIdBase64}&view=aprobar`;
+      const enlaceAprobacion = `${FRONTEND_URL}/vacaciones?data=${managerPhoneBase64}&tab=aprobar`;
 
       const mensajeJefe = `🔔 *TU SUBORDINADO ESTÁ SOLICITANDO VACACIONES*
 
-👤 *Empleado:* ${payload.emp_id}
+👤 *Empleado:* ${nombreEmpleado}
 📅 *Tipo:* ${payload.tipo}
 📆 *Días solicitados:* ${payload.detalle.length}
 
@@ -109,15 +156,14 @@ ${fechasTexto}
 👥 *Reemplazantes:* ${payload.reemplazantes?.map(r => r.nombre).join(', ') || 'No especificado'}
 
 ✅ *APROBAR DESDE AQUÍ:*
-${enlaceAprobacion}
-
-📋 *ID Solicitud:* ${solicitudId}`;
+${enlaceAprobacion}`;
 
       await bot.sendMessage(managerPhone, mensajeJefe, {});
       logger.info('✅ Notificación de solicitud enviada al jefe con enlace', {
         manager_phone: managerPhone,
         solicitud_id: solicitudId,
-        enlace: enlaceAprobacion
+        enlace: enlaceAprobacion,
+        empleado_nombre: nombreEmpleado
       });
       } catch (whatsappError: any) {
         logger.error('❌ Error al enviar notificación de WhatsApp al jefe', {

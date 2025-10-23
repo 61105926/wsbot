@@ -98,6 +98,7 @@ const main = async () => {
   // Notificaciones de vacaciones (aprobación/rechazo)
   provider.server.post("/api/vacation-notification", handleCtx(vacationNotificationHandler));
 
+
   // Iniciar limpieza automática de archivos temporales
   // Limpia archivos más antiguos de 60 minutos cada 30 minutos
   tmpCleanupService.startAutoCleanup(30, 60);

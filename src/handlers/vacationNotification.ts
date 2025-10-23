@@ -66,7 +66,6 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
         const mensajeEmpleado = `✅ *TU SOLICITUD DE VACACIONES FUE APROBADA*
 
 👤 *Empleado:* ${payload.emp_nombre || 'Tú'}
-📋 *ID Solicitud:* ${payload.id_solicitud}
 📅 *Tipo:* ${payload.tipo || 'Vacaciones'}
 📆 *Días aprobados:* ${payload.dias_solicitados || 'N/A'}
 
@@ -109,7 +108,6 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
 
 👤 *${payload.emp_nombre || 'Empleado'}* estará de vacaciones
 
-📋 *ID Solicitud:* ${payload.id_solicitud}
 📅 *Tipo:* ${payload.tipo || 'Vacaciones'}
 📆 *Días:* ${payload.dias_solicitados || 'N/A'}
 
@@ -154,7 +152,6 @@ ${payload.comentario ? `💬 *Nota del jefe:* ${payload.comentario}` : ''}
       try {
         const mensajeRechazo = `❌ *SOLICITUD DE VACACIONES RECHAZADA*
 
-📋 *ID Solicitud:* ${payload.id_solicitud}
 📅 *Tipo:* ${payload.tipo || 'Vacaciones'}
 📆 *Días solicitados:* ${payload.dias_solicitados || 'N/A'}
 
