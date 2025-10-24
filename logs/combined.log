@@ -592,3 +592,34 @@
 {"level":"info","message":"✅ PDF de solicitud enviado exitosamente","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_28.pdf","solicitud_id":"28","timestamp":"2025-10-24 09:20:36"}}
 {"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"phone_prueba":"59177711124","reemplazante":"Reemplazante de Prueba 1","solicitud_id":"28","timestamp":"2025-10-24 09:20:39"}}
 {"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"phone_prueba":"59177711124","reemplazante":"Reemplazante de Prueba 2","solicitud_id":"28","timestamp":"2025-10-24 09:20:41"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:39:50"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1761313215669","tiene_reemplazantes":true,"timestamp":"2025-10-24 09:40:15","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"quiero descansar\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-13\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1761313215669","timestamp":"2025-10-24 09:40:15"}}
+{"level":"info","message":"Nombre del empleado obtenido","metadata":{"emp_id":"665","nombre":"Gabriel Queso","timestamp":"2025-10-24 09:40:16"}}
+{"level":"info","message":"Teléfono del manager obtenido y codificado","metadata":{"encoded":"NzUwMDE0MzI=","manager_id":"63","phone":"75001432","timestamp":"2025-10-24 09:40:17"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"empleado_nombre":"Gabriel Queso","enlace":"https://hrx.minoil.com.bo/vacaciones?data=NzUwMDE0MzI=&tab=aprobar","manager_phone":"59177711124","solicitud_id":"665-1761313215669","timestamp":"2025-10-24 09:40:17"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"APROBADO","id_solicitud":"29","reemplazantes":2,"timestamp":"2025-10-24 09:40:29"}}
+{"level":"info","message":"✅ Notificación de aprobación enviada al empleado","metadata":{"emp_id":"665","phone_prueba":"59177711124","solicitud_id":"29","timestamp":"2025-10-24 09:40:29"}}
+{"level":"info","message":"📄 Descargando PDF de solicitud de vacación","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_29.pdf","pdfUrl":"http://190.171.225.68/api/vacacion","solicitud_id":"29","timestamp":"2025-10-24 09:40:29"}}
+{"level":"info","message":"✅ PDF de solicitud enviado exitosamente","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_29.pdf","solicitud_id":"29","timestamp":"2025-10-24 09:40:32"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"phone_prueba":"59177711124","reemplazante":"Reemplazante de Prueba 1","solicitud_id":"29","timestamp":"2025-10-24 09:40:35"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"phone_prueba":"59177711124","reemplazante":"Reemplazante de Prueba 2","solicitud_id":"29","timestamp":"2025-10-24 09:40:37"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"En mi casa amor","phone":"59177757416","timestamp":"2025-10-24 09:46:19"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"En mi casa amor","phone":"59177757416","timestamp":"2025-10-24 09:46:19"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59177757416","timestamp":"2025-10-24 09:46:19"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"Amor más ratos hablamos ya","phone":"59177757416","timestamp":"2025-10-24 09:48:02"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"Amor más ratos hablamos ya","phone":"59177757416","timestamp":"2025-10-24 09:48:02"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59177757416","timestamp":"2025-10-24 09:48:02"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"???","phone":"59177757416","timestamp":"2025-10-24 09:48:17"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"???","phone":"59177757416","timestamp":"2025-10-24 09:48:17"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59177757416","timestamp":"2025-10-24 09:48:17"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"Ya amor esta bien","phone":"59177757416","timestamp":"2025-10-24 09:48:34"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"Ya amor esta bien","phone":"59177757416","timestamp":"2025-10-24 09:48:34"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59177757416","timestamp":"2025-10-24 09:48:34"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:51:58"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"Lo bueno es que estás bien 😊","phone":"59178957900","timestamp":"2025-10-24 09:52:08"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"Lo bueno es que estás bien 😊","phone":"59178957900","timestamp":"2025-10-24 09:52:08"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178957900","timestamp":"2025-10-24 09:52:08"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:53:01"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:53:52"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:55:26"}}
