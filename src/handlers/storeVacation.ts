@@ -75,10 +75,30 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
     });
 
     // 🔔 NOTIFICACIÓN AL JEFE POR WHATSAPP
-    // En modo prueba: enviamos a 77711124
-    // En producción: usar el teléfono del manager desde la DB
-    const PHONE_PRUEBA = '59177711124'; // Modo prueba
-    const managerPhone = PHONE_PRUEBA;
+    // Obtener el número de teléfono real del manager
+    let managerPhone = '59177711124'; // Fallback para demo
+    try {
+      const managerData = await getUserByID(payload.manager_id);
+      // La API devuelve un array, buscar el manager con el empID correcto
+      if (Array.isArray(managerData) && managerData.length > 0) {
+        const manager = managerData.find((item: any) => item.data?.empID === payload.manager_id);
+        if (manager?.data?.phone) {
+          // Asegurar que el número tenga el prefijo 591
+          const phoneNumber = manager.data.phone;
+          managerPhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+          logger.info('✅ Número del manager obtenido', {
+            manager_id: payload.manager_id,
+            phone_original: phoneNumber,
+            phone_formatted: managerPhone
+          });
+        }
+      }
+    } catch (error: any) {
+      logger.warn('No se pudo obtener el número del manager, usando fallback', {
+        manager_id: payload.manager_id,
+        error: error.message
+      });
+    }
 
     // Verificar que el bot esté disponible antes de enviar mensajes
     if (!bot) {

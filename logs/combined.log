@@ -623,3 +623,44 @@
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:53:01"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:53:52"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 09:55:26"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 09:59:10"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:00:15"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:00:27"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 10:00:37"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:00:39"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 10:00:49"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:01:03"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:01:09"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 10:01:19"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 10:01:45"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1761314521585","tiene_reemplazantes":true,"timestamp":"2025-10-24 10:02:01","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"prueba\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-14\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1761314521585","timestamp":"2025-10-24 10:02:01"}}
+{"level":"info","message":"✅ Número del manager obtenido","metadata":{"manager_id":"63","phone":"75001432","timestamp":"2025-10-24 10:02:03"}}
+{"level":"info","message":"Nombre del empleado obtenido","metadata":{"emp_id":"665","nombre":"Gabriel Queso","timestamp":"2025-10-24 10:02:03"}}
+{"level":"info","message":"Teléfono del manager obtenido y codificado","metadata":{"encoded":"NzUwMDE0MzI=","manager_id":"63","phone":"75001432","timestamp":"2025-10-24 10:02:04"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"empleado_nombre":"Gabriel Queso","enlace":"https://hrx.minoil.com.bo/vacaciones?data=NzUwMDE0MzI=&tab=aprobar","manager_phone":"75001432","solicitud_id":"665-1761314521585","timestamp":"2025-10-24 10:02:07"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:03:29"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:03:32"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:03:36"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:03:41"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 10:03:51"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:03:55"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 10:04:05"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:04:08"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 10:04:17"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 10:04:27"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":1,"emp_id":"665","manager_id":"63","solicitud_id":"665-1761314669820","tiene_reemplazantes":true,"timestamp":"2025-10-24 10:04:29","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"prueba\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-15\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1761314669820","timestamp":"2025-10-24 10:04:29"}}
+{"level":"info","message":"✅ Número del manager obtenido","metadata":{"manager_id":"63","phone_formatted":"59175001432","phone_original":"75001432","timestamp":"2025-10-24 10:04:30"}}
+{"level":"info","message":"Nombre del empleado obtenido","metadata":{"emp_id":"665","nombre":"Gabriel Queso","timestamp":"2025-10-24 10:04:31"}}
+{"level":"info","message":"Teléfono del manager obtenido y codificado","metadata":{"encoded":"NzUwMDE0MzI=","manager_id":"63","phone":"75001432","timestamp":"2025-10-24 10:04:32"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"empleado_nombre":"Gabriel Queso","enlace":"https://hrx.minoil.com.bo/vacaciones?data=NzUwMDE0MzI=&tab=aprobar","manager_phone":"59175001432","solicitud_id":"665-1761314669820","timestamp":"2025-10-24 10:04:32"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"APROBADO","id_solicitud":"31","reemplazantes":2,"timestamp":"2025-10-24 10:05:12"}}
+{"level":"info","message":"✅ Número del empleado obtenido","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-10-24 10:05:13"}}
+{"level":"info","message":"✅ Notificación de aprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"31","timestamp":"2025-10-24 10:05:13"}}
+{"level":"info","message":"📄 Descargando PDF de solicitud de vacación","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_31.pdf","pdfUrl":"http://190.171.225.68/api/vacacion","solicitud_id":"31","timestamp":"2025-10-24 10:05:13"}}
+{"level":"info","message":"✅ PDF de solicitud enviado exitosamente","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_31.pdf","solicitud_id":"31","timestamp":"2025-10-24 10:05:16"}}
+{"level":"info","message":"✅ Número del reemplazante obtenido","metadata":{"phone_formatted":"59177022971","phone_original":"77022971","reemplazante_id":"999","timestamp":"2025-10-24 10:05:20"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"reemplazante":"Reemplazante de Prueba 1","reemplazante_phone":"59177022971","solicitud_id":"31","timestamp":"2025-10-24 10:05:20"}}
+{"level":"info","message":"✅ Número del reemplazante obtenido","metadata":{"phone_formatted":"59175395310","phone_original":"75395310","reemplazante_id":"998","timestamp":"2025-10-24 10:05:23"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"reemplazante":"Reemplazante de Prueba 2","reemplazante_phone":"59175395310","solicitud_id":"31","timestamp":"2025-10-24 10:05:23"}}

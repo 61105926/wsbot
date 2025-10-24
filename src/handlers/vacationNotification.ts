@@ -1,6 +1,7 @@
 import { Bot } from './bot.interface';
 import { sendJSON, asyncHandler } from '../utils/response';
 import { logger } from '../utils/logger';
+import { getUserByID } from '../services/getUserByID';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -51,8 +52,6 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
       });
     }
 
-    const PHONE_PRUEBA = '59177711124'; // Modo prueba - todos los mensajes van aquí
-
     logger.info('Procesando notificación', {
       id_solicitud: payload.id_solicitud,
       estado: payload.estado,
@@ -61,6 +60,30 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
 
     // 🔔 SI ES APROBADO → NOTIFICAR AL EMPLEADO Y A LOS REEMPLAZANTES
     if (payload.estado === 'APROBADO') {
+
+      // Obtener el número de teléfono real del empleado
+      let empPhone = '59177711124'; // Fallback para demo
+      try {
+        const empData = await getUserByID(payload.emp_id);
+        if (Array.isArray(empData) && empData.length > 0) {
+          const empleado = empData.find((item: any) => item.data?.empID === payload.emp_id);
+          if (empleado?.data?.phone) {
+            // Asegurar que el número tenga el prefijo 591
+            const phoneNumber = empleado.data.phone;
+            empPhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+            logger.info('✅ Número del empleado obtenido', {
+              emp_id: payload.emp_id,
+              phone_original: phoneNumber,
+              phone_formatted: empPhone
+            });
+          }
+        }
+      } catch (error: any) {
+        logger.warn('No se pudo obtener el número del empleado, usando fallback', {
+          emp_id: payload.emp_id,
+          error: error.message
+        });
+      }
 
       // 1. Notificar al EMPLEADO que su solicitud fue aprobada
       try {
@@ -83,11 +106,11 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
 
 📱 Cualquier duda, contacta con tu supervisor`;
 
-        await bot.sendMessage(PHONE_PRUEBA, mensajeEmpleado, {});
+        await bot.sendMessage(empPhone, mensajeEmpleado, {});
 
         logger.info('✅ Notificación de aprobación enviada al empleado', {
           emp_id: payload.emp_id,
-          phone_prueba: PHONE_PRUEBA,
+          emp_phone: empPhone,
           solicitud_id: payload.id_solicitud
         });
 
@@ -127,7 +150,7 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
           });
 
           // Enviar el PDF como documento
-          await bot.sendMessage(PHONE_PRUEBA, '📄 *Documento de solicitud de vacación aprobada*', { 
+          await bot.sendMessage(empPhone, '📄 *Documento de solicitud de vacación aprobada*', { 
             media: pdfPath 
           });
 
@@ -187,17 +210,40 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
 💼 *Tu rol:*
 Serás el reemplazante durante este período. Por favor coordina con tu equipo y supervisor.
 
-${payload.comentario ? `💬 *Nota del jefe:* ${payload.comentario}` : ''}
+
 
 📱 *Cualquier duda, contacta con tu supervisor*`;
 
-            // En modo prueba: enviar a PHONE_PRUEBA
-            // En producción: usar reemplazante.telefono (si está disponible)
-            await bot.sendMessage(PHONE_PRUEBA, mensajeReemplazante, {});
+            // Obtener el número de teléfono real del reemplazante
+            let reemplazantePhone = '59177711124'; // Fallback para demo
+            try {
+              const reemplazanteData = await getUserByID(reemplazante.emp_id);
+              if (Array.isArray(reemplazanteData) && reemplazanteData.length > 0) {
+                const reemplazanteUser = reemplazanteData.find((item: any) => item.data?.empID === reemplazante.emp_id);
+                if (reemplazanteUser?.data?.phone) {
+                  // Asegurar que el número tenga el prefijo 591
+                  const phoneNumber = reemplazanteUser.data.phone;
+                  reemplazantePhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+                  logger.info('✅ Número del reemplazante obtenido', {
+                    reemplazante_id: reemplazante.emp_id,
+                    phone_original: phoneNumber,
+                    phone_formatted: reemplazantePhone
+                  });
+                }
+              }
+            } catch (error: any) {
+              logger.warn('No se pudo obtener el número del reemplazante, usando fallback', {
+                reemplazante_id: reemplazante.emp_id,
+                error: error.message
+              });
+            }
+
+            // Enviar al número real del reemplazante
+            await bot.sendMessage(reemplazantePhone, mensajeReemplazante, {});
 
             logger.info('✅ Notificación enviada a reemplazante', {
               reemplazante: reemplazante.nombre,
-              phone_prueba: PHONE_PRUEBA,
+              reemplazante_phone: reemplazantePhone,
               solicitud_id: payload.id_solicitud
             });
 
@@ -227,11 +273,35 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
 
 📱 *Por favor contacta con tu supervisor para más detalles*`;
 
-        await bot.sendMessage(PHONE_PRUEBA, mensajeRechazo, {});
+        // Obtener el número de teléfono real del empleado para rechazo
+        let empPhoneRechazo = '59177711124'; // Fallback para demo
+        try {
+          const empDataRechazo = await getUserByID(payload.emp_id);
+          if (Array.isArray(empDataRechazo) && empDataRechazo.length > 0) {
+            const empleadoRechazo = empDataRechazo.find((item: any) => item.data?.empID === payload.emp_id);
+            if (empleadoRechazo?.data?.phone) {
+              // Asegurar que el número tenga el prefijo 591
+              const phoneNumber = empleadoRechazo.data.phone;
+              empPhoneRechazo = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+              logger.info('✅ Número del empleado obtenido para rechazo', {
+                emp_id: payload.emp_id,
+                phone_original: phoneNumber,
+                phone_formatted: empPhoneRechazo
+              });
+            }
+          }
+        } catch (error: any) {
+          logger.warn('No se pudo obtener el número del empleado para rechazo, usando fallback', {
+            emp_id: payload.emp_id,
+            error: error.message
+          });
+        }
+
+        await bot.sendMessage(empPhoneRechazo, mensajeRechazo, {});
 
         logger.info('✅ Notificación de rechazo enviada', {
           emp_id: payload.emp_id,
-          phone_prueba: PHONE_PRUEBA
+          emp_phone: empPhoneRechazo
         });
 
       } catch (whatsappError: any) {
