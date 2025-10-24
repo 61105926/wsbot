@@ -23,7 +23,7 @@ export const API_CONFIG = {
 // FRONTEND URLs
 export const FRONTEND_CONFIG = {
   // URL base del frontend
-  BASE_URL: process.env.FRONTEND_URL || "http://localhost:3002",
+  BASE_URL: process.env.FRONTEND_URL || "https://hrx.minoil.com.bo",
 
   // Rutas específicas
   VACATION_REQUEST: "/vacaciones",

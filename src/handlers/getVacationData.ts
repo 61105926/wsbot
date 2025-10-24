@@ -23,7 +23,7 @@ const handleGetVacationData = async (bot: Bot, req: any, res: any) => {
 
     // Buscar en los logs de solicitudes almacenadas
     const logsDir = path.join(__dirname, '../../logs');
-    const logFiles = fs.readdirSync(logsDir).filter(file => file.includes('combined'));
+    const logFiles = fs.readdirSync(logsDir).filter(file => file.includes('combined')).sort();
     
     logger.info('Archivos de log encontrados', { logFiles, logsDir });
     
@@ -38,18 +38,30 @@ const handleGetVacationData = async (bot: Bot, req: any, res: any) => {
       logger.info('Buscando en archivo de log', { logFile, totalLines: lines.length });
       
       for (const line of lines) {
-        if (line.includes(`"solicitud_id":"${solicitudId}"`) && line.includes('"Datos de la solicitud"')) {
-          logger.info('✅ Línea encontrada', { line: line.substring(0, 200) + '...' });
+        if (line.includes('"Datos de la solicitud"')) {
+          logger.info('🔍 Línea con "Datos de la solicitud" encontrada', { 
+            line: line.substring(0, 100) + '...',
+            logFile 
+          });
           try {
             const logEntry = JSON.parse(line);
-            const payloadStr = logEntry.metadata?.payload;
-            if (payloadStr) {
-              solicitudData = JSON.parse(payloadStr);
-              logger.info('✅ Datos de solicitud encontrados en logs', { 
-                solicitud_id: solicitudId,
-                reemplazantes: solicitudData.reemplazantes?.length || 0
-              });
-              break;
+            logger.info('🔍 Log entry parsed', { 
+              metadata_solicitud_id: logEntry.metadata?.solicitud_id,
+              buscando_solicitud_id: solicitudId,
+              coincide: logEntry.metadata?.solicitud_id === solicitudId
+            });
+            // Verificar si el solicitud_id en el metadata coincide
+            if (logEntry.metadata?.solicitud_id === solicitudId) {
+              logger.info('✅ Línea encontrada', { line: line.substring(0, 200) + '...' });
+              const payloadStr = logEntry.metadata?.payload;
+              if (payloadStr) {
+                solicitudData = JSON.parse(payloadStr);
+                logger.info('✅ Datos de solicitud encontrados en logs', { 
+                  solicitud_id: solicitudId,
+                  reemplazantes: solicitudData.reemplazantes?.length || 0
+                });
+                break;
+              }
             }
           } catch (parseError) {
             logger.warn('Error al parsear línea de log', { error: parseError });

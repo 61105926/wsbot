@@ -2,6 +2,7 @@ import { Bot } from './bot.interface';
 import { sendJSON, asyncHandler } from '../utils/response';
 import { logger } from '../utils/logger';
 import { getUserByID } from '../services/getUserByID';
+import { FRONTEND_CONFIG } from '../config/config';
 
 interface VacationDetail {
   fecha: string;
@@ -75,26 +76,24 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
     });
 
     // 🔔 NOTIFICACIÓN AL JEFE POR WHATSAPP
-    // Obtener el número de teléfono real del manager
-    let managerPhone = '59177711124'; // Fallback para demo
+    // Obtener el número real del jefe
+    let managerPhone = '59177711124'; // Fallback
     try {
       const managerData = await getUserByID(payload.manager_id);
-      // La API devuelve un array, buscar el manager con el empID correcto
       if (Array.isArray(managerData) && managerData.length > 0) {
         const manager = managerData.find((item: any) => item.data?.empID === payload.manager_id);
         if (manager?.data?.phone) {
           // Asegurar que el número tenga el prefijo 591
           const phoneNumber = manager.data.phone;
           managerPhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
-          logger.info('✅ Número del manager obtenido', {
+          logger.info('Número del jefe obtenido', {
             manager_id: payload.manager_id,
-            phone_original: phoneNumber,
-            phone_formatted: managerPhone
+            phone: managerPhone
           });
         }
       }
     } catch (error: any) {
-      logger.warn('No se pudo obtener el número del manager, usando fallback', {
+      logger.warn('No se pudo obtener el número del jefe, usando fallback', {
         manager_id: payload.manager_id,
         error: error.message
       });
@@ -159,8 +158,7 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
       // Crear enlace directo a la pestaña de aprobación
       // El teléfono del manager se codifica en base64 para el parámetro 'data'
       // El frontend usa 'data' para consultar solicitudes pendientes del jefe
-      const FRONTEND_URL = process.env.FRONTEND_URL || 'https://hrx.minoil.com.bo';
-      const enlaceAprobacion = `${FRONTEND_URL}/vacaciones?data=${managerPhoneBase64}&tab=aprobar`;
+      const enlaceAprobacion = `${FRONTEND_CONFIG.BASE_URL}${FRONTEND_CONFIG.VACATION_REQUEST}?data=${managerPhoneBase64}&tab=aprobar`;
 
       const mensajeJefe = `🔔 *TU SUBORDINADO ESTÁ SOLICITANDO VACACIONES*
 
