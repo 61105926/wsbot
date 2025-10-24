@@ -27,6 +27,7 @@ import { connectionStatus } from "./services/connectionStatus";
 import { getVacationConfigHandler, updateVacationConfigHandler, toggleVacationConfigHandler } from "./handlers/vacationConfig";
 import { storeVacationHandler } from "./handlers/storeVacation";
 import { vacationNotificationHandler } from "./handlers/vacationNotification";
+import { getVacationDataHandler } from "./handlers/getVacationData";
 import { tmpCleanupService } from "./services/tmpCleanup.service";
 import cors from "cors";
 
@@ -97,6 +98,7 @@ const main = async () => {
 
   // Notificaciones de vacaciones (aprobación/rechazo)
   provider.server.post("/api/vacation-notification", handleCtx(vacationNotificationHandler));
+  provider.server.get("/api/vacation-data/:id", handleCtx(getVacationDataHandler));
 
 
   // Iniciar limpieza automática de archivos temporales

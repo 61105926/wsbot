@@ -214,28 +214,49 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
 
 📱 *Cualquier duda, contacta con tu supervisor*`;
 
-            // Obtener el número de teléfono real del reemplazante
+            // Usar el número de teléfono del reemplazante que viene en el payload
             let reemplazantePhone = '59177711124'; // Fallback para demo
-            try {
-              const reemplazanteData = await getUserByID(reemplazante.emp_id);
-              if (Array.isArray(reemplazanteData) && reemplazanteData.length > 0) {
-                const reemplazanteUser = reemplazanteData.find((item: any) => item.data?.empID === reemplazante.emp_id);
-                if (reemplazanteUser?.data?.phone) {
-                  // Asegurar que el número tenga el prefijo 591
-                  const phoneNumber = reemplazanteUser.data.phone;
-                  reemplazantePhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
-                  logger.info('✅ Número del reemplazante obtenido', {
-                    reemplazante_id: reemplazante.emp_id,
-                    phone_original: phoneNumber,
-                    phone_formatted: reemplazantePhone
-                  });
-                }
+            
+            // 1. Primero intentar usar el número que viene en el payload
+            if (reemplazante.telefono) {
+              const phoneNumber = reemplazante.telefono;
+              // Formatear el número correctamente
+              if (phoneNumber.startsWith('591')) {
+                reemplazantePhone = phoneNumber;
+              } else if (phoneNumber.startsWith('+591')) {
+                reemplazantePhone = phoneNumber.substring(1); // Quitar el +
+              } else {
+                reemplazantePhone = `591${phoneNumber}`;
               }
-            } catch (error: any) {
-              logger.warn('No se pudo obtener el número del reemplazante, usando fallback', {
+              logger.info('✅ Usando número del reemplazante del payload', {
                 reemplazante_id: reemplazante.emp_id,
-                error: error.message
+                reemplazante_nombre: reemplazante.nombre,
+                phone_original: phoneNumber,
+                phone_formatted: reemplazantePhone
               });
+            } else {
+              // 2. Si no hay número en el payload, obtener de la API
+              try {
+                const reemplazanteData = await getUserByID(reemplazante.emp_id);
+                if (Array.isArray(reemplazanteData) && reemplazanteData.length > 0) {
+                  const reemplazanteUser = reemplazanteData.find((item: any) => item.data?.empID === reemplazante.emp_id);
+                  if (reemplazanteUser?.data?.phone) {
+                    // Asegurar que el número tenga el prefijo 591
+                    const phoneNumber = reemplazanteUser.data.phone;
+                    reemplazantePhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+                    logger.info('✅ Número del reemplazante obtenido de API', {
+                      reemplazante_id: reemplazante.emp_id,
+                      phone_original: phoneNumber,
+                      phone_formatted: reemplazantePhone
+                    });
+                  }
+                }
+              } catch (error: any) {
+                logger.warn('No se pudo obtener el número del reemplazante, usando fallback', {
+                  reemplazante_id: reemplazante.emp_id,
+                  error: error.message
+                });
+              }
             }
 
             // Enviar al número real del reemplazante
