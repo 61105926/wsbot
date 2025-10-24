@@ -1,6 +1,9 @@
 import { Bot } from './bot.interface';
 import { sendJSON, asyncHandler } from '../utils/response';
 import { logger } from '../utils/logger';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 interface Reemplazante {
   emp_id: string;
@@ -88,8 +91,73 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
           solicitud_id: payload.id_solicitud
         });
 
-        // Esperar 2 segundos antes de enviar a reemplazantes
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // 📄 ENVIAR PDF DE LA SOLICITUD DE VACACIÓN
+        try {
+          const pdfUrl = 'http://190.171.225.68/api/vacacion';
+          const fileName = `Solicitud_Vacacion_${payload.id_solicitud}.pdf`;
+          const pdfPath = path.join(__dirname, '../../tmp', fileName);
+          
+          logger.info('📄 Descargando PDF de solicitud de vacación', {
+            pdfUrl,
+            emp_id: payload.emp_id,
+            solicitud_id: payload.id_solicitud,
+            fileName
+          });
+
+          // Crear directorio tmp si no existe
+          const tmpDir = path.dirname(pdfPath);
+          if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir, { recursive: true });
+          }
+
+          // Descargar PDF
+          const pdfResponse = await axios({
+            method: 'GET',
+            url: pdfUrl,
+            responseType: 'stream',
+            timeout: 30000 // 30 segundos
+          });
+
+          const writer = fs.createWriteStream(pdfPath);
+          pdfResponse.data.pipe(writer);
+
+          await new Promise<void>((resolve, reject) => {
+            writer.on('finish', () => resolve());
+            writer.on('error', reject);
+          });
+
+          // Enviar el PDF como documento
+          await bot.sendMessage(PHONE_PRUEBA, '📄 *Documento de solicitud de vacación aprobada*', { 
+            media: pdfPath 
+          });
+
+          logger.info('✅ PDF de solicitud enviado exitosamente', {
+            emp_id: payload.emp_id,
+            solicitud_id: payload.id_solicitud,
+            fileName
+          });
+
+          // Eliminar archivo temporal
+          try {
+            if (fs.existsSync(pdfPath)) {
+              fs.unlinkSync(pdfPath);
+              logger.debug(`Archivo temporal eliminado: ${fileName}`);
+            }
+          } catch (e) {
+            logger.warn(`No se pudo eliminar archivo temporal: ${fileName}`, e);
+          }
+
+        } catch (pdfError: any) {
+          logger.error('❌ Error al enviar PDF de solicitud', {
+            error: pdfError.message,
+            emp_id: payload.emp_id,
+            solicitud_id: payload.id_solicitud
+          });
+          // No fallar la operación si el PDF no se puede enviar
+        }
+
+        // Esperar 3 segundos antes de enviar a reemplazantes
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
       } catch (whatsappError: any) {
         logger.error('❌ Error al enviar notificación al empleado', {
