@@ -1273,3 +1273,264 @@
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 23:14:15"}}
 {"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 23:15:06"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 23:15:06"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 10:29:39"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 10:29:49"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 10:29:52"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 10:32:25"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 10:33:23"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"284","reemplazantes":0,"timestamp":"2025-11-06 10:33:45"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 10:33:47"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"284","timestamp":"2025-11-06 10:33:48"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 10:36:47"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 10:36:53"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 10:37:03"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 10:37:37"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 10:37:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 10:58:52"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:00:16"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"287","reemplazantes":0,"timestamp":"2025-11-06 11:01:01"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"287","timestamp":"2025-11-06 11:01:01"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"288","reemplazantes":0,"timestamp":"2025-11-06 11:01:02"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"288","timestamp":"2025-11-06 11:01:02"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"289","reemplazantes":0,"timestamp":"2025-11-06 11:01:03"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"289","timestamp":"2025-11-06 11:01:03"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"290","reemplazantes":0,"timestamp":"2025-11-06 11:01:05"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"290","timestamp":"2025-11-06 11:01:05"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"291","reemplazantes":0,"timestamp":"2025-11-06 11:01:06"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"291","timestamp":"2025-11-06 11:01:06"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"292","reemplazantes":0,"timestamp":"2025-11-06 11:01:07"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"292","timestamp":"2025-11-06 11:01:07"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"293","reemplazantes":0,"timestamp":"2025-11-06 11:01:09"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"293","timestamp":"2025-11-06 11:01:09"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"294","reemplazantes":0,"timestamp":"2025-11-06 11:01:10"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"294","timestamp":"2025-11-06 11:01:10"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"295","reemplazantes":0,"timestamp":"2025-11-06 11:01:12"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"295","timestamp":"2025-11-06 11:01:12"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"296","reemplazantes":0,"timestamp":"2025-11-06 11:01:13"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"296","timestamp":"2025-11-06 11:01:13"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"297","reemplazantes":0,"timestamp":"2025-11-06 11:01:15"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"297","timestamp":"2025-11-06 11:01:15"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"298","reemplazantes":0,"timestamp":"2025-11-06 11:01:17"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"298","timestamp":"2025-11-06 11:01:17"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:10:31"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:10:42"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 11:10:52"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:11:26"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:12:17"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"300","reemplazantes":0,"timestamp":"2025-11-06 11:13:14"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"300","timestamp":"2025-11-06 11:13:14"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"301","reemplazantes":0,"timestamp":"2025-11-06 11:13:16"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"301","timestamp":"2025-11-06 11:13:16"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"302","reemplazantes":0,"timestamp":"2025-11-06 11:13:18"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"302","timestamp":"2025-11-06 11:13:18"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"303","reemplazantes":0,"timestamp":"2025-11-06 11:13:19"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"303","timestamp":"2025-11-06 11:13:19"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"304","reemplazantes":0,"timestamp":"2025-11-06 11:13:20"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"304","timestamp":"2025-11-06 11:13:20"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"305","reemplazantes":0,"timestamp":"2025-11-06 11:13:22"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"305","timestamp":"2025-11-06 11:13:22"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"310","reemplazantes":0,"timestamp":"2025-11-06 11:13:23"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"310","timestamp":"2025-11-06 11:13:23"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"311","reemplazantes":0,"timestamp":"2025-11-06 11:13:25"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"311","timestamp":"2025-11-06 11:13:25"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"306","reemplazantes":0,"timestamp":"2025-11-06 11:13:26"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"306","timestamp":"2025-11-06 11:13:26"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"307","reemplazantes":0,"timestamp":"2025-11-06 11:13:28"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"307","timestamp":"2025-11-06 11:13:28"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"308","reemplazantes":0,"timestamp":"2025-11-06 11:13:30"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"308","timestamp":"2025-11-06 11:13:30"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"309","reemplazantes":0,"timestamp":"2025-11-06 11:13:31"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"309","timestamp":"2025-11-06 11:13:31"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"312","reemplazantes":0,"timestamp":"2025-11-06 11:13:33"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"312","timestamp":"2025-11-06 11:13:33"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"313","reemplazantes":0,"timestamp":"2025-11-06 11:13:34"}}
+{"level":"info","message":"⏸️ Preaprobación recibida: No se envía notificación. Se enviará cuando todas las fechas estén aprobadas.","metadata":{"emp_id":"665","solicitud_id":"313","timestamp":"2025-11-06 11:13:34"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:15:05"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:15:29"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:15:33"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 11:15:43"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:15:59"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 11:16:09"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:36:03"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 11:36:13"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-06 11:36:39"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-06 11:36:49"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:59:05"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:59:07"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 11:59:50"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"315","reemplazantes":0,"timestamp":"2025-11-06 12:00:14"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:15"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"315","timestamp":"2025-11-06 12:00:16"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"316","reemplazantes":0,"timestamp":"2025-11-06 12:00:17"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:18"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"316","timestamp":"2025-11-06 12:00:19"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"317","reemplazantes":0,"timestamp":"2025-11-06 12:00:20"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:21"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"317","timestamp":"2025-11-06 12:00:21"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"318","reemplazantes":0,"timestamp":"2025-11-06 12:00:23"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:23"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"318","timestamp":"2025-11-06 12:00:24"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"319","reemplazantes":0,"timestamp":"2025-11-06 12:00:26"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:26"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"319","timestamp":"2025-11-06 12:00:27"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"320","reemplazantes":0,"timestamp":"2025-11-06 12:00:28"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:29"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"320","timestamp":"2025-11-06 12:00:30"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"321","reemplazantes":0,"timestamp":"2025-11-06 12:00:31"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:32"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"321","timestamp":"2025-11-06 12:00:33"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"328","reemplazantes":0,"timestamp":"2025-11-06 12:00:34"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:35"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"328","timestamp":"2025-11-06 12:00:35"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"322","reemplazantes":0,"timestamp":"2025-11-06 12:00:37"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:38"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"322","timestamp":"2025-11-06 12:00:38"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"323","reemplazantes":0,"timestamp":"2025-11-06 12:00:40"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:41"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"323","timestamp":"2025-11-06 12:00:41"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"324","reemplazantes":0,"timestamp":"2025-11-06 12:00:43"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:43"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"324","timestamp":"2025-11-06 12:00:44"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"325","reemplazantes":0,"timestamp":"2025-11-06 12:00:46"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:47"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"325","timestamp":"2025-11-06 12:00:47"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"326","reemplazantes":0,"timestamp":"2025-11-06 12:00:49"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:50"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"326","timestamp":"2025-11-06 12:00:50"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"327","reemplazantes":0,"timestamp":"2025-11-06 12:00:52"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:00:53"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"327","timestamp":"2025-11-06 12:00:54"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:03:34"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:04:04"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:04:10"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"335","reemplazantes":0,"timestamp":"2025-11-06 12:04:34"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:35"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"335","timestamp":"2025-11-06 12:04:36"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"334","reemplazantes":0,"timestamp":"2025-11-06 12:04:37"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:38"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"334","timestamp":"2025-11-06 12:04:39"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"330","reemplazantes":0,"timestamp":"2025-11-06 12:04:40"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:41"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"330","timestamp":"2025-11-06 12:04:42"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"336","reemplazantes":0,"timestamp":"2025-11-06 12:04:43"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:44"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"336","timestamp":"2025-11-06 12:04:45"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"331","reemplazantes":0,"timestamp":"2025-11-06 12:04:46"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:47"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"331","timestamp":"2025-11-06 12:04:47"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"332","reemplazantes":0,"timestamp":"2025-11-06 12:04:49"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:50"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"332","timestamp":"2025-11-06 12:04:50"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"333","reemplazantes":0,"timestamp":"2025-11-06 12:04:51"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:52"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"333","timestamp":"2025-11-06 12:04:52"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"337","reemplazantes":0,"timestamp":"2025-11-06 12:04:54"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:04:55"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"337","timestamp":"2025-11-06 12:04:55"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:07:20"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"340","reemplazantes":0,"timestamp":"2025-11-06 12:08:01"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:08:02"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"340","timestamp":"2025-11-06 12:08:02"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:10:35"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:10:37"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:11:08"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"345","reemplazantes":0,"timestamp":"2025-11-06 12:11:41"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:11:42"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"345","timestamp":"2025-11-06 12:11:42"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"351","reemplazantes":0,"timestamp":"2025-11-06 12:12:22"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:12:23"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"351","timestamp":"2025-11-06 12:12:23"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:17:43"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 12:17:46"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:17:46","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:17:50"}}
+{"level":"info","message":"Solicitud de vacaciones procesada","metadata":{"dias_solicitados":3,"emp_id":"665","manager_id":"63","solicitud_id":"665-1762445905170","tiene_reemplazantes":true,"timestamp":"2025-11-06 12:18:25","tipo":"A_CUENTA"}}
+{"level":"info","message":"Datos de la solicitud:","metadata":{"payload":"{\"emp_id\":\"665\",\"tipo\":\"A_CUENTA\",\"comentario\":\"festejo y nueva novia\",\"manager_id\":\"63\",\"antiguedad\":\"2\",\"detalle\":[{\"fecha\":\"2025-11-07\",\"turno\":\"COMPLETO\",\"observacion\":null},{\"fecha\":\"2025-11-28\",\"turno\":\"COMPLETO\",\"observacion\":null},{\"fecha\":\"2025-11-08\",\"turno\":\"COMPLETO\",\"observacion\":null}],\"reemplazantes\":[{\"emp_id\":\"493\",\"nombre\":\"Charvel Calderon\",\"cargo\":\"Analista de Sistemas\",\"telefono\":\"78003551\",\"tipo\":\"MISMO NIVEL\"},{\"emp_id\":\"1140\",\"nombre\":\"Sebastian Sorich\",\"cargo\":\"Analista programador\",\"telefono\":\"76688450\",\"tipo\":\"MISMO NIVEL\"}]}","solicitud_id":"665-1762445905170","timestamp":"2025-11-06 12:18:25"}}
+{"level":"info","message":"✅ Número del jefe obtenido de API","metadata":{"manager_id":"63","phone":"59175001432","timestamp":"2025-11-06 12:18:26"}}
+{"level":"info","message":"Nombre del empleado obtenido","metadata":{"emp_id":"665","nombre":"Gabriel Queso","timestamp":"2025-11-06 12:18:26"}}
+{"level":"info","message":"Teléfono del manager obtenido y codificado","metadata":{"encoded":"NzUwMDE0MzI=","manager_id":"63","phone":"75001432","timestamp":"2025-11-06 12:18:27"}}
+{"level":"info","message":"✅ Notificación de solicitud enviada al jefe con enlace","metadata":{"empleado_nombre":"Gabriel Queso","enlace":"https://hrx.minoil.com.bo/vacaciones?data=NzUwMDE0MzI=&tab=aprobar","manager_phone":"59175001432","solicitud_id":"665-1762445905170","timestamp":"2025-11-06 12:18:29"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:19:07"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:20:15"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"359","reemplazantes":2,"timestamp":"2025-11-06 12:22:00"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:22:01"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"359","timestamp":"2025-11-06 12:22:01"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"APROBADO","id_solicitud":"359","reemplazantes":2,"timestamp":"2025-11-06 12:22:41"}}
+{"level":"info","message":"✅ Número del empleado obtenido","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 12:22:42"}}
+{"level":"info","message":"✅ Notificación de aprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"359","timestamp":"2025-11-06 12:22:43"}}
+{"level":"info","message":"📄 Descargando PDF de solicitud de vacación","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_359.pdf","pdfUrl":"http://190.171.225.68/api/vacacion","solicitud_id":"359","timestamp":"2025-11-06 12:22:43"}}
+{"level":"info","message":"✅ PDF de solicitud enviado exitosamente","metadata":{"emp_id":"665","fileName":"Solicitud_Vacacion_359.pdf","solicitud_id":"359","timestamp":"2025-11-06 12:22:51"}}
+{"level":"info","message":"✅ Usando número del reemplazante del payload","metadata":{"phone_formatted":"59178003551","phone_original":"78003551","reemplazante_id":"493","reemplazante_nombre":"Charvel Calderon","timestamp":"2025-11-06 12:22:54"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"reemplazante":"Charvel Calderon","reemplazante_phone":"59178003551","solicitud_id":"359","timestamp":"2025-11-06 12:22:55"}}
+{"level":"info","message":"✅ Usando número del reemplazante del payload","metadata":{"phone_formatted":"59176688450","phone_original":"76688450","reemplazante_id":"1140","reemplazante_nombre":"Sebastian Sorich","timestamp":"2025-11-06 12:22:57"}}
+{"level":"info","message":"✅ Notificación enviada a reemplazante","metadata":{"reemplazante":"Sebastian Sorich","reemplazante_phone":"59176688450","solicitud_id":"359","timestamp":"2025-11-06 12:22:59"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:27:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:29:41"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:29:42"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 12:29:42"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:13:58"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:13:58"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:13:58"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:00"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:00"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:00"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:01"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:01"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:02"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:03"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:03"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:03"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:05"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:05"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:05"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:06"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:06"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:06"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:08"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:08"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:08"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:12"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"😊 *¡Gracias por comunicarte con RRHH!* 😊\n\nPor favor, selecciona una opción:\n\n*1.* Boleta de Pago 📑\n*2.* Solicitud de Vacaciones 🏖️\n\nEscribe el número de la opción que desees.\n","phone":"59178444740","timestamp":"2025-11-06 14:14:12"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59178444740","timestamp":"2025-11-06 14:14:12"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 14:25:37"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 14:25:54"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 14:26:01"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 14:39:04"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 15:41:17"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 15:41:50"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 15:50:19"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 15:50:41"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 15:51:38"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 15:51:39"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 15:51:39","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 15:51:42"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 15:52:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 15:54:08"}}
+{"level":"info","message":"Procesando notificación","metadata":{"estado":"PREAPROBADO","id_solicitud":"365","reemplazantes":0,"timestamp":"2025-11-06 15:55:03"}}
+{"level":"info","message":"✅ Número del empleado obtenido para preaprobación","metadata":{"emp_id":"665","phone_formatted":"59177711124","phone_original":"77711124","timestamp":"2025-11-06 15:55:04"}}
+{"level":"info","message":"✅ Notificación de preaprobación enviada al empleado","metadata":{"emp_id":"665","emp_phone":"59177711124","solicitud_id":"365","timestamp":"2025-11-06 15:55:05"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 16:14:30"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 16:14:30"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-06 16:18:39"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:18:39","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:18:46"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:21:19"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:23:24"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:23:57"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:24:30"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:35:16"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:39:19"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:43:21"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 16:46:38"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:09:10"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:09:59"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:10:06"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:11:22"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:12:04"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-06 17:59:40"}}

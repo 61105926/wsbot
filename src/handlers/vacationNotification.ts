@@ -295,6 +295,7 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
     }
 
     // 🔔 SI ES PREAPROBADO → NOTIFICAR AL EMPLEADO
+    // La notificación se envía cuando todas las fechas están preaprobadas
     if (payload.estado === 'PREAPROBADO') {
       try {
         // Obtener el número de teléfono real del empleado
@@ -326,22 +327,22 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
 
         const fechasTexto = payload.fechas?.join('\n• ') || 'Ver sistema';
 
-        const mensajePreaprobacion = `✅ *TU SOLICITUD DE VACACIONES FUE PREAPROBADA*
+        const mensajePreaprobacion = `✅ *TUS VACACIONES FUERON PREAPROBADAS*
 
 👤 *Empleado:* ${payload.emp_nombre || 'Tú'}
 📅 *Tipo:* ${payload.tipo || 'Vacaciones'}
-📆 *Días solicitados:* ${payload.dias_solicitados || 'N/A'}
+📆 *Días preaprobados:* ${payload.dias_solicitados || 'N/A'}
 
-*Fechas solicitadas:*
+*Fechas preaprobadas:*
 • ${fechasTexto}
 
 ✅ *Estado:* PREAPROBADO / REVISADO
 
 💬 *Comentario del jefe:*
-${payload.comentario || 'Tu solicitud ha sido revisada y está en proceso de aprobación final.'}
+${payload.comentario || 'Todas tus fechas han sido revisadas y preaprobadas.'}
 
 📋 *Próximos pasos:*
-Tu solicitud está siendo revisada. Recibirás una notificación cuando se complete el proceso de aprobación.
+Tu solicitud está preaprobada. Recibirás una notificación cuando se complete el proceso de aprobación final.
 
 📱 *Cualquier duda, contacta con tu supervisor*`;
 
@@ -412,15 +413,19 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
     }
 
     // Responder con éxito
+    const notificacionesEnviadas = payload.estado === 'APROBADO' 
+      ? (payload.reemplazantes?.length || 0) + 1 
+      : payload.estado === 'PREAPROBADO' 
+        ? 1  // Se envía notificación cuando todas las fechas están preaprobadas
+        : payload.estado === 'RECHAZADO'
+          ? 1
+          : 0;
+
     sendJSON(res, 200, {
       status: 'success',
       message: 'Notificaciones enviadas',
       estado: payload.estado,
-      notificaciones_enviadas: payload.estado === 'APROBADO' 
-        ? (payload.reemplazantes?.length || 0) + 1 
-        : payload.estado === 'PREAPROBADO' 
-          ? 1 
-          : 1
+      notificaciones_enviadas: notificacionesEnviadas
     });
 
   } catch (error: any) {
