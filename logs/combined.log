@@ -1179,3 +1179,97 @@
 {"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-10-24 16:53:17"}}
 {"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-10-24 16:53:27"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-10-24 16:54:09"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:40:55"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:41:06"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:43:54"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:43:54"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:48:19"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:49:13"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 21:58:24"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 21:58:34"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:02:37"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:02:37"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:08:55"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:08:55"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:13:33"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:13:33"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:19:59"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:20:09"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:20:27"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:20:32"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:20:38"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:20:50"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:21:00"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:21:12"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:21:21"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:21:31"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:21:41"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:21:44"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:21:54"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:22:04"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:28:15"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:28:25"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:28:33"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:28:43"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:28:58"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:28:58"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:30:00"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-05 22:30:08"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:30:08"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:30:08"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-05 22:30:18"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:30:44"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:30:44"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:30:58"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:30:58"}}
+{"level":"http","message":"POST /vacation-config/toggle - Toggle de vacaciones programadas","metadata":{"timestamp":"2025-11-05 22:31:00","updatedBy":"Admin Dashboard"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":false,"timestamp":"2025-11-05 22:31:00"}}
+{"level":"info","message":"Configuración de vacaciones guardada","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:31:00","updatedBy":"Admin Dashboard"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:31:03"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:31:03"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:31:37"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:31:37"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:32:14"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:32:14"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:32:31"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:32:31"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:15"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:15"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:24"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:24"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:33"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:33"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:33"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:33"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:35"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:35"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:36"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:36"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:41"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:41"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:41"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:41"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:34:57"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:34:57"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:35:47"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:35:47"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:50:43"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:50:43"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:52:49"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:52:49"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:53:32"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:53:32"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:53:38"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:53:38"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 22:57:06"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 22:57:06"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 23:00:13"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 23:00:13"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 23:07:03"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 23:07:03"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 23:14:15"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 23:14:15"}}
+{"level":"http","message":"GET /vacation-config - Obteniendo configuración de vacaciones","metadata":{"timestamp":"2025-11-05 23:15:06"}}
+{"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-11-05 23:15:06"}}

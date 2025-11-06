@@ -2,6 +2,7 @@ import { Bot } from './bot.interface';
 import { sendJSON, asyncHandler } from '../utils/response';
 import { logger } from '../utils/logger';
 import { getUserByID } from '../services/getUserByID';
+import { IS_DEVELOPMENT } from '../config/config';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -16,7 +17,7 @@ interface NotificationPayload {
   id_solicitud: string;
   emp_id: string;
   emp_nombre?: string;
-  estado: 'APROBADO' | 'RECHAZADO';
+  estado: 'APROBADO' | 'RECHAZADO' | 'PREAPROBADO';
   comentario?: string;
   tipo?: string;
   dias_solicitados?: number;
@@ -214,48 +215,59 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
 
 📱 *Cualquier duda, contacta con tu supervisor*`;
 
-            // Usar el número de teléfono del reemplazante que viene en el payload
-            let reemplazantePhone = '59177711124'; // Fallback para demo
+            // Usar el número de teléfono del reemplazante (o número de prueba en desarrollo)
+            let reemplazantePhone = '59161105926'; // Fallback para desarrollo
             
-            // 1. Primero intentar usar el número que viene en el payload
-            if (reemplazante.telefono) {
-              const phoneNumber = reemplazante.telefono;
-              // Formatear el número correctamente
-              if (phoneNumber.startsWith('591')) {
-                reemplazantePhone = phoneNumber;
-              } else if (phoneNumber.startsWith('+591')) {
-                reemplazantePhone = phoneNumber.substring(1); // Quitar el +
-              } else {
-                reemplazantePhone = `591${phoneNumber}`;
-              }
-              logger.info('✅ Usando número del reemplazante del payload', {
+            if (IS_DEVELOPMENT) {
+              // En desarrollo, usar siempre el número de prueba
+              reemplazantePhone = '59161105926';
+              logger.info('📱 MODO DESARROLLO: Usando número de prueba para reemplazante', {
                 reemplazante_id: reemplazante.emp_id,
                 reemplazante_nombre: reemplazante.nombre,
-                phone_original: phoneNumber,
-                phone_formatted: reemplazantePhone
+                phone: reemplazantePhone
               });
             } else {
-              // 2. Si no hay número en el payload, obtener de la API
-              try {
-                const reemplazanteData = await getUserByID(reemplazante.emp_id);
-                if (Array.isArray(reemplazanteData) && reemplazanteData.length > 0) {
-                  const reemplazanteUser = reemplazanteData.find((item: any) => item.data?.empID === reemplazante.emp_id);
-                  if (reemplazanteUser?.data?.phone) {
-                    // Asegurar que el número tenga el prefijo 591
-                    const phoneNumber = reemplazanteUser.data.phone;
-                    reemplazantePhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
-                    logger.info('✅ Número del reemplazante obtenido de API', {
-                      reemplazante_id: reemplazante.emp_id,
-                      phone_original: phoneNumber,
-                      phone_formatted: reemplazantePhone
-                    });
-                  }
+              // En producción, obtener el número real del reemplazante
+              // 1. Primero intentar usar el número que viene en el payload
+              if (reemplazante.telefono) {
+                const phoneNumber = reemplazante.telefono;
+                // Formatear el número correctamente
+                if (phoneNumber.startsWith('591')) {
+                  reemplazantePhone = phoneNumber;
+                } else if (phoneNumber.startsWith('+591')) {
+                  reemplazantePhone = phoneNumber.substring(1); // Quitar el +
+                } else {
+                  reemplazantePhone = `591${phoneNumber}`;
                 }
-              } catch (error: any) {
-                logger.warn('No se pudo obtener el número del reemplazante, usando fallback', {
+                logger.info('✅ Usando número del reemplazante del payload', {
                   reemplazante_id: reemplazante.emp_id,
-                  error: error.message
+                  reemplazante_nombre: reemplazante.nombre,
+                  phone_original: phoneNumber,
+                  phone_formatted: reemplazantePhone
                 });
+              } else {
+                // 2. Si no hay número en el payload, obtener de la API
+                try {
+                  const reemplazanteData = await getUserByID(reemplazante.emp_id);
+                  if (Array.isArray(reemplazanteData) && reemplazanteData.length > 0) {
+                    const reemplazanteUser = reemplazanteData.find((item: any) => item.data?.empID === reemplazante.emp_id);
+                    if (reemplazanteUser?.data?.phone) {
+                      // Asegurar que el número tenga el prefijo 591
+                      const phoneNumber = reemplazanteUser.data.phone;
+                      reemplazantePhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+                      logger.info('✅ Número del reemplazante obtenido de API', {
+                        reemplazante_id: reemplazante.emp_id,
+                        phone_original: phoneNumber,
+                        phone_formatted: reemplazantePhone
+                      });
+                    }
+                  }
+                } catch (error: any) {
+                  logger.warn('No se pudo obtener el número del reemplazante, usando fallback', {
+                    reemplazante_id: reemplazante.emp_id,
+                    error: error.message
+                  });
+                }
               }
             }
 
@@ -279,6 +291,73 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
             // Continuar con los demás
           }
         }
+      }
+    }
+
+    // 🔔 SI ES PREAPROBADO → NOTIFICAR AL EMPLEADO
+    if (payload.estado === 'PREAPROBADO') {
+      try {
+        // Obtener el número de teléfono real del empleado
+        let empPhone = '59177711124'; // Fallback para demo
+        if (IS_DEVELOPMENT) {
+          empPhone = '59161105926';
+        } else {
+          try {
+            const empData = await getUserByID(payload.emp_id);
+            if (Array.isArray(empData) && empData.length > 0) {
+              const empleado = empData.find((item: any) => item.data?.empID === payload.emp_id);
+              if (empleado?.data?.phone) {
+                const phoneNumber = empleado.data.phone;
+                empPhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
+                logger.info('✅ Número del empleado obtenido para preaprobación', {
+                  emp_id: payload.emp_id,
+                  phone_original: phoneNumber,
+                  phone_formatted: empPhone
+                });
+              }
+            }
+          } catch (error: any) {
+            logger.warn('No se pudo obtener el número del empleado, usando fallback', {
+              emp_id: payload.emp_id,
+              error: error.message
+            });
+          }
+        }
+
+        const fechasTexto = payload.fechas?.join('\n• ') || 'Ver sistema';
+
+        const mensajePreaprobacion = `✅ *TU SOLICITUD DE VACACIONES FUE PREAPROBADA*
+
+👤 *Empleado:* ${payload.emp_nombre || 'Tú'}
+📅 *Tipo:* ${payload.tipo || 'Vacaciones'}
+📆 *Días solicitados:* ${payload.dias_solicitados || 'N/A'}
+
+*Fechas solicitadas:*
+• ${fechasTexto}
+
+✅ *Estado:* PREAPROBADO / REVISADO
+
+💬 *Comentario del jefe:*
+${payload.comentario || 'Tu solicitud ha sido revisada y está en proceso de aprobación final.'}
+
+📋 *Próximos pasos:*
+Tu solicitud está siendo revisada. Recibirás una notificación cuando se complete el proceso de aprobación.
+
+📱 *Cualquier duda, contacta con tu supervisor*`;
+
+        await bot.sendMessage(empPhone, mensajePreaprobacion, {});
+
+        logger.info('✅ Notificación de preaprobación enviada al empleado', {
+          emp_id: payload.emp_id,
+          emp_phone: empPhone,
+          solicitud_id: payload.id_solicitud
+        });
+
+      } catch (whatsappError: any) {
+        logger.error('❌ Error al enviar notificación de preaprobación', {
+          error: whatsappError.message,
+          emp_id: payload.emp_id
+        });
       }
     }
 
@@ -337,7 +416,11 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
       status: 'success',
       message: 'Notificaciones enviadas',
       estado: payload.estado,
-      notificaciones_enviadas: payload.estado === 'APROBADO' ? payload.reemplazantes?.length || 0 : 1
+      notificaciones_enviadas: payload.estado === 'APROBADO' 
+        ? (payload.reemplazantes?.length || 0) + 1 
+        : payload.estado === 'PREAPROBADO' 
+          ? 1 
+          : 1
     });
 
   } catch (error: any) {

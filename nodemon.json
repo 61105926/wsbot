@@ -9,5 +9,5 @@
     "**/*.db",
     "**/*.png"
   ],
-  "exec": "ts-node"
+  "exec": "tsx"
 }

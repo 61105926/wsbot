@@ -36,7 +36,9 @@ import cors from "cors";
 
 const main = async () => {
   
-
+  const adapterProvider = createProvider(BaileysProvider, {
+    version: [2, 3000, 1025190524] as any
+})
   const provider = createProvider(BaileysProvider, {
 
   version: [2, 3000, 1025190524],
@@ -46,7 +48,7 @@ const main = async () => {
   timeRelease: 86400000 // Cleans up data every 24 hours (in milliseconds)
 });
   // Registrar provider para trackear conexión
-  connectionStatus.setProvider(provider);
+  connectionStatus.setProvider(adapterProvider);
 
   const { httpServer, handleCtx } = await createBot({
     flow: createFlow([
