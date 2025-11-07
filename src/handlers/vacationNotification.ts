@@ -115,18 +115,128 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
           solicitud_id: payload.id_solicitud
         });
 
-        // 📄 ENVIAR PDF DE LA SOLICITUD DE VACACIÓN
+        // 📄 GENERAR Y ENVIAR BOLETA DE VACACIÓN
         try {
-          const pdfUrl = 'http://190.171.225.68/api/vacacion';
-          const fileName = `Solicitud_Vacacion_${payload.id_solicitud}.pdf`;
-          const pdfPath = path.join(__dirname, '../../tmp', fileName);
-          
-          logger.info('📄 Descargando PDF de solicitud de vacación', {
-            pdfUrl,
+          logger.info('📄 Generando boleta de vacación', {
             emp_id: payload.emp_id,
-            solicitud_id: payload.id_solicitud,
-            fileName
+            solicitud_id: payload.id_solicitud
           });
+
+          // Obtener datos completos del empleado
+          let employeeData: any = null;
+          try {
+            const empData = await getUserByID(payload.emp_id);
+            if (Array.isArray(empData) && empData.length > 0) {
+              employeeData = empData.find((item: any) => item.data?.empID === payload.emp_id)?.data;
+            }
+          } catch (err: any) {
+            logger.warn('No se pudieron obtener datos completos del empleado', {
+              emp_id: payload.emp_id,
+              error: err.message
+            });
+          }
+
+          // Obtener datos de la solicitud desde la API
+          let solicitudData: any = null;
+          try {
+            const solicitudResponse = await axios.get(`http://190.171.225.68/api/vacacion-data-empleado?emp_id=${payload.emp_id}`);
+            if (solicitudResponse.data?.success && Array.isArray(solicitudResponse.data.data)) {
+              solicitudData = solicitudResponse.data.data.find((s: any) => String(s.id_solicitud) === String(payload.id_solicitud));
+            }
+          } catch (err: any) {
+            logger.warn('No se pudieron obtener datos completos de la solicitud', {
+              solicitud_id: payload.id_solicitud,
+              error: err.message
+            });
+          }
+
+          // Validar y formatear FechaIngreso
+          let fechaIngreso = employeeData?.fecha_ingreso || employeeData?.FechaIngreso || employeeData?.fecha_ingreso_empleado;
+          if (!fechaIngreso || fechaIngreso === 'N/A' || fechaIngreso === '') {
+            // Si no hay fecha de ingreso, usar una fecha por defecto (1 año atrás desde hoy)
+            const fechaDefault = new Date();
+            fechaDefault.setFullYear(fechaDefault.getFullYear() - 1);
+            fechaIngreso = fechaDefault.toISOString().split('T')[0];
+            logger.warn('No se encontró fecha de ingreso, usando fecha por defecto', { fechaIngreso });
+          } else {
+            // Asegurar que la fecha esté en formato YYYY-MM-DD
+            try {
+              const fechaParsed = new Date(fechaIngreso);
+              if (isNaN(fechaParsed.getTime())) {
+                throw new Error('Fecha inválida');
+              }
+              fechaIngreso = fechaParsed.toISOString().split('T')[0];
+              logger.info('Fecha de ingreso formateada', { fechaIngreso });
+            } catch (e) {
+              // Si no se puede parsear, usar fecha por defecto
+              const fechaDefault = new Date();
+              fechaDefault.setFullYear(fechaDefault.getFullYear() - 1);
+              fechaIngreso = fechaDefault.toISOString().split('T')[0];
+              logger.warn('Error al parsear fecha de ingreso, usando fecha por defecto', { fechaIngreso });
+            }
+          }
+
+          // Construir payload para la boleta
+          const boletaPayload: any = {
+            Codigo: employeeData?.codigo || payload.emp_id,
+            Empleado: payload.emp_nombre || employeeData?.fullName || `Empleado ${payload.emp_id}`,
+            Cargo: employeeData?.cargo || 'N/A',
+            Departamento: employeeData?.departamento || employeeData?.dept || 'N/A',
+            FechaIngreso: fechaIngreso, // Ahora siempre será una fecha válida
+            FechaSolicitud: solicitudData?.fecha_solicitud || new Date().toISOString().split('T')[0],
+            Estado: 'Autorizado',
+            Observaciones: payload.comentario || 'Vacación aprobada',
+            detalle: []
+          };
+
+          // Agrupar fechas consecutivas en el detalle
+          if (payload.fechas && payload.fechas.length > 0) {
+            const fechasOrdenadas = [...payload.fechas].sort();
+            let grupoInicio = fechasOrdenadas[0];
+            let grupoFin = fechasOrdenadas[0];
+
+            for (let i = 1; i < fechasOrdenadas.length; i++) {
+              const fechaActual = new Date(fechasOrdenadas[i]);
+              const fechaAnterior = new Date(fechasOrdenadas[i - 1]);
+              const diferenciaDias = (fechaActual.getTime() - fechaAnterior.getTime()) / (1000 * 60 * 60 * 24);
+
+              if (diferenciaDias === 1) {
+                // Fecha consecutiva, extender el grupo
+                grupoFin = fechasOrdenadas[i];
+              } else {
+                // Nueva secuencia, guardar el grupo anterior
+                const dias = (new Date(grupoFin).getTime() - new Date(grupoInicio).getTime()) / (1000 * 60 * 60 * 24) + 1;
+                boletaPayload.detalle.push({
+                  Desde: grupoInicio,
+                  Hasta: grupoFin,
+                  Dias: dias,
+                  Tipo: payload.tipo === 'PROGRAMADA' ? 'Vacación' : payload.tipo || 'Vacación'
+                });
+                grupoInicio = fechasOrdenadas[i];
+                grupoFin = fechasOrdenadas[i];
+              }
+            }
+
+            // Agregar el último grupo
+            const dias = (new Date(grupoFin).getTime() - new Date(grupoInicio).getTime()) / (1000 * 60 * 60 * 24) + 1;
+            boletaPayload.detalle.push({
+              Desde: grupoInicio,
+              Hasta: grupoFin,
+              Dias: dias,
+              Tipo: payload.tipo === 'PROGRAMADA' ? 'Vacación' : payload.tipo || 'Vacación'
+            });
+          }
+
+          logger.info('📄 Payload de boleta construido', {
+            codigo: boletaPayload.Codigo,
+            empleado: boletaPayload.Empleado,
+            detalle_count: boletaPayload.detalle.length
+          });
+
+          // Generar PDF usando GET (la API solo acepta GET)
+          const pdfUrl = 'http://190.171.225.68/api/vacacion';
+          const fileName = `Boleta_Vacacion_${payload.id_solicitud}.pdf`;
+          const pdfPath = path.join(__dirname, '../../tmp', fileName);
 
           // Crear directorio tmp si no existe
           const tmpDir = path.dirname(pdfPath);
@@ -134,10 +244,25 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
             fs.mkdirSync(tmpDir, { recursive: true });
           }
 
-          // Descargar PDF
+          // Construir URL con parámetros de consulta
+          const queryParams = [
+            `Codigo=${encodeURIComponent(boletaPayload.Codigo)}`,
+            `Empleado=${encodeURIComponent(boletaPayload.Empleado)}`,
+            `Cargo=${encodeURIComponent(boletaPayload.Cargo)}`,
+            `Departamento=${encodeURIComponent(boletaPayload.Departamento)}`,
+            `FechaIngreso=${encodeURIComponent(boletaPayload.FechaIngreso)}`,
+            `FechaSolicitud=${encodeURIComponent(boletaPayload.FechaSolicitud)}`,
+            `Estado=${encodeURIComponent(boletaPayload.Estado)}`,
+            `Observaciones=${encodeURIComponent(boletaPayload.Observaciones)}`,
+            `detalle=${encodeURIComponent(JSON.stringify(boletaPayload.detalle))}`
+          ].join('&');
+
+          const urlWithParams = `${pdfUrl}?${queryParams}`;
+
+          // Generar PDF con GET
           const pdfResponse = await axios({
             method: 'GET',
-            url: pdfUrl,
+            url: urlWithParams,
             responseType: 'stream',
             timeout: 30000 // 30 segundos
           });
@@ -151,11 +276,11 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
           });
 
           // Enviar el PDF como documento
-          await bot.sendMessage(empPhone, '📄 *Documento de solicitud de vacación aprobada*', { 
+          await bot.sendMessage(empPhone, '📄 *Boleta de vacación aprobada*\n\nTu solicitud de vacaciones ha sido autorizada. Adjunto encontrarás la boleta oficial.', { 
             media: pdfPath 
           });
 
-          logger.info('✅ PDF de solicitud enviado exitosamente', {
+          logger.info('✅ Boleta de vacación enviada exitosamente', {
             emp_id: payload.emp_id,
             solicitud_id: payload.id_solicitud,
             fileName
@@ -172,12 +297,12 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
           }
 
         } catch (pdfError: any) {
-          logger.error('❌ Error al enviar PDF de solicitud', {
+          logger.error('❌ Error al generar/enviar boleta de vacación', {
             error: pdfError.message,
             emp_id: payload.emp_id,
             solicitud_id: payload.id_solicitud
           });
-          // No fallar la operación si el PDF no se puede enviar
+          // No fallar la operación si la boleta no se puede enviar
         }
 
         // Esperar 3 segundos antes de enviar a reemplazantes
