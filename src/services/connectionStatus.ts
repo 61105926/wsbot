@@ -22,20 +22,23 @@ class ConnectionStatus {
 
     // Escuchar eventos de conexión del provider
     try {
-      // Baileys emite eventos de actualización de conexión
-      provider.on('connection.update', (update: any) => {
-        // Cuando la conexión está abierta
-        if (update.connection === 'open') {
-          this.connected = true;
-          loggers.whatsappConnected();
-        }
+      // Verificar si el provider tiene el método on antes de usarlo
+      if (provider && typeof provider.on === 'function') {
+        // Baileys emite eventos de actualización de conexión
+        provider.on('connection.update', (update: any) => {
+          // Cuando la conexión está abierta
+          if (update.connection === 'open') {
+            this.connected = true;
+            loggers.whatsappConnected();
+          }
 
-        // Cuando se cierra la conexión
-        if (update.connection === 'close') {
-          this.connected = false;
-          loggers.whatsappDisconnected();
-        }
-      });
+          // Cuando se cierra la conexión
+          if (update.connection === 'close') {
+            this.connected = false;
+            loggers.whatsappDisconnected();
+          }
+        });
+      }
 
       // Fallback: si no hay eventos después de 10 segundos, asumir conectado
       setTimeout(() => {
@@ -47,6 +50,7 @@ class ConnectionStatus {
 
     } catch (error) {
       // Si hay error escuchando eventos, usar fallback con timeout
+      console.warn('Warning: Could not set up connection status listener:', error);
       setTimeout(() => {
         this.connected = true;
         loggers.whatsappConnected();
