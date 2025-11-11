@@ -55,7 +55,12 @@ process.on('SIGINT', () => {
 const main = async () => {
   try {
     console.info("Using Baileys Sherpa provider");
-    const adapterProvider = createProvider(Provider)
+    const adapterProvider = createProvider(Provider, {
+      version: [2, 3000, 1025190524],
+      browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
+      experimentalStore: true, // Significantly reduces resource consumption
+      timeRelease: 86400000 // Cleans up data every 24 hours (in milliseconds)
+  })
     const provider = adapterProvider;
 
     // Registrar provider para trackear conexión

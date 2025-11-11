@@ -1713,3 +1713,16 @@
 {"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"_event_media__90d471f5-4c76-4daa-b488-8dda6dd4e3d6","phone":"59177757416","timestamp":"2025-11-11 12:30:36"}}
 {"level":"warn","message":"Opción de menú inválida","metadata":{"option":"_event_media__90d471f5-4c76-4daa-b488-8dda6dd4e3d6","phone":"59177757416","timestamp":"2025-11-11 12:30:36"}}
 {"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59177757416","timestamp":"2025-11-11 12:30:36"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:05:47"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:05:48"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:08:22"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:41:36"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-11 15:41:46"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:42:24"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:42:45"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:43:12"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:45:18"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:46:15"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-11 15:46:25"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-11 15:47:22"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-11 15:47:32"}}
