@@ -145,11 +145,17 @@ export const loggers = {
     logger.http(`Llamada a API externa`, { url, method });
   },
 
-  externalApiError: (url: string, error: any) => {
-    logger.error(`Error en API externa`, {
+  externalApiError: (url: string, error: any, level: 'error' | 'debug' = 'error') => {
+    const logData = {
       url,
       error: error.message || error,
       stack: error.stack,
-    });
+    };
+    
+    if (level === 'debug') {
+      logger.debug(`Error en API externa (no crítico)`, logData);
+    } else {
+      logger.error(`Error en API externa`, logData);
+    }
   },
 };

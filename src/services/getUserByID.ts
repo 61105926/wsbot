@@ -12,10 +12,26 @@ export async function getUserByID(empID: string) {
     const url = `${API_CONFIG.SURVEY_API}?empID=${empID}`;
     loggers.externalApiCall(url, 'GET');
 
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      timeout: 5000 // Timeout de 5 segundos
+    });
     return response.data;
   } catch (error: any) {
-    loggers.externalApiError(API_CONFIG.SURVEY_API, error);
+    // Verificar si es un error no crítico (rate limiting, timeout, etc.)
+    const isNonCriticalError = error?.code === 'ECONNABORTED' || // Timeout
+                              error?.code === 'ETIMEDOUT' ||
+                              error?.response?.status === 429 || // Rate limit
+                              error?.response?.status === 503 || // Service unavailable
+                              error?.response?.status === 504; // Gateway timeout
+    
+    if (isNonCriticalError) {
+      // Solo registrar como debug para errores no críticos
+      loggers.externalApiError(API_CONFIG.SURVEY_API, error, 'debug');
+    } else {
+      // Registrar como error para errores críticos
+      loggers.externalApiError(API_CONFIG.SURVEY_API, error);
+    }
+    
     throw new ExternalAPIError(
       'Error al obtener usuario por ID',
       error
