@@ -77,37 +77,12 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
 
     // 🔔 NOTIFICACIÓN AL JEFE POR WHATSAPP
     // Obtener el número real del jefe (o usar número de prueba en desarrollo)
-    let managerPhone = '59161105926'; // Fallback para desarrollo
-    if (IS_DEVELOPMENT) {
-      // En desarrollo, usar siempre el número de prueba
-      managerPhone = '59161105926';
-      logger.info('📱 MODO DESARROLLO: Usando número de prueba para jefe', {
-        manager_id: payload.manager_id,
-        phone: managerPhone
-      });
-    } else {
-      // En producción, obtener el número real del jefe
-      try {
-        const managerData = await getUserByID(payload.manager_id);
-        if (Array.isArray(managerData) && managerData.length > 0) {
-          const manager = managerData.find((item: any) => item.data?.empID === payload.manager_id);
-          if (manager?.data?.phone) {
-            // Asegurar que el número tenga el prefijo 591
-            const phoneNumber = manager.data.phone;
-            managerPhone = phoneNumber.startsWith('591') ? phoneNumber : `591${phoneNumber}`;
-            logger.info('✅ Número del jefe obtenido de API', {
-              manager_id: payload.manager_id,
-              phone: managerPhone
-            });
-          }
-        }
-      } catch (error: any) {
-        logger.warn('No se pudo obtener el número del jefe, usando fallback', {
-          manager_id: payload.manager_id,
-          error: error.message
-        });
-      }
-    }
+    // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
+    const managerPhone = '59161105926'; // Número de prueba
+    logger.info('📱 MODO PRUEBA: Enviando notificación al jefe al número de prueba', {
+      manager_id: payload.manager_id,
+      phone: managerPhone
+    });
 
     // Verificar que el bot esté disponible antes de enviar mensajes
     if (!bot) {
