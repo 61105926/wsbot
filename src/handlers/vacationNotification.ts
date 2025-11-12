@@ -47,8 +47,20 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
       tipo: payload?.tipo,
       tiene_fechas: payload?.fechas ? payload.fechas.length : 0,
       tiene_reemplazantes: payload?.reemplazantes ? payload.reemplazantes.length : 0,
+      es_programada: payload?.tipo === 'PROGRAMADA',
       payload_completo: JSON.stringify(payload, null, 2)
     });
+    
+    // Log crítico para PROGRAMADA
+    if (payload?.tipo === 'PROGRAMADA') {
+      logger.info('🚨🚨🚨 PAYLOAD PROGRAMADA RECIBIDO 🚨🚨🚨', {
+        id_solicitud: payload.id_solicitud,
+        emp_id: payload.emp_id,
+        estado: payload.estado,
+        tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+        reemplazantes: payload.reemplazantes ? JSON.stringify(payload.reemplazantes) : 'NINGUNO'
+      });
+    }
 
     // Validar que el bot esté disponible
     if (!bot) {
@@ -80,17 +92,42 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
       tipo: payload.tipo,
       dias_solicitados: payload.dias_solicitados,
       fechas_count: payload.fechas?.length || 0,
-      reemplazantes: payload.reemplazantes?.length || 0
+      reemplazantes: payload.reemplazantes?.length || 0,
+      es_programada: payload.tipo === 'PROGRAMADA'
     });
+    
+    // Log específico para PROGRAMADA
+    if (payload.tipo === 'PROGRAMADA') {
+      logger.info('🔔 NOTIFICACIÓN PROGRAMADA - Iniciando proceso de notificación', {
+        id_solicitud: payload.id_solicitud,
+        emp_id: payload.emp_id,
+        tiene_reemplazantes: payload.reemplazantes?.length || 0,
+        bot_disponible: !!bot
+      });
+    }
 
     // 🔔 SI ES APROBADO → NOTIFICAR AL EMPLEADO Y A LOS REEMPLAZANTES
     if (payload.estado === 'APROBADO') {
+      
+      // Log crítico para PROGRAMADA aprobada
+      if (payload.tipo === 'PROGRAMADA') {
+        logger.info('🚨🚨🚨 VACACIÓN PROGRAMADA APROBADA - INICIANDO NOTIFICACIONES 🚨🚨🚨', {
+          id_solicitud: payload.id_solicitud,
+          emp_id: payload.emp_id,
+          emp_nombre: payload.emp_nombre,
+          tiene_fechas: payload.fechas ? payload.fechas.length : 0,
+          tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+          fechas: payload.fechas ? JSON.stringify(payload.fechas) : 'NINGUNA'
+        });
+      }
 
       // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
       const empPhone = '59161105926'; // Número de prueba
       logger.info('📱 MODO PRUEBA: Enviando notificación al número de prueba', {
         emp_id: payload.emp_id,
-        phone: empPhone
+        phone: empPhone,
+        tipo: payload.tipo,
+        es_programada: payload.tipo === 'PROGRAMADA'
       });
 
       // 1. Notificar al EMPLEADO que su solicitud fue aprobada
@@ -100,7 +137,7 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
         const mensajeEmpleado = `✅ *TU SOLICITUD DE VACACIONES FUE APROBADA*
 
 👤 *Empleado:* ${payload.emp_nombre || 'Tú'}
-📅 *Tipo:* ${payload.tipo || 'Vacaciones'}
+📅 *Tipo:* ${payload.tipo === 'PROGRAMADA' ? 'Vacación Programada' : (payload.tipo || 'Vacaciones')}
 📆 *Días aprobados:* ${payload.dias_solicitados || 'N/A'}
 
 *Fechas aprobadas:*
@@ -114,13 +151,34 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
 
 📱 Cualquier duda, contacta con tu supervisor`;
 
+        logger.info('📤 Enviando mensaje de aprobación al empleado', {
+          emp_id: payload.emp_id,
+          emp_phone: empPhone,
+          tipo: payload.tipo,
+          es_programada: payload.tipo === 'PROGRAMADA',
+          mensaje_length: mensajeEmpleado.length,
+          tiene_fechas: payload.fechas ? payload.fechas.length : 0
+        });
+
         await bot.sendMessage(empPhone, mensajeEmpleado, {});
 
         logger.info('✅ Notificación de aprobación enviada al empleado', {
           emp_id: payload.emp_id,
           emp_phone: empPhone,
-          solicitud_id: payload.id_solicitud
+          solicitud_id: payload.id_solicitud,
+          tipo: payload.tipo,
+          es_programada: payload.tipo === 'PROGRAMADA',
+          mensaje_enviado: true
         });
+        
+        // Log específico para PROGRAMADA
+        if (payload.tipo === 'PROGRAMADA') {
+          logger.info('✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA AL EMPLEADO ✅✅✅', {
+            id_solicitud: payload.id_solicitud,
+            emp_id: payload.emp_id,
+            emp_phone: empPhone
+          });
+        }
 
         // 📄 GENERAR Y ENVIAR BOLETA DE VACACIÓN
         try {
@@ -330,20 +388,28 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
             fs.mkdirSync(tmpDir, { recursive: true });
           }
 
-          // Construir URL con parámetros de consulta
-          const queryParams = [
-            `Codigo=${encodeURIComponent(boletaPayload.Codigo)}`,
-            `Empleado=${encodeURIComponent(boletaPayload.Empleado)}`,
-            `Cargo=${encodeURIComponent(boletaPayload.Cargo)}`,
-            `Departamento=${encodeURIComponent(boletaPayload.Departamento)}`,
-            `FechaIngreso=${encodeURIComponent(boletaPayload.FechaIngreso)}`,
-            `FechaSolicitud=${encodeURIComponent(boletaPayload.FechaSolicitud)}`,
-            `Estado=${encodeURIComponent(boletaPayload.Estado)}`,
-            `Observaciones=${encodeURIComponent(boletaPayload.Observaciones)}`,
-            `detalle=${encodeURIComponent(JSON.stringify(boletaPayload.detalle))}`
-          ].join('&');
+          // Construir URL con parámetros de consulta usando URLSearchParams
+          // El servidor espera que detalle sea un array en formato detalle[0][Desde], detalle[0][Hasta], etc.
+          const params = new URLSearchParams();
+          params.append('Codigo', String(boletaPayload.Codigo));
+          params.append('Empleado', String(boletaPayload.Empleado));
+          params.append('Cargo', String(boletaPayload.Cargo));
+          params.append('Departamento', String(boletaPayload.Departamento));
+          params.append('FechaIngreso', String(boletaPayload.FechaIngreso));
+          params.append('FechaSolicitud', String(boletaPayload.FechaSolicitud));
+          params.append('Estado', String(boletaPayload.Estado));
+          params.append('Observaciones', String(boletaPayload.Observaciones));
+          
+          // Agregar cada elemento del detalle como parámetros separados
+          // Formato: detalle[0][Desde]=...&detalle[0][Hasta]=...&detalle[0][Dias]=...&detalle[0][Tipo]=...
+          boletaPayload.detalle.forEach((item: any, index: number) => {
+            params.append(`detalle[${index}][Desde]`, String(item.Desde));
+            params.append(`detalle[${index}][Hasta]`, String(item.Hasta));
+            params.append(`detalle[${index}][Dias]`, String(item.Dias));
+            params.append(`detalle[${index}][Tipo]`, String(item.Tipo));
+          });
 
-          const urlWithParams = `${pdfUrl}?${queryParams}`;
+          const urlWithParams = `${pdfUrl}?${params.toString()}`;
 
           logger.info('📄 Llamando a API para generar PDF', {
             url: pdfUrl,
@@ -443,51 +509,6 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
             fileName
           });
 
-          // 📄 ENVIAR BOLETA AL JEFE/MANAGER TAMBIÉN
-          // MODO PRUEBA: Enviar al número de prueba
-          const managerPhone = '59161105926'; // Número de prueba
-          try {
-            // Leer el archivo PDF nuevamente para enviarlo al manager
-            const pdfBuffer = fs.readFileSync(pdfPath);
-            const managerPdfPath = path.join(__dirname, '../../tmp', `Boleta_Manager_${payload.id_solicitud}.pdf`);
-            
-            // Crear una copia del PDF para el manager
-            fs.writeFileSync(managerPdfPath, pdfBuffer);
-            
-            const mensajeJefe = `📄 *Boleta de Vacación - ${payload.emp_nombre || 'Empleado'}*\n\n` +
-              `Has aprobado la solicitud de vacaciones.\n` +
-              `Adjunto encontrarás la boleta oficial para imprimir.\n\n` +
-              `👤 *Empleado:* ${payload.emp_nombre || 'N/A'}\n` +
-              `📅 *Días:* ${payload.dias_solicitados || 'N/A'}\n` +
-              `📆 *Tipo:* ${payload.tipo || 'Vacaciones'}`;
-
-            await bot.sendMessage(managerPhone, mensajeJefe, { 
-              media: managerPdfPath 
-            });
-
-            logger.info('✅ Boleta de vacación enviada exitosamente al jefe/manager', {
-              manager_phone: managerPhone,
-              solicitud_id: payload.id_solicitud,
-              fileName: `Boleta_Manager_${payload.id_solicitud}.pdf`
-            });
-
-            // Eliminar archivo temporal del manager
-            try {
-              if (fs.existsSync(managerPdfPath)) {
-                fs.unlinkSync(managerPdfPath);
-                logger.debug(`Archivo temporal del manager eliminado: Boleta_Manager_${payload.id_solicitud}.pdf`);
-              }
-            } catch (e) {
-              logger.warn(`No se pudo eliminar archivo temporal del manager: Boleta_Manager_${payload.id_solicitud}.pdf`, e);
-            }
-          } catch (managerError: any) {
-            logger.error('❌ Error al enviar boleta al jefe/manager', {
-              error: managerError.message,
-              solicitud_id: payload.id_solicitud
-            });
-            // No fallar la operación si falla el envío al manager
-          }
-
           // Eliminar archivo temporal del empleado
           try {
             if (fs.existsSync(pdfPath)) {
@@ -521,7 +542,27 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
       }
 
       // 2. Notificar a los REEMPLAZANTES
+      logger.info('🔔 Verificando reemplazantes para notificación', {
+        tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+        tipo: payload.tipo,
+        es_programada: payload.tipo === 'PROGRAMADA',
+        reemplazantes: payload.reemplazantes ? JSON.stringify(payload.reemplazantes) : 'NINGUNO'
+      });
+      
+      // Log específico para PROGRAMADA
+      if (payload.tipo === 'PROGRAMADA') {
+        logger.info('🔔🔔🔔 VERIFICANDO REEMPLAZANTES PARA PROGRAMADA 🔔🔔🔔', {
+          tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+          reemplazantes: payload.reemplazantes ? JSON.stringify(payload.reemplazantes) : 'NINGUNO'
+        });
+      }
+      
       if (payload.reemplazantes && payload.reemplazantes.length > 0) {
+        logger.info('✅ Reemplazantes encontrados, enviando notificaciones', {
+          cantidad: payload.reemplazantes.length,
+          tipo: payload.tipo,
+          es_programada: payload.tipo === 'PROGRAMADA'
+        });
         for (const reemplazante of payload.reemplazantes) {
           try {
             const fechasTexto = payload.fechas?.join('\n• ') || 'Ver sistema';
@@ -559,8 +600,19 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
             logger.info('✅ Notificación enviada a reemplazante', {
               reemplazante: reemplazante.nombre,
               reemplazante_phone: reemplazantePhone,
-              solicitud_id: payload.id_solicitud
+              solicitud_id: payload.id_solicitud,
+              tipo: payload.tipo,
+              es_programada: payload.tipo === 'PROGRAMADA'
             });
+            
+            // Log específico para PROGRAMADA
+            if (payload.tipo === 'PROGRAMADA') {
+              logger.info('✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA A REEMPLAZANTE ✅✅✅', {
+                reemplazante: reemplazante.nombre,
+                reemplazante_id: reemplazante.emp_id,
+                reemplazante_phone: reemplazantePhone
+              });
+            }
 
             // Esperar 2 segundos entre mensajes
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -572,6 +624,21 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
             });
             // Continuar con los demás
           }
+        }
+      } else {
+        // Log cuando NO hay reemplazantes
+        logger.info('ℹ️ No hay reemplazantes para notificar', {
+          tipo: payload.tipo,
+          es_programada: payload.tipo === 'PROGRAMADA',
+          id_solicitud: payload.id_solicitud
+        });
+        
+        // Log específico para PROGRAMADA sin reemplazantes
+        if (payload.tipo === 'PROGRAMADA') {
+          logger.info('ℹ️ℹ️ℹ️ PROGRAMADA SIN REEMPLAZANTES - NO SE ENVIARÁN NOTIFICACIONES A REEMPLAZANTES ℹ️ℹ️ℹ️', {
+            id_solicitud: payload.id_solicitud,
+            emp_id: payload.emp_id
+          });
         }
       }
     }

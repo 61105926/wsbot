@@ -83,7 +83,13 @@ const main = async () => {
 
     // Configurar CORS para permitir peticiones desde el frontend
     provider.server.use(cors({
-      origin: ['http://localhost:3002', 'http://190.171.225.68'],
+      origin: [
+        'http://localhost:3002', 
+        'http://190.171.225.68',
+        'http://190.171.225.68:3002',
+        'http://190.171.225.68:3005',
+        'https://hrx.minoil.com.bo'
+      ],
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization']
