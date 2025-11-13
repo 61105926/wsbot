@@ -3,6 +3,7 @@ import { sendJSON, asyncHandler } from '../utils/response';
 import { logger } from '../utils/logger';
 import { getUserByID } from '../services/getUserByID';
 import { IS_DEVELOPMENT } from '../config/config';
+import { getPhoneForEnvironment } from '../utils/phoneHelper';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -106,6 +107,25 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
       });
     }
 
+    // Obtener el número real del empleado (disponible para todos los estados)
+    let empPhoneReal: string | undefined;
+    try {
+      const empData = await getUserByID(payload.emp_id);
+      if (Array.isArray(empData) && empData.length > 0) {
+        const empleado = empData.find((item: any) => item.data?.empID === payload.emp_id);
+        if (empleado?.data?.phone) {
+          empPhoneReal = empleado.data.phone.startsWith('591') ? empleado.data.phone : `591${empleado.data.phone}`;
+        }
+      }
+    } catch (error: any) {
+      logger.warn('No se pudo obtener el teléfono del empleado, se usará número de desarrollo', {
+        emp_id: payload.emp_id,
+        error: error.message
+      });
+    }
+    
+    const empPhone = getPhoneForEnvironment(empPhoneReal);
+
     // 🔔 SI ES APROBADO → NOTIFICAR AL EMPLEADO Y A LOS REEMPLAZANTES
     if (payload.estado === 'APROBADO') {
       
@@ -121,11 +141,11 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
         });
       }
 
-      // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
-      const empPhone = '59161105926'; // Número de prueba
-      logger.info('📱 MODO PRUEBA: Enviando notificación al número de prueba', {
+      logger.info('📱 Enviando notificación al empleado', {
         emp_id: payload.emp_id,
         phone: empPhone,
+        phone_real: empPhoneReal,
+        is_development: IS_DEVELOPMENT,
         tipo: payload.tipo,
         es_programada: payload.tipo === 'PROGRAMADA'
       });
@@ -586,12 +606,30 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
 
 📱 *Cualquier duda, contacta con tu supervisor*`;
 
-            // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
-            const reemplazantePhone = '59161105926'; // Número de prueba
-            logger.info('📱 MODO PRUEBA: Enviando notificación de reemplazante al número de prueba', {
+            // Obtener el número real del reemplazante
+            let reemplazantePhoneReal: string | undefined;
+            try {
+              const repData = await getUserByID(reemplazante.emp_id);
+              if (Array.isArray(repData) && repData.length > 0) {
+                const reemplazanteData = repData.find((item: any) => item.data?.empID === reemplazante.emp_id);
+                if (reemplazanteData?.data?.phone) {
+                  reemplazantePhoneReal = reemplazanteData.data.phone.startsWith('591') ? reemplazanteData.data.phone : `591${reemplazanteData.data.phone}`;
+                }
+              }
+            } catch (error: any) {
+              logger.warn('No se pudo obtener el teléfono del reemplazante, se usará número de desarrollo', {
+                reemplazante_id: reemplazante.emp_id,
+                error: error.message
+              });
+            }
+            
+            const reemplazantePhone = getPhoneForEnvironment(reemplazantePhoneReal);
+            logger.info('📱 Enviando notificación de reemplazante', {
               reemplazante_id: reemplazante.emp_id,
               reemplazante_nombre: reemplazante.nombre,
-              phone: reemplazantePhone
+              phone: reemplazantePhone,
+              phone_real: reemplazantePhoneReal,
+              is_development: IS_DEVELOPMENT
             });
 
             // Enviar al número real del reemplazante
@@ -647,11 +685,11 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
     // La notificación se envía cuando todas las fechas están preaprobadas
     if (payload.estado === 'PREAPROBADO') {
       try {
-        // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
-        const empPhone = '59161105926'; // Número de prueba
-        logger.info('📱 MODO PRUEBA: Enviando notificación de preaprobación al número de prueba', {
+        logger.info('📱 Enviando notificación de preaprobación al empleado', {
           emp_id: payload.emp_id,
-          phone: empPhone
+          phone: empPhone,
+          phone_real: empPhoneReal,
+          is_development: IS_DEVELOPMENT
         });
 
         const fechasTexto = payload.fechas?.join('\n• ') || 'Ver sistema';
@@ -703,18 +741,18 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
 
 📱 *Por favor contacta con tu supervisor para más detalles*`;
 
-        // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
-        const empPhoneRechazo = '59161105926'; // Número de prueba
-        logger.info('📱 MODO PRUEBA: Enviando notificación de rechazo al número de prueba', {
+        logger.info('📱 Enviando notificación de rechazo al empleado', {
           emp_id: payload.emp_id,
-          phone: empPhoneRechazo
+          phone: empPhone,
+          phone_real: empPhoneReal,
+          is_development: IS_DEVELOPMENT
         });
 
-        await bot.sendMessage(empPhoneRechazo, mensajeRechazo, {});
+        await bot.sendMessage(empPhone, mensajeRechazo, {});
 
         logger.info('✅ Notificación de rechazo enviada', {
           emp_id: payload.emp_id,
-          emp_phone: empPhoneRechazo
+          emp_phone: empPhone
         });
 
       } catch (whatsappError: any) {

@@ -5,6 +5,7 @@ import { getUserByID } from '../services/getUserByID';
 import { FRONTEND_CONFIG, IS_DEVELOPMENT } from '../config/config';
 import { connectionStatus } from '../services/connectionStatus';
 import { vacationNotificationQueue } from '../services/vacationNotificationQueue';
+import { getPhoneForEnvironment } from '../utils/phoneHelper';
 
 interface VacationDetail {
   fecha: string;
@@ -96,11 +97,28 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
 
     // 🔔 NOTIFICACIÓN AL JEFE POR WHATSAPP
     // Obtener el número real del jefe (o usar número de prueba en desarrollo)
-    // MODO PRUEBA: Enviar todas las notificaciones al número de prueba
-    const managerPhone = '59161105926'; // Número del jefe
+    let managerPhoneReal: string | undefined;
+    try {
+      const managerData = await getUserByID(payload.manager_id);
+      if (Array.isArray(managerData) && managerData.length > 0) {
+        const manager = managerData.find((item: any) => item.data?.empID === payload.manager_id);
+        if (manager?.data?.phone) {
+          managerPhoneReal = manager.data.phone.startsWith('591') ? manager.data.phone : `591${manager.data.phone}`;
+        }
+      }
+    } catch (error: any) {
+      logger.warn('No se pudo obtener el teléfono del manager, se usará número de desarrollo', {
+        manager_id: payload.manager_id,
+        error: error.message
+      });
+    }
+    
+    const managerPhone = getPhoneForEnvironment(managerPhoneReal);
     logger.info('📱 Enviando notificación al jefe', {
       manager_id: payload.manager_id,
       phone: managerPhone,
+      phone_real: managerPhoneReal,
+      is_development: IS_DEVELOPMENT,
       tipo: payload.tipo,
       es_programada: payload.tipo === 'PROGRAMADA',
       solicitud_id: solicitudId

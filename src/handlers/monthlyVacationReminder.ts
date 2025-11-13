@@ -1,6 +1,7 @@
 import { logger } from '../utils/logger';
 import { connectionStatus } from '../services/connectionStatus';
 import { getUserByID } from '../services/getUserByID';
+import { getPhoneForEnvironment } from '../utils/phoneHelper';
 
 interface VacationData {
   emp_id: string;
@@ -219,14 +220,18 @@ async function sendEmployeeReminder(bot: any, vacationData: VacationData, monthN
       return false;
     }
 
-    // MODO DESARROLLO: Enviar todas las notificaciones al número de prueba
-    const phone = '59161105926'; // Número de desarrollo
+    // Obtener el número real del empleado
+    const phoneReal = vacationData.emp_telefono ? 
+      (vacationData.emp_telefono.startsWith('591') ? vacationData.emp_telefono : `591${vacationData.emp_telefono}`) : 
+      undefined;
+    const phone = getPhoneForEnvironment(phoneReal);
     
-    logger.info('📱 MODO DESARROLLO: Enviando recordatorio al número de prueba', {
+    logger.info('📱 Enviando recordatorio al empleado', {
       emp_id: vacationData.emp_id,
       emp_nombre: vacationData.emp_nombre,
       phone_destino: phone,
-      phone_real: vacationData.emp_telefono
+      phone_real: phoneReal,
+      is_development: process.env.NODE_ENV === 'development'
     });
 
     // Formatear fechas
@@ -304,14 +309,18 @@ async function sendManagerReminder(bot: any, managerId: string, employeesVacatio
       return false;
     }
 
-    // MODO DESARROLLO: Enviar todas las notificaciones al número de prueba
-    const managerPhone = '59161105926'; // Número de desarrollo
+    // Obtener el número real del manager
+    const managerPhoneReal = firstEmployee.manager_telefono ? 
+      (firstEmployee.manager_telefono.startsWith('591') ? firstEmployee.manager_telefono : `591${firstEmployee.manager_telefono}`) : 
+      undefined;
+    const managerPhone = getPhoneForEnvironment(managerPhoneReal);
     
-    logger.info('📱 MODO DESARROLLO: Enviando consolidado al número de prueba', {
+    logger.info('📱 Enviando consolidado al manager', {
       manager_id: managerId,
       manager_nombre: firstEmployee.manager_nombre,
       phone_destino: managerPhone,
-      phone_real: firstEmployee.manager_telefono,
+      phone_real: managerPhoneReal,
+      is_development: process.env.NODE_ENV === 'development',
       total_empleados: employeesVacations.size
     });
 
