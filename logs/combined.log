@@ -6483,3 +6483,9 @@
 {"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-13 15:46:00"}}
 {"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-13 15:54:28"}}
 {"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-13 15:54:28"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-19 15:17:22"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-19 15:17:22"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-19 15:17:32"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"Ahora sí joven","phone":"59162421141","timestamp":"2025-11-19 15:20:14"}}
+{"level":"warn","message":"Opción de menú inválida","metadata":{"option":"Ahora sí joven","phone":"59162421141","timestamp":"2025-11-19 15:20:14"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59162421141","timestamp":"2025-11-19 15:20:15"}}

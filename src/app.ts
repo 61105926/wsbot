@@ -5,7 +5,7 @@ import { createBot, createProvider, createFlow, addKeyword, utils, EVENTS } from
 
 import { MemoryDB as Database } from '@builderbot/bot'
 
-import { BaileysProvider as Provider } from 'builderbot-provider-sherpa'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
 
 import { PORT } from "./config/config";
 import { getCardIDFlow } from "./flows/getCardIDFlow";
@@ -34,6 +34,131 @@ import { logger } from "./utils/logger";
 import { sendJSON } from "./utils/response";
 import cors from "cors";
 
+// Configurar reconexión automática para desconexiones repentinas
+function setupAutoReconnection(provider: any) {
+  const boundSockets = new WeakSet<any>();
+
+  // Función para obtener el socket del provider
+  const getSocket = () => {
+    try {
+      const sock = (provider as any)?.vendor || 
+                  (provider as any)?.getInstance?.();
+      if (sock && sock.ev) {
+        if (boundSockets.has(sock)) {
+          return sock;
+        }
+        boundSockets.add(sock);
+        return sock;
+      }
+      return null;
+    } catch (error) {
+      logger.error('Error al obtener socket para reconexión', { error });
+      return null;
+    }
+  };
+
+  // Escuchar eventos de conexión
+  if (provider && typeof provider.on === 'function') {
+    provider.on('connection.update', (update: any) => {
+      if (update.connection === 'close' && update.lastDisconnect) {
+        const lastDisconnect = update.lastDisconnect;
+        const reason = lastDisconnect.error?.output?.statusCode || 
+                       lastDisconnect.error?.output?.disconnectReason ||
+                       lastDisconnect.error?.message ||
+                       'unknown';
+        
+        const date = lastDisconnect.date ? new Date(lastDisconnect.date).toISOString() : new Date().toISOString();
+        const sock = getSocket();
+
+        logger.warn('Desconexión detectada', {
+          reason,
+          date,
+          error: lastDisconnect.error?.message
+        });
+
+        // Mapear razones de desconexión
+        let disconnectReason = reason;
+        if (typeof reason === 'number') {
+          const reasonMap: Record<number, string> = {
+            401: 'loggedOut',
+            403: 'connectionReplaced',
+            404: 'connectionClosed',
+            408: 'timedOut',
+            429: 'connectionLost',
+            500: 'connectionLost',
+            502: 'connectionLost',
+            503: 'connectionLost',
+            504: 'timedOut',
+          };
+          disconnectReason = reasonMap[reason] || 'unknown';
+        } else if (typeof reason === 'string') {
+          if (reason.includes('logged out') || reason.includes('401')) {
+            disconnectReason = 'loggedOut';
+          } else if (reason.includes('connection closed') || reason.includes('404')) {
+            disconnectReason = 'connectionClosed';
+          } else if (reason.includes('connection lost') || reason.includes('429') || reason.includes('500')) {
+            disconnectReason = 'connectionLost';
+          } else if (reason.includes('connection replaced') || reason.includes('403')) {
+            disconnectReason = 'connectionReplaced';
+          } else if (reason.includes('restart required')) {
+            disconnectReason = 'restartRequired';
+          } else if (reason.includes('timed out') || reason.includes('408') || reason.includes('504')) {
+            disconnectReason = 'timedOut';
+          }
+        }
+
+        // Manejar reconexión según el tipo
+        switch (disconnectReason) {
+          case 'connectionClosed':
+            logger.info(`Connection closed, reconnecting.... ${date}`);
+            if (sock && typeof sock.connect === 'function') {
+              sock.connect();
+            }
+            break;
+
+          case 'connectionLost':
+            logger.info(`Connection Lost from Server, reconnecting... ${date}`);
+            if (sock && typeof sock.connect === 'function') {
+              sock.connect();
+            }
+            break;
+
+          case 'connectionReplaced':
+            logger.error(`Connection Replaced, Another New Session Opened, Please Close Current Session First ${date}`);
+            process.exit(1);
+            break;
+
+          case 'loggedOut':
+            logger.error('Device Logged Out, Please Delete session and Scan Again.');
+            process.exit(1);
+            break;
+
+          case 'restartRequired':
+            logger.info(`Restart Required, Restarting... ${date}`);
+            if (sock && typeof sock.connect === 'function') {
+              sock.connect();
+            }
+            break;
+
+          case 'timedOut':
+            logger.info(`Connection TimedOut, Reconnecting... ${date}`);
+            if (sock && typeof sock.connect === 'function') {
+              sock.connect();
+            }
+            break;
+
+          default:
+            logger.warn(`Unknown DisconnectReason: ${disconnectReason} ${date} | ${reason}`);
+            if (sock && typeof sock.connect === 'function') {
+              sock.connect();
+            }
+            break;
+        }
+      }
+    });
+  }
+}
+
 // Manejador global de errores no capturados
 process.on('uncaughtException', (error) => {
   console.error('❌ Uncaught Exception:', error);
@@ -58,13 +183,13 @@ process.on('SIGINT', () => {
 
 const main = async () => {
   try {
-    console.info("Using Baileys Sherpa provider");
+    console.info("Using Baileys provider");
     const adapterProvider = createProvider(Provider, {
       version: [2, 3000, 1025190524],
       browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
       experimentalStore: true, // Significantly reduces resource consumption
       timeRelease: 86400000 // Cleans up data every 24 hours (in milliseconds)
-  })
+    })
     const provider = adapterProvider;
 
     // Registrar provider para trackear conexión
@@ -82,6 +207,9 @@ const main = async () => {
       database: new Database(),
       provider: provider,
     });
+
+    // Configurar reconexión automática
+    setupAutoReconnection(provider);
 
     httpServer(PORT);
 
