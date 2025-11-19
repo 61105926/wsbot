@@ -7,6 +7,7 @@ import { TIMEOUTS, PATHS } from "../config/constants";
 import { FLOW_MESSAGES } from "../config/flowMessages";
 import { MessageBuilderService } from "../services/messageBuilder.service";
 import { logger } from "../utils/logger";
+import { extractRealPhoneFromContext } from "../utils/phoneHelper";
 import {
   getMonthDictionary,
   getStringDate,
@@ -27,17 +28,20 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
   .addAnswer(monthsAnswer)
   .addAction({ capture: true }, async (ctx, { flowDynamic, gotoFlow }) => {
     const input = ctx.body.trim();
+    const phoneInfo = extractRealPhoneFromContext(ctx);
 
     logger.info('Usuario seleccionando mes', {
       flow: 'getMonths',
-      phone: ctx.from,
+      phone: phoneInfo.phone,
+      lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
       input
     });
 
     // Validar entrada
     if (!isNumericString(input)) {
       logger.warn('Entrada inválida en getMonthsFlow', {
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         input
       });
 
@@ -49,7 +53,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
 
     if (!monthsDict.has(input)) {
       logger.warn('Mes no disponible seleccionado', {
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         input
       });
 
@@ -63,7 +68,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
 
     logger.info('Descargando boleta para usuario', {
       flow: 'getMonths',
-      phone: ctx.from,
+      phone: phoneInfo.phone,
+      lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
       month: monthCode
     });
 
@@ -71,9 +77,11 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       await flowDynamic([{ body: FLOW_MESSAGES.PROMPTS.SENDING_DOCUMENT }]);
 
       // Construir URL usando servicio
+      // Usar el número real si está disponible, sino usar el LID
+      const phoneForApi = phoneInfo.isRealPhone ? phoneInfo.phone : phoneInfo.lid;
       const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
         API_CONFIG.PAYSLIP_API_BASE,
-        ctx.from,
+        phoneForApi,
         monthCode
       );
 
@@ -105,7 +113,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       await fs.writeFile(tmpPath, pdfData);
 
       logger.info('Enviando PDF al usuario', {
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         fileName
       });
 
@@ -124,14 +133,16 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       }
 
       logger.info('Boleta enviada exitosamente', {
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         month: monthCode
       });
 
     } catch (error: any) {
       logger.error('Error al procesar boleta en flow', {
         flow: 'getMonths',
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         month: monthCode,
         error: error.message || error,
         stack: error.stack

@@ -4,6 +4,7 @@ import { getMonthsFlow } from "./getMonthsFlow";
 import { vacationRequestFlow } from "./vacationRequestFlow";
 import { FLOW_MESSAGES } from "../config/flowMessages";
 import { logger } from "../utils/logger";
+import { extractRealPhoneFromContext } from "../utils/phoneHelper";
 
 /**
  * Flow principal del menú
@@ -17,9 +18,12 @@ const answerActions: Record<string, any> = {
 export const menuFlow = addKeyword([EVENTS.WELCOME, "menu"])
   .addAnswer(FLOW_MESSAGES.MENU.WELCOME)
   .addAction({ capture: true }, async (ctx, { gotoFlow }) => {
+    const phoneInfo = extractRealPhoneFromContext(ctx);
+    
     logger.info('Usuario seleccionando opción de menú', {
       flow: 'menu',
-      phone: ctx.from,
+      phone: phoneInfo.phone,
+      lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
       option: ctx.body
     });
 
@@ -27,7 +31,8 @@ export const menuFlow = addKeyword([EVENTS.WELCOME, "menu"])
 
     if (flow === invalidFlow) {
       logger.warn('Opción de menú inválida', {
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         option: ctx.body
       });
     }

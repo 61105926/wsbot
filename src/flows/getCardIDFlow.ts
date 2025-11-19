@@ -2,6 +2,7 @@ import { addKeyword, EVENTS } from "@builderbot/bot";
 import { getUserByID } from "../services/getUserByID";
 import { FLOW_MESSAGES } from "../config/flowMessages";
 import { logger } from "../utils/logger";
+import { extractRealPhoneFromContext } from "../utils/phoneHelper";
 import { isNumericString } from "../utils/flowHelpers";
 
 /**
@@ -13,17 +14,20 @@ export const getCardIDFlow = addKeyword(EVENTS.ACTION)
     { capture: true },
     async (ctx, { flowDynamic, endFlow }) => {
       const empID = ctx.body.trim();
+      const phoneInfo = extractRealPhoneFromContext(ctx);
 
       logger.info('Usuario consultando por ID', {
         flow: 'getCardID',
-        phone: ctx.from,
+        phone: phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         empID
       });
 
       // Validar que sea numérico
       if (!isNumericString(empID)) {
         logger.warn('ID inválido (no numérico)', {
-          phone: ctx.from,
+          phone: phoneInfo.phone,
+          lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
           empID
         });
 
@@ -34,7 +38,8 @@ export const getCardIDFlow = addKeyword(EVENTS.ACTION)
         const user = await getUserByID(empID);
 
         logger.info('Usuario encontrado por ID', {
-          phone: ctx.from,
+          phone: phoneInfo.phone,
+          lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
           empID,
           userName: user.data?.name
         });
@@ -47,7 +52,8 @@ export const getCardIDFlow = addKeyword(EVENTS.ACTION)
       } catch (error: any) {
         logger.error('Error al obtener usuario por ID en flow', {
           flow: 'getCardID',
-          phone: ctx.from,
+          phone: phoneInfo.phone,
+          lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
           empID,
           error: error.message || error,
           stack: error.stack
