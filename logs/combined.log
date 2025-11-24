@@ -1,0 +1,15 @@
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-24 17:21:20"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-24 17:21:20"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-24 17:21:30"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-24 17:26:16"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-24 17:26:24"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-24 17:26:31"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-24 17:26:35"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-24 17:27:42"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-24 17:27:42"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-24 17:27:52"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"1","phone":"59177711124","timestamp":"2025-11-24 17:28:11"}}
+{"level":"info","message":"Usuario seleccionando mes","metadata":{"flow":"getMonths","input":"1","phone":"59177711124","timestamp":"2025-11-24 17:28:13"}}
+{"level":"info","message":"Descargando boleta para usuario","metadata":{"flow":"getMonths","month":"202510","phone":"59177711124","timestamp":"2025-11-24 17:28:13"}}
+{"level":"info","message":"Enviando PDF al usuario","metadata":{"fileName":"OCTUBRE 2025.pdf","phone":"59177711124","timestamp":"2025-11-24 17:28:17"}}
+{"level":"info","message":"Boleta enviada exitosamente","metadata":{"month":"202510","phone":"59177711124","timestamp":"2025-11-24 17:28:18"}}

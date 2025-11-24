@@ -5,7 +5,7 @@ import { createBot, createProvider, createFlow, addKeyword, utils, EVENTS } from
 
 import { MemoryDB as Database } from '@builderbot/bot'
 
-import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { BaileysProvider as Provider } from 'builderbot-provider-sherpa'
 
 import { PORT } from "./config/config";
 import { getCardIDFlow } from "./flows/getCardIDFlow";
@@ -183,7 +183,7 @@ process.on('SIGINT', () => {
 
 const main = async () => {
   try {
-    console.info("Using Baileys provider");
+    console.info("Using Sherpa provider");
     const adapterProvider = createProvider(Provider, {
       version: [2, 3000, 1025190524],
       browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],

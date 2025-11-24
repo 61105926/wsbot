@@ -50,11 +50,11 @@ export function extractRealPhoneFromContext(ctx: any): {
   const lid = ctx.from || '';
   
   // Intentar obtener el número real desde ctx.key?.remoteJid
-  // En Baileys, remoteJid tiene el formato: "59161105926@s.whatsapp.net"
+  // En Sherpa, remoteJid tiene el formato: "59161105926@s.whatsapp.net"
   let realPhone: string | null = null;
   
   try {
-    // Intentar desde ctx.key?.remoteJid (formato Baileys)
+    // Intentar desde ctx.key?.remoteJid (formato Sherpa)
     if (ctx?.key?.remoteJid) {
       const jid = ctx.key.remoteJid;
       // Extraer el número: "59161105926@s.whatsapp.net" -> "59161105926"

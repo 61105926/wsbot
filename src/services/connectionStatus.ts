@@ -24,7 +24,7 @@ class ConnectionStatus {
     try {
       // Verificar si el provider tiene el método on antes de usarlo
       if (provider && typeof provider.on === 'function') {
-        // Baileys emite eventos de actualización de conexión
+        // Sherpa emite eventos de actualización de conexión
         provider.on('connection.update', (update: any) => {
           // Cuando la conexión está abierta
           if (update.connection === 'open') {
