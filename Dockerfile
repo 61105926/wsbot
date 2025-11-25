@@ -28,7 +28,10 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
 
-# Install only production dependencies
+# Copy patches directory (needed for patch-package)
+COPY --from=builder /app/patches ./patches
+
+# Install only production dependencies (postinstall will apply patches)
 RUN npm install --omit=dev
 
 # Expose port 3005
