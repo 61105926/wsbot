@@ -5,7 +5,7 @@ import { createBot, createProvider, createFlow, addKeyword, utils, EVENTS } from
 
 import { MemoryDB as Database } from '@builderbot/bot'
 
-import { BaileysProvider as Provider } from 'builderbot-provider-sherpa'
+import { BaileysProvider as Provider } from './providers/sherpaProvider'
 
 import { PORT } from "./config/config";
 import { getCardIDFlow } from "./flows/getCardIDFlow";

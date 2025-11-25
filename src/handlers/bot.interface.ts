@@ -4,12 +4,13 @@ import {
   DispatchFn,
   DynamicBlacklist,
 } from "@builderbot/bot/dist/types";
-import { BaileysProvider as Provider } from 'builderbot-provider-sherpa';
+import type { BaileysProvider as ProviderType } from 'builderbot-provider-sherpa';
+import { BaileysProvider as Provider } from '../providers/sherpaProvider';
 
 
 export type Bot =
-  | (Pick<Provider, "sendMessage" | "vendor"> & {
-      provider: Provider;
+  | (Pick<ProviderType, "sendMessage" | "vendor"> & {
+      provider: ProviderType;
       blacklist: DynamicBlacklist;
       dispatch: DispatchFn;
       state: (number: string) => BotStateStandAlone;
