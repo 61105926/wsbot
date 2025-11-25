@@ -1,0 +1,19 @@
+diff --git a/node_modules/builderbot-provider-sherpa/dist/index-DFaJv1KD.js b/node_modules/builderbot-provider-sherpa/dist/index-DFaJv1KD.cjs
+similarity index 100%
+rename from node_modules/builderbot-provider-sherpa/dist/index-DFaJv1KD.js
+rename to node_modules/builderbot-provider-sherpa/dist/index-DFaJv1KD.cjs
+diff --git a/node_modules/builderbot-provider-sherpa/dist/index-DhqBPPnU.js b/node_modules/builderbot-provider-sherpa/dist/index-DhqBPPnU.js
+index 931b926..2b0b4c5 100644
+Binary files a/node_modules/builderbot-provider-sherpa/dist/index-DhqBPPnU.js and b/node_modules/builderbot-provider-sherpa/dist/index-DhqBPPnU.js differ
+diff --git a/node_modules/builderbot-provider-sherpa/dist/index.cjs b/node_modules/builderbot-provider-sherpa/dist/index.cjs
+index b6a061b..caf8b22 100644
+--- a/node_modules/builderbot-provider-sherpa/dist/index.cjs
++++ b/node_modules/builderbot-provider-sherpa/dist/index.cjs
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-var index = require('./index-DFaJv1KD.js');
++var index = require('./index-DFaJv1KD.cjs');
+ require('@builderbot/bot');
+ require('fs');
+ require('constants');

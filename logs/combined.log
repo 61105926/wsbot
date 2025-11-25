@@ -19,3 +19,7 @@
 {"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-25 09:53:16"}}
 {"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-11-25 09:53:26"}}
 {"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"1","phone":"59177711124","timestamp":"2025-11-25 09:53:41"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-25 10:02:12"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-25 10:02:12"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-11-25 10:10:30"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-11-25 10:10:30"}}
