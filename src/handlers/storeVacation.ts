@@ -43,6 +43,17 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
     });
 
     const payload: VacationPayload = req.body;
+    
+    // Función helper para calcular días totales considerando medio día = 0.5
+    const calcularDiasTotales = (detalle: VacationDetail[]): number => {
+      return detalle.reduce((total, d) => {
+        const turno = d.turno || d.tipo_dia || 'COMPLETO';
+        if (turno === 'MAÑANA' || turno === 'TARDE') {
+          return total + 0.5;
+        }
+        return total + 1;
+      }, 0);
+    };
 
     // Validar campos requeridos
     if (!payload.emp_id || !payload.tipo || !payload.manager_id || !payload.detalle || payload.detalle.length === 0) {
@@ -67,13 +78,17 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
     const timestamp = Date.now();
     const solicitudId = `${payload.emp_id}-${timestamp}`;
 
+    // Calcular días totales
+    const diasTotales = calcularDiasTotales(payload.detalle);
+    
     // Log de la solicitud recibida
     logger.info('Solicitud de vacaciones procesada', {
       solicitud_id: solicitudId,
       emp_id: payload.emp_id,
       tipo: payload.tipo,
       manager_id: payload.manager_id,
-      dias_solicitados: payload.detalle.length,
+      dias_solicitados: diasTotales,
+      cantidad_fechas: payload.detalle.length,
       tiene_reemplazantes: payload.reemplazantes?.length > 0,
       es_programada: payload.tipo === 'PROGRAMADA'
     });
@@ -216,6 +231,9 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
       // El frontend usa 'data' para consultar solicitudes pendientes del jefe
       const enlaceAprobacion = `${FRONTEND_CONFIG.BASE_URL}${FRONTEND_CONFIG.VACATION_REQUEST}?data=${managerPhoneBase64}&tab=aprobar`;
 
+      // Calcular días totales (la función ya está definida arriba)
+      const diasTotalesMensaje = calcularDiasTotales(payload.detalle);
+      
       // Mensaje diferente según el tipo de vacación
       let mensajeJefe: string;
       if (payload.tipo === 'PROGRAMADA') {
@@ -223,7 +241,7 @@ const handleStoreVacation = async (bot: Bot, req: any, res: any) => {
 
 👤 *Empleado:* ${nombreEmpleado}
 📅 *Tipo:* Vacación Programada
-📆 *Días solicitados:* ${payload.detalle.length}
+📆 *Días solicitados:* ${diasTotalesMensaje}
 
 *Fechas:*
 ${fechasTexto}
@@ -237,7 +255,7 @@ ${enlaceAprobacion}`;
 
 👤 *Empleado:* ${nombreEmpleado}
 📅 *Tipo:* ${payload.tipo}
-📆 *Días solicitados:* ${payload.detalle.length}
+📆 *Días solicitados:* ${diasTotalesMensaje}
 
 *Fechas:*
 ${fechasTexto}
