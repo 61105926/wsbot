@@ -493,7 +493,8 @@ ${enlaceAprobacion}`;
         manager_id: payload.manager_id,
         antiguedad: payload.antiguedad,
         comentario: payload.comentario,
-        dias_solicitados: payload.detalle.length,
+        dias_solicitados: diasTotales,
+        cantidad_fechas: payload.detalle.length,
         reemplazantes: payload.reemplazantes?.length || 0,
         fecha_creacion: new Date().toISOString()
       }

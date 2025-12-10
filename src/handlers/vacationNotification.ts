@@ -165,7 +165,7 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
 
 ✅ *Estado:* APROBADO
 
-${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''}
+${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}` : ''}
 
 🎉 *¡Disfruta tus vacaciones!*
 
@@ -307,8 +307,13 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
               }
               
               // Calcular días según el turno
+              const turnoUpper = turno.toUpperCase().trim();
               let dias = 1; // Por defecto día completo
-              if (turno.toUpperCase().includes('MEDIO') || turno.toUpperCase().includes('MEDIA') || turno === '0.5') {
+              if (turnoUpper === 'MAÑANA' || turnoUpper === 'MANANA' || 
+                  turnoUpper === 'TARDE' || 
+                  turnoUpper.includes('MEDIO') || 
+                  turnoUpper.includes('MEDIA') || 
+                  turno === '0.5') {
                 dias = 0.5;
               }
               
@@ -318,11 +323,11 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
             // Ordenar por fecha
             fechasConTurno.sort((a, b) => a.fecha.localeCompare(b.fecha));
             
-            // Agrupar fechas consecutivas con el mismo tipo de turno
+            // Agrupar fechas consecutivas con el mismo turno
             let grupoInicio = fechasConTurno[0];
             let grupoFin = fechasConTurno[0];
             let totalDiasGrupo = grupoInicio.dias;
-            let esMedioDia = grupoInicio.dias === 0.5;
+            let turnoGrupo = grupoInicio.turno;
 
             for (let i = 1; i < fechasConTurno.length; i++) {
               const fechaActual = fechasConTurno[i];
@@ -332,27 +337,29 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
               const fechaAnteriorDate = new Date(fechaAnterior.fecha);
               const diferenciaDias = (fechaActualDate.getTime() - fechaAnteriorDate.getTime()) / (1000 * 60 * 60 * 24);
               
-              // Verificar si es consecutiva y tiene el mismo tipo (ambas completas o ambas medio día)
-              const mismaTipo = (fechaActual.dias === 0.5 && esMedioDia) || (fechaActual.dias === 1 && !esMedioDia);
+              // Verificar si es consecutiva y tiene el mismo turno
+              const esConsecutiva = diferenciaDias === 1;
+              const mismoTurno = fechaActual.turno === turnoGrupo;
               
-              if (diferenciaDias === 1 && mismaTipo) {
-                // Fecha consecutiva del mismo tipo, extender el grupo
+              if (esConsecutiva && mismoTurno) {
+                // Fecha consecutiva con mismo turno, extender el grupo
                 grupoFin = fechaActual;
                 totalDiasGrupo += fechaActual.dias;
               } else {
-                // Nueva secuencia o cambio de tipo, guardar el grupo anterior
+                // Nueva secuencia o cambio de turno, guardar el grupo anterior
                 boletaPayload.detalle.push({
                   Desde: grupoInicio.fecha,
                   Hasta: grupoFin.fecha,
                   Dias: totalDiasGrupo,
-                  Tipo: payload.tipo === 'PROGRAMADA' ? 'Vacación' : payload.tipo || 'Vacación'
+                  Tipo: payload.tipo === 'PROGRAMADA' ? 'Vacación' : payload.tipo || 'Vacación',
+                  Turno: turnoGrupo !== 'COMPLETO' ? turnoGrupo : undefined
                 });
                 
                 // Iniciar nuevo grupo
                 grupoInicio = fechaActual;
                 grupoFin = fechaActual;
                 totalDiasGrupo = fechaActual.dias;
-                esMedioDia = fechaActual.dias === 0.5;
+                turnoGrupo = fechaActual.turno;
               }
             }
 
@@ -361,7 +368,8 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
               Desde: grupoInicio.fecha,
               Hasta: grupoFin.fecha,
               Dias: totalDiasGrupo,
-              Tipo: payload.tipo === 'PROGRAMADA' ? 'Vacación' : payload.tipo || 'Vacación'
+              Tipo: payload.tipo === 'PROGRAMADA' ? 'Vacación' : payload.tipo || 'Vacación',
+              Turno: grupoInicio.turno !== 'COMPLETO' ? grupoInicio.turno : undefined
             });
           } else {
             // Si no hay fechas, crear un detalle por defecto con la fecha actual
@@ -421,12 +429,15 @@ ${payload.comentario ? `💬 *Comentario del jefe:*\n${payload.comentario}` : ''
           params.append('Observaciones', String(boletaPayload.Observaciones));
           
           // Agregar cada elemento del detalle como parámetros separados
-          // Formato: detalle[0][Desde]=...&detalle[0][Hasta]=...&detalle[0][Dias]=...&detalle[0][Tipo]=...
+          // Formato: detalle[0][Desde]=...&detalle[0][Hasta]=...&detalle[0][Dias]=...&detalle[0][Tipo]=...&detalle[0][Turno]=...
           boletaPayload.detalle.forEach((item: any, index: number) => {
             params.append(`detalle[${index}][Desde]`, String(item.Desde));
             params.append(`detalle[${index}][Hasta]`, String(item.Hasta));
             params.append(`detalle[${index}][Dias]`, String(item.Dias));
             params.append(`detalle[${index}][Tipo]`, String(item.Tipo));
+            if (item.Turno) {
+              params.append(`detalle[${index}][Turno]`, String(item.Turno));
+            }
           });
 
           const urlWithParams = `${pdfUrl}?${params.toString()}`;
@@ -705,7 +716,7 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
 
 ✅ *Estado:* PREAPROBADO / REVISADO
 
-💬 *Comentario del jefe:*
+💬 *Comentario del supervisor:*
 ${payload.comentario || 'Todas tus fechas han sido revisadas y preaprobadas.'}
 
 📋 *Próximos pasos:*
