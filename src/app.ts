@@ -5,7 +5,6 @@ import { createBot, createProvider, createFlow, addKeyword, utils, EVENTS } from
 
 import { MemoryDB as Database } from '@builderbot/bot'
 
-import { BaileysProvider as Provider } from './providers/sherpaProvider'
 
 import { PORT } from "./config/config";
 import { getCardIDFlow } from "./flows/getCardIDFlow";
@@ -14,6 +13,7 @@ import { menuFlow } from "./flows/menu.flow";
 import { sendDocumentFlow } from "./flows/sendDocumentFlow";
 import { getMonthsFlow } from "./flows/getMonthsFlow";
 import { vacationRequestFlow } from "./flows/vacationRequestFlow";
+import { BaileysProvider as Provider } from 'aurik3-builderbot-baileys-custom'
 
 import { uploadFile } from "./middlewares/fileMiddleware";
 import { sendRegionalMessagesHandler } from "./handlers/sendRegionalMessages";
@@ -183,7 +183,22 @@ process.on('SIGINT', () => {
 
 const main = async () => {
   try {
-    console.info("Using Sherpa provider");
+    // Log información del entorno
+    const packageManager = process.env.npm_config_user_agent?.includes('pnpm') ? 'pnpm' : 
+                           process.env.PNPM_VERSION ? 'pnpm' : 'npm';
+    const pnpmVersion = process.env.PNPM_VERSION || 'unknown';
+    
+    logger.info('🚀 Iniciando aplicación', {
+      packageManager: packageManager,
+      pnpmVersion: packageManager === 'pnpm' ? pnpmVersion : undefined,
+      nodeVersion: process.version,
+      provider: 'Aurik3 Baileys Custom'
+    });
+    
+    console.info("📦 Package Manager: pnpm");
+    console.info("🔌 Provider: Aurik3 Baileys Custom");
+    console.info("✅ Usando aurik3-builderbot-baileys-custom como proveedor de WhatsApp");
+    
     const adapterProvider = createProvider(Provider, {
       version: [2, 3000, 1030817285],
       browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
@@ -371,7 +386,16 @@ const main = async () => {
       logger.warn('⚠️ Scheduler ejecutado - el bot se obtendrá del contexto cuando sea necesario');
     });
 
+    logger.info('✅ Servidor iniciado correctamente', {
+      port: PORT,
+      packageManager: 'pnpm',
+      provider: 'Aurik3 Baileys Custom',
+      environment: process.env.NODE_ENV || 'development'
+    });
+    
     console.log("✅ Server running on port", PORT);
+    console.log("📦 Package Manager: pnpm");
+    console.log("🔌 Provider: Aurik3 Baileys Custom");
     
     // Mantener el proceso vivo
     // El servidor HTTP y el provider mantendrán el proceso activo

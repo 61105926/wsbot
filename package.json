@@ -21,7 +21,6 @@
     "@builderbot/bot": "v1.3.5-alpha.9",
     "@builderbot/database-json": "1.2.9",
     "axios": "^1.6.8",
-    "builderbot-provider-sherpa": "0.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "multer": "^1.4.5-lts.1",
@@ -30,7 +29,8 @@
     "path": "^0.12.7",
     "sharp": "^0.30.5",
     "winston": "^3.18.3",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "aurik3-builderbot-baileys-custom": "0.0.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

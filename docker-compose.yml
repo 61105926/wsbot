@@ -10,4 +10,10 @@ services:
       - "3005:3005"
     environment:
       - PORT=3005
+      - NODE_ENV=production
+      - PNPM_VERSION=${PNPM_VERSION:-latest}
     restart: unless-stopped
+    volumes:
+      - ./bot_sessions:/app/bot_sessions
+      - ./logs:/app/logs
+      - ./tmp:/app/tmp

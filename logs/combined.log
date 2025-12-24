@@ -4351,3 +4351,24 @@
 {"level":"info","message":"✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA A REEMPLAZANTE ✅✅✅","metadata":{"reemplazante":"Charvel Calderon","reemplazante_id":"493","reemplazante_phone":"59178003551","timestamp":"2025-12-11 14:23:01"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-12-11 14:24:06"}}
 {"level":"info","message":"Configuración de vacaciones leída","metadata":{"programmedEnabled":true,"timestamp":"2025-12-11 14:24:20"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 08:56:38"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 08:59:24"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 09:00:16"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-12-24 09:00:16"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-12-24 09:00:26"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"2","phone":"59177711124","timestamp":"2025-12-24 09:00:52"}}
+{"level":"info","message":"Usuario solicitando vacaciones","metadata":{"flow":"vacationRequest","phone":"59177711124","timestamp":"2025-12-24 09:00:53"}}
+{"level":"info","message":"URL de vacaciones generada","metadata":{"encodedPhone":"Nzc3MTExMjQ=","phone":"59177711124","phoneNumber":"77711124","timestamp":"2025-12-24 09:00:53","urlLength":54}}
+{"level":"info","message":"Link de vacaciones enviado exitosamente","metadata":{"phone":"59177711124","timestamp":"2025-12-24 09:00:54"}}
+{"level":"info","message":"🚀 Iniciando aplicación","metadata":{"nodeVersion":"v22.20.0","packageManager":"pnpm","pnpmVersion":"unknown","provider":"Aurik3 Baileys Custom","timestamp":"2025-12-24 09:02:31"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 09:02:31"}}
+{"level":"info","message":"🚀 Iniciando aplicación","metadata":{"nodeVersion":"v22.20.0","packageManager":"pnpm","pnpmVersion":"unknown","provider":"Aurik3 Baileys Custom","timestamp":"2025-12-24 09:03:17"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 09:03:17"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-12-24 09:03:17"}}
+{"level":"info","message":"✅ Servidor iniciado correctamente","metadata":{"environment":"production","packageManager":"pnpm","port":3005,"provider":"Aurik3 Baileys Custom","timestamp":"2025-12-24 09:03:17"}}
+{"level":"info","message":"🚀 Iniciando aplicación","metadata":{"nodeVersion":"v22.20.0","packageManager":"pnpm","pnpmVersion":"unknown","provider":"Aurik3 Baileys Custom","timestamp":"2025-12-24 09:05:53"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 09:05:53"}}
+{"level":"info","message":"Usuario seleccionando opción de menú","metadata":{"flow":"menu","option":"2","phone":"59177711124","timestamp":"2025-12-24 09:06:04"}}
+{"level":"info","message":"Usuario solicitando vacaciones","metadata":{"flow":"vacationRequest","phone":"59177711124","timestamp":"2025-12-24 09:06:04"}}
+{"level":"info","message":"URL de vacaciones generada","metadata":{"encodedPhone":"Nzc3MTExMjQ=","phone":"59177711124","phoneNumber":"77711124","timestamp":"2025-12-24 09:06:04","urlLength":54}}
+{"level":"info","message":"Link de vacaciones enviado exitosamente","metadata":{"phone":"59177711124","timestamp":"2025-12-24 09:06:05"}}
