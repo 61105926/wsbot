@@ -57,10 +57,24 @@ export function extractRealPhoneFromContext(ctx: any): {
     // Intentar desde ctx.key?.remoteJid (formato Sherpa)
     if (ctx?.key?.remoteJid) {
       const jid = ctx.key.remoteJid;
-      // Extraer el número: "59161105926@s.whatsapp.net" -> "59161105926"
-      const match = jid.match(/^(\d+)@/);
-      if (match && match[1]) {
-        realPhone = match[1];
+      
+      // Verificar si es un número real (termina en @s.whatsapp.net) o un LID (termina en @lid)
+      if (jid.endsWith('@s.whatsapp.net')) {
+        // Es un número real: "59161105926@s.whatsapp.net" -> "59161105926"
+        const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
+        if (match && match[1]) {
+          realPhone = match[1];
+        }
+      } else if (jid.endsWith('@lid')) {
+        // Es un LID: "153059917307993@lid" -> NO es número real
+        // No extraer como número real
+        realPhone = null;
+      } else {
+        // Formato desconocido, intentar extraer de todos modos
+        const match = jid.match(/^(\d+)@/);
+        if (match && match[1]) {
+          realPhone = match[1];
+        }
       }
     }
     
@@ -74,8 +88,9 @@ export function extractRealPhoneFromContext(ctx: any): {
     }
     
     // Si aún no se encontró, verificar si ctx.from ya es un número real (no un LID)
-    if (!realPhone && lid && !lid.includes('@lid') && /^\d+$/.test(lid.replace(/^591/, ''))) {
-      // Si ctx.from parece un número real (solo dígitos, posiblemente con prefijo 591)
+    // Verificar que NO contenga @lid y que sea solo dígitos (posiblemente con prefijo 591)
+    if (!realPhone && lid && !lid.includes('@lid') && !lid.includes('@') && /^\d+$/.test(lid.replace(/^591/, ''))) {
+      // Si ctx.from parece un número real (solo dígitos, posiblemente con prefijo 591, sin @)
       realPhone = lid;
     }
   } catch (error) {

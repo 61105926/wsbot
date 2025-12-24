@@ -4523,3 +4523,13 @@
 {"level":"info","message":"Descargando boleta para usuario","metadata":{"flow":"getMonths","month":"202511","phone":"59177711124","timestamp":"2025-12-24 10:14:50"}}
 {"level":"info","message":"Enviando PDF al usuario","metadata":{"fileName":"NOVIEMBRE 2025.pdf","phone":"59177711124","timestamp":"2025-12-24 10:15:00"}}
 {"level":"info","message":"Boleta enviada exitosamente","metadata":{"month":"202511","phone":"59177711124","timestamp":"2025-12-24 10:15:01"}}
+{"level":"info","message":"🚀 Iniciando aplicación","metadata":{"nodeVersion":"v22.20.0","packageManager":"npm","provider":"Aurik3 Baileys Custom","timestamp":"2025-12-24 11:56:18"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2025-12-24 11:56:18"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2025-12-24 11:56:18"}}
+{"level":"info","message":"✅ Servidor iniciado correctamente","metadata":{"environment":"production","packageManager":"pnpm","port":3005,"provider":"Aurik3 Baileys Custom","timestamp":"2025-12-24 11:56:18"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2025-12-24 11:56:28"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59174261198","timestamp":"2025-12-24 12:00:03"}}
+{"level":"warn","message":"Flow inválido ejecutado","metadata":{"flow":"invalid","phone":"59174261198","timestamp":"2025-12-24 12:00:05"}}
+{"level":"info","message":"Usuario solicitando vacaciones","metadata":{"flow":"vacationRequest","phone":"59174261198","timestamp":"2025-12-24 12:00:17"}}
+{"level":"info","message":"URL de vacaciones generada","metadata":{"encodedPhone":"NzQyNjExOTg=","phone":"59174261198","phoneNumber":"74261198","timestamp":"2025-12-24 12:00:17","urlLength":54}}
+{"level":"info","message":"Link de vacaciones enviado exitosamente","metadata":{"phone":"59174261198","timestamp":"2025-12-24 12:00:19"}}
