@@ -126,8 +126,15 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
     
     const empPhone = getPhoneForEnvironment(empPhoneReal);
 
+    // ============================================
+    // 🔔 NOTIFICACIONES DESACTIVADAS TEMPORALMENTE
+    // ============================================
+    // TODO: Reactivar cuando sea necesario
+    // Cambiar `if (false &&` por `if (payload.estado === 'APROBADO')` para reactivar
+    // ============================================
+    
     // 🔔 SI ES APROBADO → NOTIFICAR AL EMPLEADO Y A LOS REEMPLAZANTES
-    if (payload.estado === 'APROBADO') {
+    if (false && payload.estado === 'APROBADO') {
       
       // Log crítico para PROGRAMADA aprobada
       if (payload.tipo === 'PROGRAMADA') {
@@ -135,13 +142,13 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
           id_solicitud: payload.id_solicitud,
           emp_id: payload.emp_id,
           emp_nombre: payload.emp_nombre,
-          tiene_fechas: payload.fechas ? payload.fechas.length : 0,
-          tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+          tiene_fechas: payload.fechas?.length ?? 0,
+          tiene_reemplazantes: payload.reemplazantes?.length ?? 0,
           fechas: payload.fechas ? JSON.stringify(payload.fechas) : 'NINGUNA'
         });
       }
 
-      logger.info('📱 Enviando notificación al empleado', {
+      logger.info('📱 [DESACTIVADO] Enviando notificación al empleado', {
         emp_id: payload.emp_id,
         phone: empPhone,
         phone_real: empPhoneReal,
@@ -150,6 +157,16 @@ const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
         es_programada: payload.tipo === 'PROGRAMADA'
       });
 
+      // ============================================
+      // 1. NOTIFICACIÓN AL EMPLEADO (APROBADO)
+      // ============================================
+      // PROPÓSITO: Informar al empleado que su solicitud de vacaciones fue aprobada
+      // CONTENIDO: 
+      //   - Mensaje de confirmación con fechas aprobadas
+      //   - Comentario del supervisor (si existe)
+      //   - Generación y envío de boleta PDF oficial
+      // DESACTIVADO: Temporalmente no se envía ninguna notificación
+      // ============================================
       // 1. Notificar al EMPLEADO que su solicitud fue aprobada
       try {
         const fechasTexto = payload.fechas?.join('\n• ') || 'Ver sistema';
@@ -177,10 +194,11 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
           tipo: payload.tipo,
           es_programada: payload.tipo === 'PROGRAMADA',
           mensaje_length: mensajeEmpleado.length,
-          tiene_fechas: payload.fechas ? payload.fechas.length : 0
+          tiene_fechas: payload.fechas?.length ?? 0
         });
 
-        await bot.sendMessage(empPhone, mensajeEmpleado, {});
+        // ⚠️ NOTIFICACIÓN DESACTIVADA - Mensaje de aprobación al empleado
+        // await bot.sendMessage(empPhone, mensajeEmpleado, {});
 
         logger.info('✅ Notificación de aprobación enviada al empleado', {
           emp_id: payload.emp_id,
@@ -193,11 +211,14 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
         
         // Log específico para PROGRAMADA
         if (payload.tipo === 'PROGRAMADA') {
-          logger.info('✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA AL EMPLEADO ✅✅✅', {
-            id_solicitud: payload.id_solicitud,
-            emp_id: payload.emp_id,
-            emp_phone: empPhone
-          });
+        // Log específico para PROGRAMADA (comentado porque notificaciones están desactivadas)
+        // if (payload.tipo === 'PROGRAMADA') {
+        //   logger.info('✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA AL EMPLEADO ✅✅✅', {
+        //     id_solicitud: payload.id_solicitud,
+        //     emp_id: payload.emp_id,
+        //     emp_phone: empPhone
+        //   });
+        // }
         }
 
         // 📄 GENERAR Y ENVIAR BOLETA DE VACACIÓN
@@ -284,7 +305,7 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
           });
 
           // Agrupar fechas consecutivas en el detalle, considerando turnos (COMPLETO, MEDIO DÍA, etc.)
-          if (payload.fechas && payload.fechas.length > 0) {
+          if (payload.fechas?.length ?? 0 > 0) {
             // Parsear fechas con su turno: extraer fecha y turno de formato "YYYY-MM-DD (TURNO)"
             interface FechaConTurno {
               fecha: string;
@@ -292,7 +313,7 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
               dias: number; // 0.5 para medio día, 1 para completo
             }
             
-            const fechasConTurno: FechaConTurno[] = payload.fechas.map((fechaStr: string) => {
+            const fechasConTurno: FechaConTurno[] = (payload.fechas ?? []).map((fechaStr: string) => {
               let fecha: string;
               let turno: string = 'COMPLETO';
               
@@ -529,10 +550,10 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
             });
           });
 
-          // Enviar el PDF como documento al empleado
-          await bot.sendMessage(empPhone, '📄 *Boleta de vacación aprobada*\n\nTu solicitud de vacaciones ha sido autorizada. Adjunto encontrarás la boleta oficial.', { 
-            media: pdfPath 
-          });
+          // ⚠️ NOTIFICACIÓN DESACTIVADA - Envío de boleta PDF al empleado
+          // await bot.sendMessage(empPhone, '📄 *Boleta de vacación aprobada*\n\nTu solicitud de vacaciones ha sido autorizada. Adjunto encontrarás la boleta oficial.', { 
+          //   media: pdfPath 
+          // });
 
           logger.info('✅ Boleta de vacación enviada exitosamente al empleado', {
             emp_id: payload.emp_id,
@@ -572,9 +593,21 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
         });
       }
 
+      // ============================================
+      // 2. NOTIFICACIÓN A LOS REEMPLAZANTES (APROBADO)
+      // ============================================
+      // PROPÓSITO: Informar a los empleados asignados como reemplazantes que deben cubrir
+      //            las funciones del empleado que estará de vacaciones
+      // CONTENIDO:
+      //   - Nombre del empleado que estará de vacaciones
+      //   - Fechas en las que deben cubrir
+      //   - Tipo de vacación
+      //   - Instrucciones para coordinar con el equipo
+      // DESACTIVADO: Temporalmente no se envía ninguna notificación
+      // ============================================
       // 2. Notificar a los REEMPLAZANTES
-      logger.info('🔔 Verificando reemplazantes para notificación', {
-        tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+      logger.info('🔔 [DESACTIVADO] Verificando reemplazantes para notificación', {
+        tiene_reemplazantes: payload.reemplazantes?.length ?? 0,
         tipo: payload.tipo,
         es_programada: payload.tipo === 'PROGRAMADA',
         reemplazantes: payload.reemplazantes ? JSON.stringify(payload.reemplazantes) : 'NINGUNO'
@@ -583,18 +616,18 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
       // Log específico para PROGRAMADA
       if (payload.tipo === 'PROGRAMADA') {
         logger.info('🔔🔔🔔 VERIFICANDO REEMPLAZANTES PARA PROGRAMADA 🔔🔔🔔', {
-          tiene_reemplazantes: payload.reemplazantes ? payload.reemplazantes.length : 0,
+          tiene_reemplazantes: payload.reemplazantes?.length ?? 0,
           reemplazantes: payload.reemplazantes ? JSON.stringify(payload.reemplazantes) : 'NINGUNO'
         });
       }
       
-      if (payload.reemplazantes && payload.reemplazantes.length > 0) {
+      if ((payload.reemplazantes?.length ?? 0) > 0) {
         logger.info('✅ Reemplazantes encontrados, enviando notificaciones', {
-          cantidad: payload.reemplazantes.length,
+          cantidad: payload.reemplazantes?.length ?? 0,
           tipo: payload.tipo,
           es_programada: payload.tipo === 'PROGRAMADA'
         });
-        for (const reemplazante of payload.reemplazantes) {
+        for (const reemplazante of (payload.reemplazantes ?? [])) {
           try {
             const fechasTexto = payload.fechas?.join('\n• ') || 'Ver sistema';
 
@@ -643,8 +676,8 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
               is_development: IS_DEVELOPMENT
             });
 
-            // Enviar al número real del reemplazante
-            await bot.sendMessage(reemplazantePhone, mensajeReemplazante, {});
+            // ⚠️ NOTIFICACIÓN DESACTIVADA - Mensaje a reemplazante
+            // await bot.sendMessage(reemplazantePhone, mensajeReemplazante, {});
 
             logger.info('✅ Notificación enviada a reemplazante', {
               reemplazante: reemplazante.nombre,
@@ -654,14 +687,14 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
               es_programada: payload.tipo === 'PROGRAMADA'
             });
             
-            // Log específico para PROGRAMADA
-            if (payload.tipo === 'PROGRAMADA') {
-              logger.info('✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA A REEMPLAZANTE ✅✅✅', {
-                reemplazante: reemplazante.nombre,
-                reemplazante_id: reemplazante.emp_id,
-                reemplazante_phone: reemplazantePhone
-              });
-            }
+            // Log específico para PROGRAMADA (comentado porque notificaciones están desactivadas)
+            // if (payload.tipo === 'PROGRAMADA') {
+            //   logger.info('✅✅✅ NOTIFICACIÓN PROGRAMADA ENVIADA A REEMPLAZANTE ✅✅✅', {
+            //     reemplazante: reemplazante.nombre,
+            //     reemplazante_id: reemplazante.emp_id,
+            //     reemplazante_phone: reemplazantePhone
+            //   });
+            // }
 
             // Esperar 2 segundos entre mensajes
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -692,11 +725,25 @@ Serás el reemplazante durante este período. Por favor coordina con tu equipo y
       }
     }
 
+    // ============================================
+    // 3. NOTIFICACIÓN DE PREAPROBACIÓN AL EMPLEADO
+    // ============================================
+    // PROPÓSITO: Informar al empleado que su solicitud de vacaciones fue preaprobada
+    //            (revisada pero aún no aprobada completamente)
+    // CONTENIDO:
+    //   - Mensaje indicando que las fechas fueron revisadas y preaprobadas
+    //   - Fechas preaprobadas
+    //   - Comentario del supervisor
+    //   - Información de que recibirá otra notificación cuando se apruebe finalmente
+    // CUANDO SE ENVÍA: Cuando todas las fechas de una solicitud están preaprobadas
+    // DESACTIVADO: Temporalmente no se envía ninguna notificación
+    // ============================================
     // 🔔 SI ES PREAPROBADO → NOTIFICAR AL EMPLEADO
     // La notificación se envía cuando todas las fechas están preaprobadas
-    if (payload.estado === 'PREAPROBADO') {
+    // ⚠️ DESACTIVADO: Cambiar `if (false &&` por `if (payload.estado === 'PREAPROBADO')` para reactivar
+    if (false && payload.estado === 'PREAPROBADO') {
       try {
-        logger.info('📱 Enviando notificación de preaprobación al empleado', {
+        logger.info('📱 [DESACTIVADO] Enviando notificación de preaprobación al empleado', {
           emp_id: payload.emp_id,
           phone: empPhone,
           phone_real: empPhoneReal,
@@ -724,7 +771,8 @@ Tu solicitud está preaprobada. Recibirás una notificación cuando se complete 
 
 📱 *Cualquier duda, contacta con tu supervisor*`;
 
-        await bot.sendMessage(empPhone, mensajePreaprobacion, {});
+        // ⚠️ NOTIFICACIÓN DESACTIVADA - Mensaje de preaprobación al empleado
+        // await bot.sendMessage(empPhone, mensajePreaprobacion, {});
 
         logger.info('✅ Notificación de preaprobación enviada al empleado', {
           emp_id: payload.emp_id,
@@ -740,8 +788,19 @@ Tu solicitud está preaprobada. Recibirás una notificación cuando se complete 
       }
     }
 
+    // ============================================
+    // 4. NOTIFICACIÓN DE RECHAZO AL EMPLEADO
+    // ============================================
+    // PROPÓSITO: Informar al empleado que su solicitud de vacaciones fue rechazada
+    // CONTENIDO:
+    //   - Mensaje indicando que la solicitud fue rechazada
+    //   - Motivo del rechazo (comentario del supervisor)
+    //   - Instrucciones para contactar al supervisor
+    // DESACTIVADO: Temporalmente no se envía ninguna notificación
+    // ============================================
     // 🔔 SI ES RECHAZADO → NOTIFICAR AL EMPLEADO
-    if (payload.estado === 'RECHAZADO') {
+    // ⚠️ DESACTIVADO: Cambiar `if (false &&` por `if (payload.estado === 'RECHAZADO')` para reactivar
+    if (false && payload.estado === 'RECHAZADO') {
       try {
         const mensajeRechazo = `❌ *SOLICITUD DE VACACIONES RECHAZADA*
 
@@ -752,14 +811,15 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
 
 📱 *Por favor contacta con tu supervisor para más detalles*`;
 
-        logger.info('📱 Enviando notificación de rechazo al empleado', {
+        logger.info('📱 [DESACTIVADO] Enviando notificación de rechazo al empleado', {
           emp_id: payload.emp_id,
           phone: empPhone,
           phone_real: empPhoneReal,
           is_development: IS_DEVELOPMENT
         });
 
-        await bot.sendMessage(empPhone, mensajeRechazo, {});
+        // ⚠️ NOTIFICACIÓN DESACTIVADA - Mensaje de rechazo al empleado
+        // await bot.sendMessage(empPhone, mensajeRechazo, {});
 
         logger.info('✅ Notificación de rechazo enviada', {
           emp_id: payload.emp_id,
