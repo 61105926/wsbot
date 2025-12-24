@@ -199,6 +199,19 @@ const main = async () => {
     console.info("🔌 Provider: Aurik3 Baileys Custom");
     console.info("✅ Usando aurik3-builderbot-baileys-custom como proveedor de WhatsApp");
     
+    // Silenciar logs verbosos de Baileys/Aurik3
+    // Estos logs muestran información de criptografía y sesiones que no son necesarios en producción
+    const defaultLogger = {
+      level: process.env.NODE_ENV === 'production' ? 'error' : 'silent',
+      child: () => defaultLogger,
+      trace: () => {},
+      debug: () => {},
+      info: () => {},
+      warn: () => {},
+      error: () => {},
+      fatal: () => {},
+    };
+
     const adapterProvider = createProvider(Provider, {
       version: [2, 3000, 1030817285],
       browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
@@ -206,6 +219,8 @@ const main = async () => {
       timeRelease: 86400000, // Cleans up data every 24 hours (in milliseconds)
       groupsIgnore: true,
       readStatus: false,
+      logger: defaultLogger, // Silenciar logs verbosos del proveedor
+      printQRInTerminal: true, // Mantener QR visible
     })
     const provider = adapterProvider;
 

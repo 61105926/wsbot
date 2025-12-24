@@ -11,7 +11,7 @@
     "restart:pm2": "npx pm2 restart wsbot",
     "logs:pm2": "npx pm2 logs wsbot",
     "status:pm2": "npx pm2 status",
-    "build": "npx tsc",
+    "build": "pnpm exec tsc",
     "postinstall": "patch-package",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
