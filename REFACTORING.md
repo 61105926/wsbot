@@ -317,8 +317,8 @@ PORT=3005
 NODE_ENV=production
 
 # API URLs
-SURVEY_API_URL=http://190.171.225.68/api/survey
-PAYSLIP_API_URL=http://190.171.225.68/api/boleta
+SURVEY_API_URL=http://190.171.225.68:8006/api/survey
+PAYSLIP_API_URL=http://190.171.225.68:8006/api/boleta
 
 # Logging
 LOG_LEVEL=info

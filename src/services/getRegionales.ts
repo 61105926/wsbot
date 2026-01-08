@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://190.171.225.68/api/survey";
+const API_URL = "http://190.171.225.68:8006/api/survey";
 
 interface ResponseAPI {
   data: {

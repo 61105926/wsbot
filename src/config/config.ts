@@ -8,13 +8,13 @@ export const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3005;
 // API ENDPOINTS
 export const API_CONFIG = {
   // Survey API (usuarios y regionales)
-  SURVEY_API: process.env.SURVEY_API_URL || "http://190.171.225.68/api/survey",
+  SURVEY_API: process.env.SURVEY_API_URL || "http://190.171.225.68:8006/api/survey",
 
   // Payslip API (boletas de pago)
-  PAYSLIP_API_BASE: process.env.PAYSLIP_API_URL || "http://190.171.225.68/api/boleta",
+  PAYSLIP_API_BASE: process.env.PAYSLIP_API_URL || "http://190.171.225.68:8006/api/boleta",
 
   // Employee API (datos de empleado para vacaciones)
-  EMPLOYEE_API: process.env.EMPLOYEE_API_URL || "http://190.171.225.68/api/emp",
+  EMPLOYEE_API: process.env.EMPLOYEE_API_URL || "http://190.171.225.68:8006/api/emp",
 
   // Backend API (Laravel - si se usa en el futuro)
   BACKEND_API: process.env.BACKEND_API || "http://localhost",

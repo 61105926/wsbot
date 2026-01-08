@@ -245,7 +245,7 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
           // Obtener datos de la solicitud desde la API
           let solicitudData: any = null;
           try {
-            const solicitudResponse = await axios.get(`http://190.171.225.68/api/vacacion-data-empleado?emp_id=${payload.emp_id}`);
+            const solicitudResponse = await axios.get(`http://190.171.225.68:8006/api/vacacion-data-empleado?emp_id=${payload.emp_id}`);
             if (solicitudResponse.data?.success && Array.isArray(solicitudResponse.data.data)) {
               solicitudData = solicitudResponse.data.data.find((s: any) => String(s.id_solicitud) === String(payload.id_solicitud));
             }
@@ -427,7 +427,7 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
           });
 
           // Generar PDF usando GET (la API solo acepta GET)
-          const pdfUrl = 'http://190.171.225.68/api/vacacion';
+          const pdfUrl = 'http://190.171.225.68:8006/api/vacacion';
           const fileName = `Boleta_Vacacion_${payload.id_solicitud}.pdf`;
           const pdfPath = path.join(__dirname, '../../tmp', fileName);
 

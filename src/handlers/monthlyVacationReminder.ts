@@ -28,7 +28,7 @@ async function getVacationsForMonth(year: number, month: number): Promise<{
   byManager: Map<string, Map<string, VacationData>>;
 }> {
   try {
-    const apiUrl = process.env.API_URL || 'http://190.171.225.68';
+    const apiUrl = process.env.API_URL || 'http://190.171.225.68:8006';
     
     // Obtener todos los managers únicos desde las solicitudes
     // Por ahora, usamos el manager_id conocido (63) o podemos obtener todos los managers
