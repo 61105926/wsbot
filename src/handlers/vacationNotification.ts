@@ -838,7 +838,19 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
     // 📧 ENVIAR CORREO ELECTRÓNICO DE NOTIFICACIÓN
     // ============================================
     // Solo enviar correo si el estado es APROBADO o RECHAZADO (no PREAPROBADO)
+    logger.info('📧 Verificando si se debe enviar correo electrónico', {
+      estado: payload.estado,
+      debe_enviar: payload.estado === 'APROBADO' || payload.estado === 'RECHAZADO'
+    });
+    
     if (payload.estado === 'APROBADO' || payload.estado === 'RECHAZADO') {
+      logger.info('📧 Iniciando proceso de envío de correo electrónico', {
+        emp_id: payload.emp_id,
+        estado: payload.estado,
+        tiene_fechas: payload.fechas?.length || 0,
+        tiene_reemplazantes: payload.reemplazantes?.length || 0
+      });
+      
       try {
         // Obtener información adicional del empleado para la regional
         let regional: string | undefined;
@@ -849,6 +861,7 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
             // Intentar obtener la regional del empleado
             // Ajustar según la estructura real de los datos
             regional = empleado?.data?.regional || empleado?.data?.branch || undefined;
+            logger.info('✅ Regional obtenida para el correo', { regional });
           }
         } catch (error: any) {
           logger.warn('No se pudo obtener la regional del empleado para el correo', {
@@ -859,15 +872,27 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
 
         // Formatear fechas para el correo
         const fechasFormateadas = payload.fechas?.map((fecha: string, index: number) => {
-          // Si la fecha viene en formato YYYY-MM-DD, convertirla a DD-MM-YYYY
+          // Las fechas pueden venir en formato "YYYY-MM-DD" o "DD-MM-YYYY (TURNO)"
           let fechaFormateada = fecha;
-          if (fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          let turno = 'COMPLETO';
+          
+          // Si la fecha incluye el turno en paréntesis: "DD-MM-YYYY (TURNO)"
+          const fechaConTurno = fecha.match(/^(.+?)\s*\((.+?)\)$/);
+          if (fechaConTurno) {
+            fechaFormateada = fechaConTurno[1].trim();
+            turno = fechaConTurno[2].trim().toUpperCase();
+            if (turno !== 'MAÑANA' && turno !== 'TARDE' && turno !== 'COMPLETO') {
+              turno = 'COMPLETO';
+            }
+          } else if (fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            // Formato YYYY-MM-DD, convertir a DD-MM-YYYY
             const [year, month, day] = fecha.split('-');
             fechaFormateada = `${day}-${month}-${year}`;
           }
+          
           return {
             fecha: fechaFormateada,
-            turno: 'COMPLETO' // Por defecto, ajustar si hay información de turno
+            turno: turno
           };
         }) || [];
 
@@ -878,8 +903,17 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
           telefono: rep.telefono
         })) || [];
 
+        logger.info('📧 Preparando datos para envío de correo', {
+          empleadoNombre: payload.emp_nombre || `Empleado ${payload.emp_id}`,
+          empleadoId: payload.emp_id,
+          estado: payload.estado,
+          cantidad_fechas: fechasFormateadas.length,
+          cantidad_reemplazantes: reemplazantesFormateados.length,
+          regional: regional
+        });
+
         // Enviar correo electrónico
-        await sendVacationEmail({
+        const emailEnviado = await sendVacationEmail({
           empleadoNombre: payload.emp_nombre || `Empleado ${payload.emp_id}`,
           empleadoId: payload.emp_id,
           estado: payload.estado,
@@ -889,11 +923,20 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
           reemplazantes: reemplazantesFormateados
         });
 
-        logger.info('✅ Correo electrónico de notificación enviado', {
-          emp_id: payload.emp_id,
-          estado: payload.estado,
-          regional: regional
-        });
+        if (emailEnviado) {
+          logger.info('✅ Correo electrónico de notificación enviado exitosamente', {
+            emp_id: payload.emp_id,
+            estado: payload.estado,
+            regional: regional,
+            cantidad_fechas: fechasFormateadas.length,
+            cantidad_reemplazantes: reemplazantesFormateados.length
+          });
+        } else {
+          logger.warn('⚠️ No se pudo enviar el correo electrónico (retornó false)', {
+            emp_id: payload.emp_id,
+            estado: payload.estado
+          });
+        }
       } catch (emailError: any) {
         // No fallar la operación si el correo no se puede enviar
         logger.error('❌ Error al enviar correo de notificación (no crítico)', {
