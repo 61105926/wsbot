@@ -4,6 +4,7 @@ import { logger } from '../utils/logger';
 import { getUserByID } from '../services/getUserByID';
 import { IS_DEVELOPMENT } from '../config/config';
 import { getPhoneForEnvironment } from '../utils/phoneHelper';
+import { sendVacationEmail } from '../services/emailService';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -829,6 +830,76 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
       } catch (whatsappError: any) {
         logger.error('❌ Error al enviar notificación de rechazo', {
           error: whatsappError.message
+        });
+      }
+    }
+
+    // ============================================
+    // 📧 ENVIAR CORREO ELECTRÓNICO DE NOTIFICACIÓN
+    // ============================================
+    // Solo enviar correo si el estado es APROBADO o RECHAZADO (no PREAPROBADO)
+    if (payload.estado === 'APROBADO' || payload.estado === 'RECHAZADO') {
+      try {
+        // Obtener información adicional del empleado para la regional
+        let regional: string | undefined;
+        try {
+          const empData = await getUserByID(payload.emp_id);
+          if (Array.isArray(empData) && empData.length > 0) {
+            const empleado = empData.find((item: any) => item.data?.empID === payload.emp_id);
+            // Intentar obtener la regional del empleado
+            // Ajustar según la estructura real de los datos
+            regional = empleado?.data?.regional || empleado?.data?.branch || undefined;
+          }
+        } catch (error: any) {
+          logger.warn('No se pudo obtener la regional del empleado para el correo', {
+            emp_id: payload.emp_id,
+            error: error.message
+          });
+        }
+
+        // Formatear fechas para el correo
+        const fechasFormateadas = payload.fechas?.map((fecha: string, index: number) => {
+          // Si la fecha viene en formato YYYY-MM-DD, convertirla a DD-MM-YYYY
+          let fechaFormateada = fecha;
+          if (fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            const [year, month, day] = fecha.split('-');
+            fechaFormateada = `${day}-${month}-${year}`;
+          }
+          return {
+            fecha: fechaFormateada,
+            turno: 'COMPLETO' // Por defecto, ajustar si hay información de turno
+          };
+        }) || [];
+
+        // Formatear reemplazantes para el correo
+        const reemplazantesFormateados = payload.reemplazantes?.map((rep: Reemplazante) => ({
+          emp_id: rep.emp_id,
+          nombre: rep.nombre,
+          telefono: rep.telefono
+        })) || [];
+
+        // Enviar correo electrónico
+        await sendVacationEmail({
+          empleadoNombre: payload.emp_nombre || `Empleado ${payload.emp_id}`,
+          empleadoId: payload.emp_id,
+          estado: payload.estado,
+          fechas: fechasFormateadas,
+          comentario: payload.comentario,
+          regional: regional,
+          reemplazantes: reemplazantesFormateados
+        });
+
+        logger.info('✅ Correo electrónico de notificación enviado', {
+          emp_id: payload.emp_id,
+          estado: payload.estado,
+          regional: regional
+        });
+      } catch (emailError: any) {
+        // No fallar la operación si el correo no se puede enviar
+        logger.error('❌ Error al enviar correo de notificación (no crítico)', {
+          error: emailError.message,
+          emp_id: payload.emp_id,
+          estado: payload.estado
         });
       }
     }

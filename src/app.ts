@@ -259,6 +259,133 @@ const main = async () => {
       allowedHeaders: ['Content-Type', 'Authorization']
     }));
 
+    // Endpoint de prueba para correo electrónico (registrado primero para evitar conflictos)
+    provider.server.get("/api/test-email", handleCtx(async (bot: any, req: any, res: any) => {
+      try {
+        const { sendVacationEmail, verifyEmailConnection } = await import('./services/emailService');
+        
+        logger.info('📧 Endpoint de prueba de correo llamado (GET)');
+        
+        // Verificar conexión primero (pero continuar aunque falle para ver el error detallado)
+        const connectionOk = await verifyEmailConnection();
+        if (!connectionOk) {
+          logger.warn('⚠️ Verificación de conexión falló, pero intentando enviar correo de todas formas');
+          // Continuar de todas formas para intentar enviar el correo
+        }
+        
+        // Enviar correo de prueba
+        const emailSent = await sendVacationEmail({
+          empleadoNombre: 'Empleado de Prueba',
+          empleadoId: 'TEST001',
+          estado: 'APROBADO',
+          fechas: [
+            { fecha: '20-01-2024', turno: 'MAÑANA' },
+            { fecha: '21-01-2024', turno: 'COMPLETO' },
+            { fecha: '22-01-2024', turno: 'COMPLETO' }
+          ],
+          comentario: 'Este es un correo de prueba del sistema de vacaciones',
+          regional: 'La Paz',
+          managerNombre: 'Manager de Prueba',
+          reemplazantes: [
+            {
+              emp_id: 'EMP123',
+              nombre: 'Juan Pérez',
+              telefono: '77712345'
+            },
+            {
+              emp_id: 'EMP456',
+              nombre: 'María González',
+              telefono: '77767890'
+            }
+          ]
+        });
+        
+        if (emailSent) {
+          return sendJSON(res, 200, {
+            success: true,
+            message: 'Correo de prueba enviado exitosamente a rrhhlpz@minoil.com.bo'
+          });
+        } else {
+          return sendJSON(res, 500, {
+            success: false,
+            error: 'No se pudo enviar el correo de prueba'
+          });
+        }
+      } catch (error: any) {
+        logger.error('Error en endpoint de prueba de correo', {
+          error: error.message,
+          stack: error.stack
+        });
+        return sendJSON(res, 500, {
+          success: false,
+          error: error.message
+        });
+      }
+    }));
+    
+    provider.server.post("/api/test-email", handleCtx(async (bot: any, req: any, res: any) => {
+      try {
+        const { sendVacationEmail, verifyEmailConnection } = await import('./services/emailService');
+        
+        logger.info('📧 Endpoint de prueba de correo llamado (POST)');
+        
+        // Verificar conexión primero (pero continuar aunque falle para ver el error detallado)
+        const connectionOk = await verifyEmailConnection();
+        if (!connectionOk) {
+          logger.warn('⚠️ Verificación de conexión falló, pero intentando enviar correo de todas formas');
+          // Continuar de todas formas para intentar enviar el correo
+        }
+        
+        // Enviar correo de prueba
+        const emailSent = await sendVacationEmail({
+          empleadoNombre: 'Empleado de Prueba',
+          empleadoId: 'TEST001',
+          estado: 'APROBADO',
+          fechas: [
+            { fecha: '20-01-2024', turno: 'MAÑANA' },
+            { fecha: '21-01-2024', turno: 'COMPLETO' },
+            { fecha: '22-01-2024', turno: 'COMPLETO' }
+          ],
+          comentario: 'Este es un correo de prueba del sistema de vacaciones',
+          regional: 'La Paz',
+          managerNombre: 'Manager de Prueba',
+          reemplazantes: [
+            {
+              emp_id: 'EMP123',
+              nombre: 'Juan Pérez',
+              telefono: '77712345'
+            },
+            {
+              emp_id: 'EMP456',
+              nombre: 'María González',
+              telefono: '77767890'
+            }
+          ]
+        });
+        
+        if (emailSent) {
+          return sendJSON(res, 200, {
+            success: true,
+            message: 'Correo de prueba enviado exitosamente a rrhhlpz@minoil.com.bo'
+          });
+        } else {
+          return sendJSON(res, 500, {
+            success: false,
+            error: 'No se pudo enviar el correo de prueba'
+          });
+        }
+      } catch (error: any) {
+        logger.error('Error en endpoint de prueba de correo', {
+          error: error.message,
+          stack: error.stack
+        });
+        return sendJSON(res, 500, {
+          success: false,
+          error: error.message
+        });
+      }
+    }));
+
     // Status del bot
     provider.server.get("/status", handleCtx(statusBotHandler));
 
