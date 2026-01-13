@@ -250,8 +250,8 @@ const main = async () => {
       origin: [
         'http://localhost:3002', 
         'http://190.171.225.68:8006',
-        'http://190.171.225.68:8006:3002',
-        'http://190.171.225.68:8006:3005',
+        'http://190.171.225.68:3002',
+        'http://190.171.225.68:3005',
         'https://hrx.minoil.com.bo'
       ],
       credentials: true,
