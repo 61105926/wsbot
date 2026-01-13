@@ -838,17 +838,26 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
     // 📧 ENVIAR CORREO ELECTRÓNICO DE NOTIFICACIÓN
     // ============================================
     // Solo enviar correo si el estado es APROBADO o RECHAZADO (no PREAPROBADO)
+    // Normalizar el estado para comparación (mayúsculas)
+    const estadoNormalizado = payload.estado?.toUpperCase().trim();
+    const debeEnviarCorreo = estadoNormalizado === 'APROBADO' || estadoNormalizado === 'RECHAZADO';
+    
     logger.info('📧 Verificando si se debe enviar correo electrónico', {
-      estado: payload.estado,
-      debe_enviar: payload.estado === 'APROBADO' || payload.estado === 'RECHAZADO'
+      estado_original: payload.estado,
+      estado_normalizado: estadoNormalizado,
+      debe_enviar: debeEnviarCorreo,
+      es_aprobado: estadoNormalizado === 'APROBADO',
+      es_rechazado: estadoNormalizado === 'RECHAZADO'
     });
     
-    if (payload.estado === 'APROBADO' || payload.estado === 'RECHAZADO') {
+    if (debeEnviarCorreo) {
       logger.info('📧 Iniciando proceso de envío de correo electrónico', {
         emp_id: payload.emp_id,
-        estado: payload.estado,
+        estado_original: payload.estado,
+        estado_normalizado: estadoNormalizado,
         tiene_fechas: payload.fechas?.length || 0,
-        tiene_reemplazantes: payload.reemplazantes?.length || 0
+        tiene_reemplazantes: payload.reemplazantes?.length || 0,
+        fechas: payload.fechas ? JSON.stringify(payload.fechas) : 'NINGUNA'
       });
       
       try {
@@ -913,10 +922,24 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
         });
 
         // Enviar correo electrónico
+        // Asegurar que el estado esté en el formato correcto para el servicio de correo
+        const estadoParaCorreo = estadoNormalizado === 'APROBADO' ? 'APROBADO' 
+          : estadoNormalizado === 'RECHAZADO' ? 'RECHAZADO' 
+          : 'SUGERENCIA';
+        
+        logger.info('📧 Llamando a sendVacationEmail con datos:', {
+          empleadoNombre: payload.emp_nombre || `Empleado ${payload.emp_id}`,
+          empleadoId: payload.emp_id,
+          estado: estadoParaCorreo,
+          cantidad_fechas: fechasFormateadas.length,
+          cantidad_reemplazantes: reemplazantesFormateados.length,
+          regional: regional || 'NO DEFINIDA'
+        });
+        
         const emailEnviado = await sendVacationEmail({
           empleadoNombre: payload.emp_nombre || `Empleado ${payload.emp_id}`,
           empleadoId: payload.emp_id,
-          estado: payload.estado,
+          estado: estadoParaCorreo as 'APROBADO' | 'RECHAZADO' | 'SUGERENCIA',
           fechas: fechasFormateadas,
           comentario: payload.comentario,
           regional: regional,

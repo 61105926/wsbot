@@ -18,9 +18,17 @@ const EMAIL_CONFIG = {
 
 // Mapeo de regiones a correos
 const REGIONAL_EMAILS: Record<string, string> = {
-  'Cochabamba': 'rrhhlpz@minoil.com.bo',
-  'La Paz': 'rrhhlpz@minoil.com.bo',
-  'Santa Cruz': 'rrhhscz@minoil.com.bo'
+  'Cochabamba': 'jortiz@minoil.com.bo',
+  'La Paz': 'mflores@minoil.com.bo',
+  'Santa Cruz': 'jjordan@minoil.com.bo'
+};
+
+// Correo para copia en todos los correos
+const CC_EMAIL = 'igarcia@minoil.com.bo';
+
+// Correos adicionales por regional
+const REGIONAL_CC_EMAILS: Record<string, string[]> = {
+  'Santa Cruz': ['kequilia@minoil.com.bo']
 };
 
 // Crear transporter de nodemailer
@@ -82,6 +90,14 @@ export interface VacationEmailData {
  */
 export async function sendVacationEmail(data: VacationEmailData): Promise<boolean> {
   try {
+    logger.info('📧 [emailService] Iniciando envío de correo', {
+      empleadoNombre: data.empleadoNombre,
+      empleadoId: data.empleadoId,
+      estado: data.estado,
+      cantidad_fechas: data.fechas?.length || 0,
+      regional: data.regional || 'NO DEFINIDA'
+    });
+    
     // Determinar destinatario según la regional
     const toEmail = data.regional && REGIONAL_EMAILS[data.regional] 
       ? REGIONAL_EMAILS[data.regional] 
@@ -106,9 +122,9 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
     }
     
     // Formatear fechas para texto plano
-    const fechasTexto = data.fechas
-      .map((f, idx) => `${idx + 1}. ${f.fecha} - ${f.turno}`)
-      .join('\n');
+    const fechasTexto = (data.fechas && data.fechas.length > 0)
+      ? data.fechas.map((f, idx) => `${idx + 1}. ${f.fecha} - ${f.turno}`).join('\n')
+      : 'No se especificaron fechas';
     
     // Generar calendario visual HTML
     const generarCalendarioHTML = (fechas: Array<{ fecha: string; turno: string }>) => {
@@ -164,7 +180,9 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
       }).join('');
     };
     
-    const calendarioHTML = generarCalendarioHTML(data.fechas);
+    const calendarioHTML = (data.fechas && data.fechas.length > 0)
+      ? generarCalendarioHTML(data.fechas)
+      : '<div class="calendar-container"><p style="color: #666; font-style: italic;">No se especificaron fechas</p></div>';
     
     // Construir cuerpo del correo con diseño corporativo profesional
     const htmlBody = `
@@ -561,9 +579,18 @@ Este es un correo automático del sistema de gestión de vacaciones.
         const transporter = createTransporter(i);
         const smtpConfig = SMTP_CONFIGS[i];
         
+        // Preparar destinatarios en copia (CC)
+        const ccEmails: string[] = [CC_EMAIL]; // Siempre incluir igarcia@minoil.com.bo
+        
+        // Agregar correos adicionales según la regional
+        if (data.regional && REGIONAL_CC_EMAILS[data.regional]) {
+          ccEmails.push(...REGIONAL_CC_EMAILS[data.regional]);
+        }
+        
         logger.info(`🔄 Intentando enviar correo con configuración: ${smtpConfig.name}`, {
           from: EMAIL_CONFIG.auth.user,
           to: toEmail,
+          cc: ccEmails,
           host: EMAIL_CONFIG.host,
           port: smtpConfig.port
         });
@@ -571,6 +598,7 @@ Este es un correo automático del sistema de gestión de vacaciones.
         const info = await transporter.sendMail({
           from: `"Sistema de Vacaciones" <${EMAIL_CONFIG.auth.user}>`,
           to: toEmail,
+          cc: ccEmails,
           subject: subject,
           text: textBody,
           html: htmlBody
@@ -579,6 +607,7 @@ Este es un correo automático del sistema de gestión de vacaciones.
         logger.info(`✅ Correo de vacación enviado exitosamente con configuración: ${smtpConfig.name}`, {
           messageId: info.messageId,
           to: toEmail,
+          cc: ccEmails,
           estado: data.estado,
           empleado: data.empleadoNombre,
           response: info.response,
