@@ -32,6 +32,9 @@ interface NotificationPayload {
  * Envía notificaciones de WhatsApp cuando se aprueba/rechaza una solicitud
  */
 const handleVacationNotification = async (bot: Bot, req: any, res: any) => {
+  // Variable para almacenar la ruta del PDF de la boleta (solo para APROBADO)
+  let pdfPath: string | undefined = undefined;
+  
   try {
     logger.http('POST /api/vacation-notification - Petición recibida');
     logger.info('📥 Petición recibida en /api/vacation-notification', {
@@ -222,12 +225,13 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
         // }
         }
 
-        // 📄 GENERAR Y ENVIAR BOLETA DE VACACIÓN
-        try {
-          logger.info('📄 Generando boleta de vacación', {
-            emp_id: payload.emp_id,
-            solicitud_id: payload.id_solicitud
-          });
+        // 📄 GENERAR BOLETA DE VACACIÓN (solo si está aprobado)
+        if (payload.estado === 'APROBADO') {
+          try {
+            logger.info('📄 Generando boleta de vacación', {
+              emp_id: payload.emp_id,
+              solicitud_id: payload.id_solicitud
+            });
 
           // Obtener datos completos del empleado
           let employeeData: any = null;
@@ -430,10 +434,10 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
           // Generar PDF usando GET (la API solo acepta GET)
           const pdfUrl = 'http://190.171.225.68:8006/api/vacacion';
           const fileName = `Boleta_Vacacion_${payload.id_solicitud}.pdf`;
-          const pdfPath = path.join(__dirname, '../../tmp', fileName);
+          pdfPath = path.join(__dirname, '../../tmp', fileName);
 
           // Crear directorio tmp si no existe
-          const tmpDir = path.dirname(pdfPath);
+          const tmpDir = path.dirname(pdfPath!);
           if (!fs.existsSync(tmpDir)) {
             fs.mkdirSync(tmpDir, { recursive: true });
           }
@@ -537,7 +541,7 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
             });
           }
 
-          const writer = fs.createWriteStream(pdfPath);
+          const writer = fs.createWriteStream(pdfPath!);
           pdfResponse.data.pipe(writer);
 
           await new Promise<void>((resolve, reject) => {
@@ -556,24 +560,18 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
           //   media: pdfPath 
           // });
 
-          logger.info('✅ Boleta de vacación enviada exitosamente al empleado', {
+          logger.info('✅ PDF de boleta de vacación generado exitosamente', {
             emp_id: payload.emp_id,
             solicitud_id: payload.id_solicitud,
-            fileName
+            fileName,
+            pdfPath
           });
-
-          // Eliminar archivo temporal del empleado
-          try {
-            if (fs.existsSync(pdfPath)) {
-              fs.unlinkSync(pdfPath);
-              logger.debug(`Archivo temporal eliminado: ${fileName}`);
-            }
-          } catch (e) {
-            logger.warn(`No se pudo eliminar archivo temporal: ${fileName}`, e);
-          }
+          
+          // Guardar la ruta del PDF para adjuntarlo al correo
+          pdfPath = pdfPath;
 
         } catch (pdfError: any) {
-          logger.error('❌ Error al generar/enviar boleta de vacación', {
+          logger.error('❌ Error al generar boleta de vacación', {
             error: pdfError.message,
             stack: pdfError.stack,
             emp_id: payload.emp_id,
@@ -581,7 +579,14 @@ ${payload.comentario ? `💬 *Comentario del supervisor:*\n${payload.comentario}
             payload_fechas: payload.fechas,
             payload_completo: JSON.stringify(payload, null, 2)
           });
-          // No fallar la operación si la boleta no se puede enviar
+          // No fallar la operación si la boleta no se puede generar
+          pdfPath = undefined;
+        }
+        } else {
+          logger.info('ℹ️ No se genera boleta de vacación (estado no es APROBADO)', {
+            estado: payload.estado,
+            emp_id: payload.emp_id
+          });
         }
 
         // Esperar 3 segundos antes de enviar a reemplazantes
@@ -943,7 +948,8 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
           fechas: fechasFormateadas,
           comentario: payload.comentario,
           regional: regional,
-          reemplazantes: reemplazantesFormateados
+          reemplazantes: reemplazantesFormateados,
+          pdfPath: pdfPath // Adjuntar PDF si está disponible (solo para APROBADO)
         });
 
         if (emailEnviado) {
@@ -952,13 +958,34 @@ ${payload.comentario ? `💬 *Motivo del rechazo:*\n${payload.comentario}` : ''}
             estado: payload.estado,
             regional: regional,
             cantidad_fechas: fechasFormateadas.length,
-            cantidad_reemplazantes: reemplazantesFormateados.length
+            cantidad_reemplazantes: reemplazantesFormateados.length,
+            pdf_adjuntado: pdfPath ? 'Sí' : 'No'
           });
+          
+          // Eliminar archivo PDF temporal después de enviar el correo exitosamente
+          if (pdfPath && fs.existsSync(pdfPath)) {
+            try {
+              fs.unlinkSync(pdfPath);
+              logger.debug(`✅ Archivo PDF temporal eliminado después de enviar correo: ${pdfPath}`);
+            } catch (e) {
+              logger.warn(`⚠️ No se pudo eliminar archivo PDF temporal: ${pdfPath}`, e);
+            }
+          }
         } else {
           logger.warn('⚠️ No se pudo enviar el correo electrónico (retornó false)', {
             emp_id: payload.emp_id,
             estado: payload.estado
           });
+          
+          // Si el correo falló, también intentar eliminar el PDF para no dejar archivos huérfanos
+          if (pdfPath && fs.existsSync(pdfPath)) {
+            try {
+              fs.unlinkSync(pdfPath);
+              logger.debug(`✅ Archivo PDF temporal eliminado después de fallo en correo: ${pdfPath}`);
+            } catch (e) {
+              logger.warn(`⚠️ No se pudo eliminar archivo PDF temporal: ${pdfPath}`, e);
+            }
+          }
         }
       } catch (emailError: any) {
         // No fallar la operación si el correo no se puede enviar

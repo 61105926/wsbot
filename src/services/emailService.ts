@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { logger } from '../utils/logger';
+import fs from 'fs';
 
 // Configuración de correo electrónico
 // cPanel mail server - El puerto 2080 es para CalDAV/CardDAV, no para SMTP
@@ -83,6 +84,7 @@ export interface VacationEmailData {
   regional?: string;
   managerNombre?: string;
   reemplazantes?: Reemplazante[];
+  pdfPath?: string; // Ruta al archivo PDF de la boleta de vacación
 }
 
 /**
@@ -624,13 +626,27 @@ Este es un correo automático del sistema de gestión de vacaciones.
           port: smtpConfig.port
         });
         
+        // Preparar adjuntos si hay PDF
+        const attachments: any[] = [];
+        if (data.pdfPath && fs.existsSync(data.pdfPath)) {
+          attachments.push({
+            filename: `Boleta_Vacacion_${data.empleadoId}.pdf`,
+            path: data.pdfPath
+          });
+          logger.info('📎 PDF adjuntado al correo', {
+            pdfPath: data.pdfPath,
+            filename: `Boleta_Vacacion_${data.empleadoId}.pdf`
+          });
+        }
+        
         const info = await transporter.sendMail({
           from: `"Sistema de Vacaciones" <${EMAIL_CONFIG.auth.user}>`,
           to: toEmail,
           cc: ccEmails,
           subject: subject,
           text: textBody,
-          html: htmlBody
+          html: htmlBody,
+          attachments: attachments.length > 0 ? attachments : undefined
         });
         
         logger.info(`✅ Correo de vacación enviado exitosamente con configuración: ${smtpConfig.name}`, {
