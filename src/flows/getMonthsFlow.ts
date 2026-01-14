@@ -74,7 +74,7 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
     });
 
     try {
-      await flowDynamic([{ body: FLOW_MESSAGES.PROMPTS.SENDING_DOCUMENT }]);
+      await flowDynamic([{ body: FLOW_MESSAGES.PROMPTS.SENDING_IMAGE }]);
 
       // Construir URL usando servicio
       // Usar el número real si está disponible, sino usar el LID

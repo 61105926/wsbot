@@ -281,8 +281,7 @@ export async function processMonthlyReminders(bot: any, year?: number, month?: n
     logger.info('📅 Iniciando proceso de recordatorios mensuales', {
       year: targetYear,
       month: targetMonth,
-      monthName,
-      bot_connected: connectionStatus.isConnected()
+      monthName
     });
 
     // Obtener todas las vacaciones del mes agrupadas por empleado y manager

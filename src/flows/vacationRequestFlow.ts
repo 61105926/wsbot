@@ -9,7 +9,6 @@ import { extractRealPhoneFromContext } from "../utils/phoneHelper";
  * Envía un link al frontend con solo el teléfono codificado en base64
  */
 export const vacationRequestFlow = addKeyword([EVENTS.ACTION])
-  .addAnswer(FLOW_MESSAGES.VACATION.PROCESSING)
   .addAction(async (ctx, { flowDynamic }) => {
     const phoneInfo = extractRealPhoneFromContext(ctx);
     const userPhone = phoneInfo.phone;
