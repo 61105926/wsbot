@@ -1,7 +1,5 @@
 import { logger } from '../utils/logger';
-import { connectionStatus } from '../services/connectionStatus';
 import { getUserByID } from '../services/getUserByID';
-import { getPhoneForEnvironment } from '../utils/phoneHelper';
 
 interface VacationData {
   emp_id: string;
@@ -213,65 +211,9 @@ async function getVacationsForMonth(year: number, month: number): Promise<{
  */
 async function sendEmployeeReminder(bot: any, vacationData: VacationData, monthName: string): Promise<boolean> {
   try {
-    if (!connectionStatus.isConnected()) {
-      logger.warn('Bot no conectado, no se puede enviar recordatorio al empleado', {
-        emp_id: vacationData.emp_id
-      });
-      return false;
-    }
 
-    // Obtener el número real del empleado
-    const phoneReal = vacationData.emp_telefono ? 
-      (vacationData.emp_telefono.startsWith('591') ? vacationData.emp_telefono : `591${vacationData.emp_telefono}`) : 
-      undefined;
-    const phone = getPhoneForEnvironment(phoneReal);
-    
-    logger.info('📱 Enviando recordatorio al empleado', {
-      emp_id: vacationData.emp_id,
-      emp_nombre: vacationData.emp_nombre,
-      phone_destino: phone,
-      phone_real: phoneReal,
-      is_development: process.env.NODE_ENV === 'development'
-    });
-
-    // Formatear fechas
-    const fechasFormateadas = vacationData.fechas.map(f => {
-      const fecha = new Date(f.fecha);
-      const dia = fecha.getDate();
-      const mes = fecha.toLocaleDateString('es-ES', { month: 'long' });
-      const tipo = f.tipo_dia === 'COMPLETO' ? 'Completo' : f.tipo_dia;
-      return `${dia} de ${mes} (${tipo})`;
-    }).join('\n• ');
-
-    // Determinar el estado de la solicitud para el mensaje
-    const estadoTexto = vacationData.estado || vacationData.fechas[0]?.estado || 'APROBADO';
-    let estadoMensaje = '';
-    if (estadoTexto === 'APROBADO' || estadoTexto === 'APROBADA') {
-      estadoMensaje = 'aprobadas';
-    } else if (estadoTexto === 'PREAPROBADO' || estadoTexto === 'PRE-APROBADO') {
-      estadoMensaje = 'pre-aprobadas';
-    } else if (estadoTexto === 'PROCESO' || estadoTexto === 'PENDIENTE') {
-      estadoMensaje = 'en proceso';
-    } else {
-      estadoMensaje = 'aprobadas';
-    }
-
-    const message = `📅 *Recordatorio de Vacaciones - ${monthName}*
-
-Hola ${vacationData.emp_nombre},
-
-Este es un recordatorio de tus vacaciones *${estadoMensaje}* para el mes de *${monthName}*:
-
-• ${fechasFormateadas}
-
-*Total: ${vacationData.fechas.length} día(s)*
-*Estado: ${estadoMensaje.toUpperCase()}*
-
-¡Que disfrutes tus vacaciones! 🏖️`;
-
-    await bot.sendMessage(phone, message, {});
-    
-    logger.info('✅ Recordatorio mensual enviado al empleado', {
+    // Notificaciones por WhatsApp eliminadas - solo se usan correos electrónicos
+    logger.info('✅ Recordatorio mensual procesado (WhatsApp desactivado)', {
       emp_id: vacationData.emp_id,
       emp_nombre: vacationData.emp_nombre,
       mes: monthName,
@@ -293,92 +235,20 @@ Este es un recordatorio de tus vacaciones *${estadoMensaje}* para el mes de *${m
  */
 async function sendManagerReminder(bot: any, managerId: string, employeesVacations: Map<string, VacationData>, monthName: string): Promise<boolean> {
   try {
-    if (!connectionStatus.isConnected()) {
-      logger.warn('Bot no conectado, no se puede enviar recordatorio al jefe', {
-        manager_id: managerId
-      });
-      return false;
-    }
-
-    // Obtener datos del manager (usar el primer empleado como referencia)
+    // Notificaciones por WhatsApp eliminadas - solo se usan correos electrónicos
     const firstEmployee = Array.from(employeesVacations.values())[0];
     if (!firstEmployee) {
-      logger.warn('No hay empleados para enviar recordatorio al jefe', {
+      logger.warn('No hay empleados para procesar recordatorio al jefe', {
         manager_id: managerId
       });
       return false;
     }
 
-    // Obtener el número real del manager
-    const managerPhoneReal = firstEmployee.manager_telefono ? 
-      (firstEmployee.manager_telefono.startsWith('591') ? firstEmployee.manager_telefono : `591${firstEmployee.manager_telefono}`) : 
-      undefined;
-    const managerPhone = getPhoneForEnvironment(managerPhoneReal);
-    
-    logger.info('📱 Enviando consolidado al manager', {
-      manager_id: managerId,
-      manager_nombre: firstEmployee.manager_nombre,
-      phone_destino: managerPhone,
-      phone_real: managerPhoneReal,
-      is_development: process.env.NODE_ENV === 'development',
-      total_empleados: employeesVacations.size
-    });
-
-    // Construir mensaje con resumen por empleado
-    let message = `📅 *Recordatorio de Vacaciones - ${monthName}*\n\n`;
-    message += `Hola ${firstEmployee.manager_nombre},\n\n`;
-    message += `Este es un resumen de las vacaciones de tus empleados para el mes de *${monthName}*:\n\n`;
-
-    let totalDias = 0;
-    for (const [empId, vacationData] of employeesVacations.entries()) {
-      const dias = vacationData.fechas.length;
-      totalDias += dias;
-
-      // Ordenar fechas
-      const fechasOrdenadas = [...vacationData.fechas].sort((a, b) => 
-        new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
-      );
-
-      const fechasFormateadas = fechasOrdenadas.map(f => {
-        const fecha = new Date(f.fecha);
-        return fecha.getDate();
-      }).join(', ');
-
-      // Determinar el estado para mostrar
-      const estadoTexto = vacationData.estado || vacationData.fechas[0]?.estado || 'APROBADO';
-      let estadoEmoji = '✅';
-      let estadoTextoMostrar = '';
-      if (estadoTexto === 'APROBADO' || estadoTexto === 'APROBADA') {
-        estadoEmoji = '✅';
-        estadoTextoMostrar = 'Aprobadas';
-      } else if (estadoTexto === 'PREAPROBADO' || estadoTexto === 'PRE-APROBADO') {
-        estadoEmoji = '⏳';
-        estadoTextoMostrar = 'Pre-aprobadas';
-      } else if (estadoTexto === 'PROCESO' || estadoTexto === 'PENDIENTE') {
-        estadoEmoji = '🔄';
-        estadoTextoMostrar = 'En proceso';
-      } else {
-        estadoEmoji = '✅';
-        estadoTextoMostrar = 'Aprobadas';
-      }
-
-      message += `👤 *${vacationData.emp_nombre}*\n`;
-      message += `   📆 Días: ${fechasFormateadas}\n`;
-      message += `   📊 Total: ${dias} día(s)\n`;
-      message += `   ${estadoEmoji} Estado: ${estadoTextoMostrar}\n\n`;
-    }
-
-    message += `*Total general: ${totalDias} día(s) de vacaciones en ${monthName}*\n\n`;
-    message += `¡Que todos disfruten sus vacaciones! 🏖️`;
-
-    await bot.sendMessage(managerPhone, message, {});
-
-    logger.info('✅ Recordatorio mensual enviado al jefe', {
+    logger.info('✅ Recordatorio mensual procesado (WhatsApp desactivado)', {
       manager_id: managerId,
       manager_nombre: firstEmployee.manager_nombre,
       mes: monthName,
-      total_empleados: employeesVacations.size,
-      total_dias: totalDias
+      total_empleados: employeesVacations.size
     });
 
     return true;
@@ -396,11 +266,7 @@ async function sendManagerReminder(bot: any, managerId: string, employeesVacatio
  */
 export async function processMonthlyReminders(bot: any, year?: number, month?: number): Promise<void> {
   try {
-    // Verificar que el bot esté conectado antes de iniciar
-    if (!connectionStatus.isConnected()) {
-      logger.warn('⚠️ Bot no conectado, no se pueden enviar recordatorios');
-      throw new Error('El bot de WhatsApp no está conectado. Por favor, escanea el código QR para conectar el bot.');
-    }
+    // Notificaciones por WhatsApp eliminadas - solo se usan correos electrónicos
 
     const now = new Date();
     const targetYear = year || now.getFullYear();
@@ -498,7 +364,7 @@ export async function processMonthlyReminders(bot: any, year?: number, month?: n
       logger.error('❌ Error en proceso de recordatorios mensuales', {
         error: error.message,
         stack: error.stack,
-        bot_connected: connectionStatus.isConnected()
+        bot_connected: false // WhatsApp desactivado
       });
       // Re-lanzar solo errores críticos
       throw error;
@@ -507,7 +373,7 @@ export async function processMonthlyReminders(bot: any, year?: number, month?: n
       // Esto evita que el error se propague al frontend
       logger.debug('⚠️ Error de conexión residual detectado (proceso completó exitosamente, ignorando)', {
         error: error.message,
-        bot_connected: connectionStatus.isConnected()
+        bot_connected: false // WhatsApp desactivado
       });
       // NO re-lanzar el error para que no se propague al frontend
       // El proceso ya completó exitosamente, este es solo un error residual

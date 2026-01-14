@@ -29,7 +29,6 @@ Escribe el número de la opción que desees.
   // Solicitudes de datos
   PROMPTS: {
     ENTER_ID: "Escribe tu *ID* (solo números)",
-    SENDING_DOCUMENT: "📥 Enviando documento...",
     SENDING_IMAGE: "⏰ Enviando documento, espere....",
   },
 
@@ -46,7 +45,6 @@ Escribe el número de la opción que desees.
 
   // Solicitud de vacaciones
   VACATION: {
-    PROCESSING: "⏳ Procesando tu solicitud de vacaciones...",
     SUCCESS: `✅ *Solicitud de Vacaciones*
 
 Por favor, completa tu solicitud en el siguiente enlace:

@@ -414,10 +414,6 @@ const main = async () => {
     // Notificaciones de vacaciones (aprobación/rechazo)
     provider.server.post("/api/vacation-notification", handleCtx(vacationNotificationHandler));
     provider.server.get("/api/vacation-data/:id", handleCtx(getVacationDataHandler));
-    
-    // Endpoint de prueba para WhatsApp
-    const { testWhatsAppHandler } = await import('./handlers/testWhatsApp');
-    provider.server.post("/api/test-whatsapp", handleCtx(testWhatsAppHandler));
 
     // Iniciar limpieza automática de archivos temporales
     // Limpia archivos más antiguos de 60 minutos cada 30 minutos

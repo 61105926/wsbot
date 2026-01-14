@@ -35,7 +35,7 @@ export const vacationRequestFlow = addKeyword([EVENTS.ACTION])
           phoneNumber = phoneNumber.replace('@lid', '');
         }
       }
-
+      phoneNumber = String(phoneNumber);
       // Codificar el teléfono en base64
       const encodedPhone = Buffer.from(phoneNumber).toString('base64');
 

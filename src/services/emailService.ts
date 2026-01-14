@@ -126,13 +126,15 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
       ? data.fechas.map((f, idx) => `${idx + 1}. ${f.fecha} - ${f.turno}`).join('\n')
       : 'No se especificaron fechas';
     
-    // Generar calendario visual HTML
+    // Generar calendario visual HTML compatible con Outlook
+    const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    
     const generarCalendarioHTML = (fechas: Array<{ fecha: string; turno: string }>) => {
-      const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      let html = '<table class="calendar-container" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 20px 0;"><tr>';
       
-      return fechas.map((f, idx) => {
+      fechas.forEach((f, idx) => {
         // Parsear fecha (formato: DD-MM-YYYY o YYYY-MM-DD)
         let fechaObj: Date;
         if (f.fecha.includes('-')) {
@@ -154,35 +156,52 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
         const diaSemana = diasSemana[fechaObj.getDay()];
         
         // Determinar color del badge según el turno
-        let turnoClass = 'turno-completo';
+        let turnoBgColor = '#357abd';
+        let turnoColor = '#ffffff';
         let turnoTexto = f.turno || 'COMPLETO';
         if (f.turno === 'MAÑANA') {
-          turnoClass = 'turno-manana';
+          turnoBgColor = '#ffc107';
+          turnoColor = '#2c3e50';
           turnoTexto = 'MAÑANA';
         } else if (f.turno === 'TARDE') {
-          turnoClass = 'turno-tarde';
+          turnoBgColor = '#ff9800';
+          turnoColor = '#ffffff';
           turnoTexto = 'TARDE';
         }
         
-        return `
-          <div class="calendar-card">
-            <div class="calendar-header">
-              <div class="calendar-day">${dia}</div>
-              <div class="calendar-month">${mes}</div>
-            </div>
-            <div class="calendar-body">
-              <div class="calendar-year">${año}</div>
-              <div class="calendar-weekday">${diaSemana}</div>
-              <div class="calendar-turno ${turnoClass}">${turnoTexto}</div>
-            </div>
-          </div>
+        // Nueva fila cada 3 elementos
+        if (idx > 0 && idx % 3 === 0) {
+          html += '</tr><tr>';
+        }
+        
+        html += `
+          <td class="calendar-cell" style="width: 33.333%; padding: 8px; vertical-align: top;">
+            <table class="calendar-card" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ffffff; border: 2px solid #e1e8ed; border-radius: 4px; margin: 0 auto;">
+              <tr>
+                <td class="calendar-header" style="background-color: #357abd; padding: 12px; text-align: center; color: #ffffff;">
+                  <div style="font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px;">${dia}</div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">${mes}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="calendar-body" style="padding: 12px; text-align: center;">
+                  <div style="font-size: 11px; color: #6c757d; margin-bottom: 6px; font-weight: 500;">${año}</div>
+                  <div style="font-size: 12px; color: #5a6c7d; margin-bottom: 8px; font-weight: 600;">${diaSemana}</div>
+                  <div style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background-color: ${turnoBgColor}; color: ${turnoColor};">${turnoTexto}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
         `;
-      }).join('');
+      });
+      
+      html += '</tr></table>';
+      return html;
     };
     
     const calendarioHTML = (data.fechas && data.fechas.length > 0)
       ? generarCalendarioHTML(data.fechas)
-      : '<div class="calendar-container"><p style="color: #666; font-style: italic;">No se especificaron fechas</p></div>';
+      : '<table class="calendar-container" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 20px 0;"><tr><td style="color: #666; font-style: italic; padding: 20px;">No se especificaron fechas</td></tr></table>';
     
     // Construir cuerpo del correo con diseño corporativo profesional
     const htmlBody = `
@@ -215,11 +234,10 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
             background-color: #ffffff; 
             border-radius: 4px; 
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border: 1px solid #e1e8ed;
           }
           .header { 
-            background: linear-gradient(135deg, #357abd 0%, #2a5f8f 100%);
+            background-color: #357abd;
             padding: 35px 40px; 
             border-bottom: 3px solid #ffc107;
           }
@@ -354,12 +372,14 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
             margin: 8px 0;
             border-radius: 4px;
             border: 1px solid #d1ecf1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            width: 100%;
+          }
+          .reemplazante-row {
+            width: 100%;
+            border-collapse: collapse;
           }
           .reemplazante-info {
-            flex: 1;
+            width: 100%;
           }
           .reemplazante-nombre {
             font-weight: 600;
@@ -399,23 +419,30 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
             margin: 30px 0;
           }
           .calendar-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
             margin: 20px 0;
+            width: 100%;
+          }
+          .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+          }
+          .calendar-cell {
+            width: 33.333%;
+            padding: 8px;
+            vertical-align: top;
           }
           .calendar-card {
-            flex: 0 0 calc(33.333% - 10px);
+            width: 100%;
             min-width: 140px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            background-color: #ffffff;
             border: 2px solid #e1e8ed;
-            border-radius: 8px;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
+            margin: 0 auto;
           }
           .calendar-header {
-            background: linear-gradient(135deg, #357abd 0%, #2a5f8f 100%);
+            background-color: #357abd;
             padding: 12px;
             text-align: center;
             color: #ffffff;
@@ -511,24 +538,26 @@ export async function sendVacationEmail(data: VacationEmailData): Promise<boolea
               
               <div class="fechas-section">
                 <h3>Fechas Solicitadas</h3>
-                <div class="calendar-container">
-                  ${calendarioHTML}
-                </div>
+                ${calendarioHTML}
               </div>
               
               ${data.reemplazantes && data.reemplazantes.length > 0 ? `
               <div class="reemplazantes-section">
                 <h3>Reemplazantes Asignados</h3>
                 ${data.reemplazantes.map((rep, idx) => `
-                  <div class="reemplazante-item">
-                    <div class="reemplazante-info">
-                      <div class="reemplazante-nombre">${rep.nombre}</div>
-                      <div class="reemplazante-details">
-                        Tel: ${rep.telefono ? rep.telefono : 'N/A'}
-                      </div>
-                    </div>
-                    <span class="reemplazante-badge">Reemplazo</span>
-                  </div>
+                  <table class="reemplazante-item" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ffffff; padding: 12px 15px; margin: 8px 0; border-radius: 4px; border: 1px solid #d1ecf1;">
+                    <tr>
+                      <td class="reemplazante-info" style="width: 100%;">
+                        <div class="reemplazante-nombre" style="font-weight: 600; color: #2c3e50; font-size: 14px; margin-bottom: 4px;">${rep.nombre}</div>
+                        <div class="reemplazante-details" style="font-size: 12px; color: #6c757d;">
+                          Tel: ${rep.telefono ? rep.telefono : 'N/A'}
+                        </div>
+                      </td>
+                      <td style="vertical-align: middle; padding-left: 10px;">
+                        <span class="reemplazante-badge" style="background-color: #357abd; color: #ffffff; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Reemplazo</span>
+                      </td>
+                    </tr>
+                  </table>
                 `).join('')}
               </div>
               ` : ''}
