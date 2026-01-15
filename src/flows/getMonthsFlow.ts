@@ -74,7 +74,23 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
     });
 
     try {
-      await flowDynamic([{ body: FLOW_MESSAGES.PROMPTS.SENDING_IMAGE }]);
+      // Mensajes variados mientras busca
+      const searchingMessages = [
+        'Buscando tu boleta... 📄',
+        'Déjame buscar tu boleta...',
+        'Un momento, buscando...',
+        'Buscando, un segundo...',
+        'Ya te la busco...'
+      ];
+      const searchingMessage = searchingMessages[Math.floor(Math.random() * searchingMessages.length)];
+      
+      // Simular tiempo de escritura
+      const typingTime = Math.max(1000, Math.min(3000, searchingMessage.length * 50));
+      await new Promise(resolve => setTimeout(resolve, typingTime));
+      await flowDynamic([{ body: searchingMessage }]);
+      
+      // Simular tiempo de búsqueda
+      await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
 
       // Construir URL usando servicio
       // Usar el número real si está disponible, sino usar el LID
@@ -118,8 +134,22 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         fileName
       });
 
-      // Enviar documento
+      // Mensajes de éxito variados
+      const successMessages = [
+        'Listo, ahí está tu boleta. Cualquier consulta, avísame 👍',
+        'Ahí tienes tu boleta. Si necesitas algo más, dime.',
+        'Listo, te la envié. Cualquier duda, me avisas.',
+        'Ya está, ahí tienes tu boleta. 👍'
+      ];
+      const successMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
+      
+      // Delay antes de enviar
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
       await flowDynamic([{ media: tmpPath }]);
+      
+      // Delay antes del mensaje de confirmación
+      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+      await flowDynamic([{ body: successMessage }]);
 
       // ✅ CRÍTICO: Limpiar archivo temporal
       try {

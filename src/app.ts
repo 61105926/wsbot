@@ -13,6 +13,7 @@ import { menuFlow } from "./flows/menu.flow";
 import { sendDocumentFlow } from "./flows/sendDocumentFlow";
 import { getMonthsFlow } from "./flows/getMonthsFlow";
 import { vacationRequestFlow } from "./flows/vacationRequestFlow";
+import { naturalConversationFlow } from "./flows/naturalConversationFlow";
 import { BaileysProvider as Provider } from 'aurik3-builderbot-baileys-custom'
 
 import { uploadFile } from "./middlewares/fileMiddleware";
@@ -229,6 +230,7 @@ const main = async () => {
 
     const { httpServer, handleCtx } = await createBot({
       flow: createFlow([
+        naturalConversationFlow, // Flow conversacional natural (prioridad)
         menuFlow,
         invalidFlow,
         getCardIDFlow,

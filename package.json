@@ -31,7 +31,8 @@
     "sharp": "^0.30.5",
     "winston": "^3.18.3",
     "zod": "^4.1.12",
-    "aurik3-builderbot-baileys-custom": "0.0.8"
+    "aurik3-builderbot-baileys-custom": "0.0.8",
+    "@google/generative-ai": "^0.21.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

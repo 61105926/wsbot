@@ -53,9 +53,13 @@ const handler = async (bot: Bot, req: any, res: any) => {
 
       // Enviar cada mensaje
       for (let index = 0; index < messages.length; index++) {
-        const message = MessageBuilderService.replaceVariables(messages[index], {
+        const message = await MessageBuilderService.replaceVariables(messages[index], {
           nombre: user.fullName,
           link: user.linkURL
+        }, {
+          regional: user.regional,
+          cargo: (user as any).cargo,
+          departamento: (user as any).departamento
         });
 
         // Si es el primer mensaje y hay archivo, enviarlo con el archivo

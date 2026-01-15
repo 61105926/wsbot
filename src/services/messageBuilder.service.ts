@@ -1,5 +1,7 @@
 import { MONTH_NAMES, GREETINGS, FAREWELLS } from "../config/constants";
 import { User } from "../dto/models.dto";
+import { GeminiService } from "./geminiService";
+import { GEMINI_CONFIG } from "../config/config";
 
 /**
  * Servicio para construir mensajes personalizados
@@ -39,12 +41,33 @@ export class MessageBuilderService {
 
   /**
    * Construye mensaje personalizado para envío de boleta
+   * Usa Gemini AI para generar mensajes naturales si está habilitado
    */
-  static buildPayslipMessage(user: User, monthCode: string): string {
+  static async buildPayslipMessage(user: User, monthCode: string): Promise<string> {
     const monthName = this.getMonthName(monthCode);
     const year = this.getYear(monthCode);
 
-    // Seleccionar saludo y despedida aleatoria
+    // Si Gemini está habilitado, usarlo para generar mensaje natural
+    if (GEMINI_CONFIG.ENABLED) {
+      try {
+        const geminiMessage = await GeminiService.generatePayslipMessage(
+          user.fullName,
+          monthName,
+          year,
+          {
+            regional: (user as any).regional,
+            cargo: (user as any).cargo,
+            departamento: (user as any).departamento
+          }
+        );
+        return geminiMessage;
+      } catch (error: any) {
+        // Si falla Gemini, usar fallback tradicional
+        console.warn('⚠️ Gemini falló, usando mensaje tradicional:', error.message);
+      }
+    }
+
+    // Fallback: mensaje tradicional con variaciones
     const saludo = this.getRandomItem(GREETINGS);
     const despedida = this.getRandomItem(FAREWELLS);
 
@@ -53,18 +76,38 @@ export class MessageBuilderService {
 
   /**
    * Reemplaza variables en un mensaje
+   * Usa Gemini AI para generar mensajes naturales si está habilitado
    */
-  static replaceVariables(
+  static async replaceVariables(
     message: string,
-    variables: Record<string, string>
-  ): string {
-    let result = message;
+    variables: Record<string, string>,
+    userInfo?: {
+      regional?: string;
+      cargo?: string;
+      departamento?: string;
+    }
+  ): Promise<string> {
+    // Si Gemini está habilitado y tenemos nombre de usuario, usar Gemini
+    if (GEMINI_CONFIG.ENABLED && variables.nombre) {
+      try {
+        const geminiMessage = await GeminiService.generateRegionalMessage(
+          message,
+          variables.nombre,
+          userInfo
+        );
+        return geminiMessage;
+      } catch (error: any) {
+        // Si falla Gemini, usar reemplazo tradicional
+        console.warn('⚠️ Gemini falló, usando reemplazo tradicional:', error.message);
+      }
+    }
 
+    // Fallback: reemplazo tradicional de variables
+    let result = message;
     for (const [key, value] of Object.entries(variables)) {
       const regex = new RegExp(`{{${key}}}`, 'g');
       result = result.replace(regex, value);
     }
-
     return result;
   }
 

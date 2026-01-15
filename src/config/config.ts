@@ -18,6 +18,15 @@ export const API_CONFIG = {
 
   // Backend API (Laravel - si se usa en el futuro)
   BACKEND_API: process.env.BACKEND_API || "http://localhost",
+  
+  // Gemini AI API Key
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || "AIzaSyAH2doRRVBHE80dVE4qgUkeylffPMT0bAI",
+} as const;
+
+// Gemini AI Configuration
+export const GEMINI_CONFIG = {
+  API_KEY: API_CONFIG.GEMINI_API_KEY,
+  ENABLED: process.env.GEMINI_ENABLED !== 'false', // Habilitado por defecto
 } as const;
 
 // FRONTEND URLs

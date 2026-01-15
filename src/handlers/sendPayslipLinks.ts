@@ -60,8 +60,8 @@ const handler = async (bot: Bot, req: any, res: any) => {
       // Construir nombre de archivo
       const fileName = MessageBuilderService.buildPayslipFileName(user, month);
 
-      // Construir mensaje
-      const message = MessageBuilderService.buildPayslipMessage(user, month);
+      // Construir mensaje (ahora es async porque usa Gemini)
+      const message = await MessageBuilderService.buildPayslipMessage(user, month);
 
       // Descargar PDF usando streams para no cargar todo en memoria
       logger.http(`Descargando PDF desde: ${payslipUrl}`);
