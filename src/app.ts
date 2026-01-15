@@ -1,12 +1,12 @@
 
 import "dotenv/config";
 
-import { createBot, createProvider, createFlow, addKeyword, utils, EVENTS } from '@builderbot/bot'
+import { createBot, createFlow, addKeyword, utils, EVENTS } from '@builderbot/bot'
 
 import { MemoryDB as Database } from '@builderbot/bot'
 
 
-import { PORT } from "./config/config";
+import { PORT, SENDWAVE_CONFIG } from "./config/config";
 import { getCardIDFlow } from "./flows/getCardIDFlow";
 import { invalidFlow } from "./flows/invalidFlow";
 import { menuFlow } from "./flows/menu.flow";
@@ -14,7 +14,8 @@ import { sendDocumentFlow } from "./flows/sendDocumentFlow";
 import { getMonthsFlow } from "./flows/getMonthsFlow";
 import { vacationRequestFlow } from "./flows/vacationRequestFlow";
 import { naturalConversationFlow } from "./flows/naturalConversationFlow";
-import { BaileysProvider as Provider } from 'aurik3-builderbot-baileys-custom'
+import { flowEnd } from "./flows/endFlow";
+import { SendWaveProvider as Provider } from "@gamastudio/sendwave-provider";
 
 import { uploadFile } from "./middlewares/fileMiddleware";
 import { sendRegionalMessagesHandler } from "./handlers/sendRegionalMessages";
@@ -35,199 +36,94 @@ import { logger } from "./utils/logger";
 import { sendJSON } from "./utils/response";
 import cors from "cors";
 
-// Configurar reconexión automática para desconexiones repentinas
-function setupAutoReconnection(provider: any) {
-  const boundSockets = new WeakSet<any>();
+import { createSendWaveProvider, type GlobalVendorArgs } from "@gamastudio/sendwave-provider";
 
-  // Función para obtener el socket del provider
-  const getSocket = () => {
-    try {
-      const sock = (provider as any)?.vendor || 
-                  (provider as any)?.getInstance?.();
-      if (sock && sock.ev) {
-        if (boundSockets.has(sock)) {
-          return sock;
-        }
-        boundSockets.add(sock);
-        return sock;
-      }
-      return null;
-    } catch (error) {
-      logger.error('Error al obtener socket para reconexión', { error });
-      return null;
-    }
-  };
-
-  // Escuchar eventos de conexión
-  if (provider && typeof provider.on === 'function') {
-    provider.on('connection.update', (update: any) => {
-      if (update.connection === 'close' && update.lastDisconnect) {
-        const lastDisconnect = update.lastDisconnect;
-        const reason = lastDisconnect.error?.output?.statusCode || 
-                       lastDisconnect.error?.output?.disconnectReason ||
-                       lastDisconnect.error?.message ||
-                       'unknown';
-        
-        const date = lastDisconnect.date ? new Date(lastDisconnect.date).toISOString() : new Date().toISOString();
-        const sock = getSocket();
-
-        logger.warn('Desconexión detectada', {
-          reason,
-          date,
-          error: lastDisconnect.error?.message
-        });
-
-        // Mapear razones de desconexión
-        let disconnectReason = reason;
-        if (typeof reason === 'number') {
-          const reasonMap: Record<number, string> = {
-            401: 'loggedOut',
-            403: 'connectionReplaced',
-            404: 'connectionClosed',
-            408: 'timedOut',
-            429: 'connectionLost',
-            500: 'connectionLost',
-            502: 'connectionLost',
-            503: 'connectionLost',
-            504: 'timedOut',
-          };
-          disconnectReason = reasonMap[reason] || 'unknown';
-        } else if (typeof reason === 'string') {
-          if (reason.includes('logged out') || reason.includes('401')) {
-            disconnectReason = 'loggedOut';
-          } else if (reason.includes('connection closed') || reason.includes('404')) {
-            disconnectReason = 'connectionClosed';
-          } else if (reason.includes('connection lost') || reason.includes('429') || reason.includes('500')) {
-            disconnectReason = 'connectionLost';
-          } else if (reason.includes('connection replaced') || reason.includes('403')) {
-            disconnectReason = 'connectionReplaced';
-          } else if (reason.includes('restart required')) {
-            disconnectReason = 'restartRequired';
-          } else if (reason.includes('timed out') || reason.includes('408') || reason.includes('504')) {
-            disconnectReason = 'timedOut';
-          }
-        }
-
-        // Manejar reconexión según el tipo
-        switch (disconnectReason) {
-          case 'connectionClosed':
-            logger.info(`Connection closed, reconnecting.... ${date}`);
-            if (sock && typeof sock.connect === 'function') {
-              sock.connect();
-            }
-            break;
-
-          case 'connectionLost':
-            logger.info(`Connection Lost from Server, reconnecting... ${date}`);
-            if (sock && typeof sock.connect === 'function') {
-              sock.connect();
-            }
-            break;
-
-          case 'connectionReplaced':
-            logger.error(`Connection Replaced, Another New Session Opened, Please Close Current Session First ${date}`);
-            process.exit(1);
-            break;
-
-          case 'loggedOut':
-            logger.error('Device Logged Out, Please Delete session and Scan Again.');
-            process.exit(1);
-            break;
-
-          case 'restartRequired':
-            logger.info(`Restart Required, Restarting... ${date}`);
-            if (sock && typeof sock.connect === 'function') {
-              sock.connect();
-            }
-            break;
-
-          case 'timedOut':
-            logger.info(`Connection TimedOut, Reconnecting... ${date}`);
-            if (sock && typeof sock.connect === 'function') {
-              sock.connect();
-            }
-            break;
-
-          default:
-            logger.warn(`Unknown DisconnectReason: ${disconnectReason} ${date} | ${reason}`);
-            if (sock && typeof sock.connect === 'function') {
-              sock.connect();
-            }
-            break;
-        }
-      }
-    });
-  }
-}
-
-// Manejador global de errores no capturados
 process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
-  // No salir del proceso, solo registrar el error
+  logger.error('❌ Uncaught Exception', { error: error.message });
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
-  // No salir del proceso, solo registrar el error
+process.on('unhandledRejection', (reason) => {
+  logger.error('❌ Unhandled Rejection', { reason });
 });
 
-// Manejar señales de terminación
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  console.log('SIGINT signal received: closing HTTP server');
-  process.exit(0);
-});
+process.on('SIGTERM', () => process.exit(0));
+process.on('SIGINT', () => process.exit(0));
 
 const main = async () => {
   try {
-    // Log información del entorno
-    const packageManager = process.env.npm_config_user_agent?.includes('pnpm') ? 'pnpm' : 
-                           process.env.PNPM_VERSION ? 'pnpm' : 'npm';
-    const pnpmVersion = process.env.PNPM_VERSION || 'unknown';
-    
     logger.info('🚀 Iniciando aplicación', {
-      packageManager: packageManager,
-      pnpmVersion: packageManager === 'pnpm' ? pnpmVersion : undefined,
       nodeVersion: process.version,
-      provider: 'Aurik3 Baileys Custom'
+      provider: 'SendWave'
     });
     
-    console.info("📦 Package Manager: pnpm");
-    console.info("🔌 Provider: Aurik3 Baileys Custom");
-    console.info("✅ Usando aurik3-builderbot-baileys-custom como proveedor de WhatsApp");
-    
-    // Silenciar logs verbosos de Baileys/Aurik3
-    // Estos logs muestran información de criptografía y sesiones que no son necesarios en producción
-    const defaultLogger = {
-      level: process.env.NODE_ENV === 'production' ? 'error' : 'silent',
-      child: () => defaultLogger,
-      trace: () => {},
-      debug: () => {},
-      info: () => {},
-      warn: () => {},
-      error: () => {},
-      fatal: () => {},
+    // Configuración de SendWave
+    const sendWaveConfig: Partial<GlobalVendorArgs> = {
+      name: SENDWAVE_CONFIG.BOT_NAME,
+      apiKey: SENDWAVE_CONFIG.API_KEY,
+      port: SENDWAVE_CONFIG.PORT,
+      delay: SENDWAVE_CONFIG.DELAY,
+      linkPreview: SENDWAVE_CONFIG.LINK_PREVIEW,
+      message: {
+        mergeMessage: false,
+        timeMergeMessage: 3,
+      },
+      queueFlow: {
+        enabled: SENDWAVE_CONFIG.QUEUE_FLOW.ENABLED,
+        warningTimeout: SENDWAVE_CONFIG.QUEUE_FLOW.WARNING_TIMEOUT,
+        endTimeout: SENDWAVE_CONFIG.QUEUE_FLOW.END_TIMEOUT,
+        warningMessage: SENDWAVE_CONFIG.QUEUE_FLOW.WARNING_MESSAGE,
+      },
     };
 
-    const adapterProvider = createProvider(Provider, {
-      version: [2, 3000, 1030817285],
-      browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
-      experimentalStore: true, // Significantly reduces resource consumption
-      timeRelease: 86400000, // Cleans up data every 24 hours (in milliseconds)
-      groupsIgnore: true,
-      readStatus: false,
-      logger: defaultLogger, // Silenciar logs verbosos del proveedor
-      printQRInTerminal: true, // Mantener QR visible
-    })
-    const provider = adapterProvider;
+    // Validar que la API key esté configurada
+    if (!sendWaveConfig.apiKey || sendWaveConfig.apiKey === "") {
+      throw new Error("SENDWAVE_API_KEY no está configurada en las variables de entorno");
+    }
+
+    // Crear el proveedor SendWave directamente
+    const provider = createSendWaveProvider(sendWaveConfig);
+
+    // Inicializar el proveedor SendWave
+    // initVendor() es protegido y se llama internamente por initAll()
+    const port = provider.globalVendorArgs.port || PORT;
+    await provider.initAll(port);
+
+    // Configurar event listeners de SendWave
+    provider.on('ready', (isReady: boolean) => {
+      logger.info('Estado de conexión SendWave', { 
+        connected: isReady ? 'Conectado' : 'Desconectado' 
+      });
+      connectionStatus.setConnected(isReady);
+    });
+
+    provider.on('auth_failure', (error: any) => {
+      logger.error('Error de autenticación SendWave', { error });
+    });
+
+    provider.on('message', (ctx: any) => {
+      logger.debug('Mensaje recibido', { 
+        from: ctx.from, 
+        body: ctx.body?.substring(0, 50) 
+      });
+    });
+
+    provider.on('user-message', (data: any) => {
+      logger.debug('Mensaje de usuario', { 
+        from: data.from, 
+        body: data.body?.substring(0, 50) 
+      });
+      // El timeout se resetea automáticamente si queueFlow está habilitado
+    });
+
+    // Los eventos de Queue Flow se configuran dinámicamente por usuario
+    // El formato es 'userInactive-{phone}' según la documentación
 
     // Registrar provider para trackear conexión
     connectionStatus.setProvider(provider);
 
+    // SendWaveProvider es compatible con BuilderBot pero TypeScript necesita un cast
+    // SendWaveProvider es compatible con BuilderBot pero TypeScript necesita un cast
+    // porque no extiende formalmente de ProviderClass
     const { httpServer, handleCtx } = await createBot({
       flow: createFlow([
         naturalConversationFlow, // Flow conversacional natural (prioridad)
@@ -237,13 +133,13 @@ const main = async () => {
         sendDocumentFlow,
         getMonthsFlow,
         vacationRequestFlow,
+        flowEnd, // Flow para manejar inactividad de usuarios (Queue Flow)
       ]),
       database: new Database(),
-      provider: provider,
+      provider: provider as unknown as any,
     });
 
-    // Configurar reconexión automática
-    setupAutoReconnection(provider);
+    // SendWave maneja la reconexión automáticamente, no necesitamos setupAutoReconnection
 
     httpServer(PORT);
 
@@ -261,82 +157,13 @@ const main = async () => {
       allowedHeaders: ['Content-Type', 'Authorization']
     }));
 
-    // Endpoint de prueba para correo electrónico (registrado primero para evitar conflictos)
-    provider.server.get("/api/test-email", handleCtx(async (bot: any, req: any, res: any) => {
-      try {
-        const { sendVacationEmail, verifyEmailConnection } = await import('./services/emailService');
-        
-        logger.info('📧 Endpoint de prueba de correo llamado (GET)');
-        
-        // Verificar conexión primero (pero continuar aunque falle para ver el error detallado)
-        const connectionOk = await verifyEmailConnection();
-        if (!connectionOk) {
-          logger.warn('⚠️ Verificación de conexión falló, pero intentando enviar correo de todas formas');
-          // Continuar de todas formas para intentar enviar el correo
-        }
-        
-        // Enviar correo de prueba
-        const emailSent = await sendVacationEmail({
-          empleadoNombre: 'Empleado de Prueba',
-          empleadoId: 'TEST001',
-          estado: 'APROBADO',
-          fechas: [
-            { fecha: '20-01-2024', turno: 'MAÑANA' },
-            { fecha: '21-01-2024', turno: 'COMPLETO' },
-            { fecha: '22-01-2024', turno: 'COMPLETO' }
-          ],
-          comentario: 'Este es un correo de prueba del sistema de vacaciones',
-          regional: 'La Paz',
-          managerNombre: 'Manager de Prueba',
-          reemplazantes: [
-            {
-              emp_id: 'EMP123',
-              nombre: 'Juan Pérez',
-              telefono: '77712345'
-            },
-            {
-              emp_id: 'EMP456',
-              nombre: 'María González',
-              telefono: '77767890'
-            }
-          ]
-        });
-        
-        if (emailSent) {
-          return sendJSON(res, 200, {
-            success: true,
-            message: 'Correo de prueba enviado exitosamente a rrhhlpz@minoil.com.bo'
-          });
-        } else {
-          return sendJSON(res, 500, {
-            success: false,
-            error: 'No se pudo enviar el correo de prueba'
-          });
-        }
-      } catch (error: any) {
-        logger.error('Error en endpoint de prueba de correo', {
-          error: error.message,
-          stack: error.stack
-        });
-        return sendJSON(res, 500, {
-          success: false,
-          error: error.message
-        });
-      }
-    }));
-    
+    // Endpoint de prueba para correo electrónico
     provider.server.post("/api/test-email", handleCtx(async (bot: any, req: any, res: any) => {
       try {
         const { sendVacationEmail, verifyEmailConnection } = await import('./services/emailService');
         
-        logger.info('📧 Endpoint de prueba de correo llamado (POST)');
-        
-        // Verificar conexión primero (pero continuar aunque falle para ver el error detallado)
-        const connectionOk = await verifyEmailConnection();
-        if (!connectionOk) {
-          logger.warn('⚠️ Verificación de conexión falló, pero intentando enviar correo de todas formas');
-          // Continuar de todas formas para intentar enviar el correo
-        }
+        logger.info('📧 Endpoint de prueba de correo llamado');
+        await verifyEmailConnection();
         
         // Enviar correo de prueba
         const emailSent = await sendVacationEmail({
@@ -417,128 +244,54 @@ const main = async () => {
     provider.server.post("/api/vacation-notification", handleCtx(vacationNotificationHandler));
     provider.server.get("/api/vacation-data/:id", handleCtx(getVacationDataHandler));
 
-    // Iniciar limpieza automática de archivos temporales
-    // Limpia archivos más antiguos de 60 minutos cada 30 minutos
     tmpCleanupService.startAutoCleanup(30, 60);
 
-    // Endpoint para ejecutar recordatorios manualmente (útil para pruebas)
     provider.server.post("/api/monthly-reminders/trigger", handleCtx(async (bot: any, req: any, res: any) => {
       try {
         const { year, month } = req.body || {};
-        logger.info('🔔 Endpoint de recordatorios mensuales llamado manualmente', { 
-          year, 
-          month,
-          bot_connected: connectionStatus.isConnected()
-        });
         
-        // Verificar conexión del bot antes de procesar
         if (!connectionStatus.isConnected()) {
-          logger.warn('⚠️ Bot no conectado, rechazando solicitud');
           return sendJSON(res, 503, { 
             success: false, 
-            error: 'El bot de WhatsApp no está conectado. Por favor, escanea el código QR para conectar el bot antes de enviar recordatorios.',
+            error: 'El bot de WhatsApp no está conectado',
             code: 'BOT_NOT_CONNECTED'
           });
         }
 
-        // Ejecutar el proceso y capturar el resultado para saber si hay vacaciones
         processMonthlyReminders(bot, year, month)
-          .then(() => {
-            // Proceso completado exitosamente
-            logger.info('✅ Proceso de recordatorios completado exitosamente');
-          })
+          .then(() => logger.info('✅ Recordatorios completados'))
           .catch((error: any) => {
-            // Verificar si es un caso especial (no hay vacaciones)
             if (error?.code === 'NO_VACATIONS' && error?.isSuccess) {
-              // No es un error real, solo que no hay vacaciones para procesar
-              logger.info('ℹ️ Proceso completado: No hay vacaciones para el mes seleccionado');
-              return; // No registrar como error
-            }
-            
-            // Verificar si es un error de QR code (error residual que puede aparecer después de completar)
-            const isQRCodeError = error?.message?.includes('QR code') || 
-                                 error?.message?.includes('scanning') || 
-                                 error?.code === '100' ||
-                                 error?.code === 'BOT_NOT_CONNECTED';
-            
-            if (isQRCodeError) {
-              // Si es un error de QR code residual, solo registrar como debug (no crítico)
-              // El proceso probablemente ya completó exitosamente antes de este error
-              logger.debug('⚠️ Error de QR code residual detectado (proceso ya completó, no crítico)', { 
-                error: error.message,
-                code: error.code
-              });
-            } else {
-              // Solo registrar errores críticos que no son de conexión
-              logger.error('❌ Error en proceso de recordatorios (segundo plano)', { 
-                error: error.message,
-                code: error.code
-              });
+              logger.info('ℹ️ No hay vacaciones para el mes seleccionado');
+            } else if (!error?.message?.includes('QR code') && !error?.code?.includes('100')) {
+              logger.error('❌ Error en recordatorios', { error: error.message });
             }
           });
 
-        // Responder inmediatamente que el proceso se inició
         return sendJSON(res, 200, { 
           success: true, 
-          message: 'Proceso de recordatorios mensuales iniciado correctamente. Las notificaciones se están enviando en segundo plano.',
+          message: 'Proceso de recordatorios iniciado',
           status: 'processing'
         });
       } catch (error: any) {
-        // Verificar si es un error de QR code (error residual que puede aparecer después de completar)
-        const isQRCodeError = error?.message?.includes('QR code') || 
-                             error?.message?.includes('scanning') || 
-                             error?.code === '100';
-        
-        if (isQRCodeError) {
-          // Si es un error de QR code, probablemente el proceso ya se ejecutó en segundo plano
-          // Responder como éxito ya que el proceso se inició correctamente
-          logger.debug('⚠️ Error de QR code detectado (probablemente residual, proceso ya iniciado)', { 
-            error: error.message 
-          });
-          return sendJSON(res, 200, { 
-            success: true, 
-            message: 'Proceso de recordatorios mensuales iniciado correctamente. Las notificaciones se están enviando en segundo plano.',
-            status: 'processing',
-            warning: 'Se detectó un error de conexión residual, pero el proceso se inició correctamente'
-          });
-        }
-        
-        // Para otros errores, registrar y responder con error
-        logger.error('❌ Error en endpoint de recordatorios mensuales', { 
-          error: error.message,
-          code: error.code 
-        });
+        logger.error('❌ Error en endpoint de recordatorios', { error: error.message });
         return sendJSON(res, 500, { 
           success: false, 
-          error: error.message || 'Error al ejecutar el proceso de recordatorios',
+          error: error.message || 'Error al ejecutar el proceso',
           code: error.code || 'UNKNOWN_ERROR'
         });
       }
     }));
 
-    // Iniciar scheduler de recordatorios mensuales
-    // Se ejecuta el día 1 de cada mes a las 9:00 AM
-    // Nota: El scheduler necesita acceso al bot, pero el bot solo está disponible en el contexto de handleCtx
-    // Por ahora, el scheduler se ejecutará pero necesitará que el bot esté disponible cuando se ejecute
     startMonthlyReminderScheduler(async () => {
-      // El scheduler se ejecutará automáticamente, pero necesitamos acceso al bot
-      // Por ahora, usaremos el provider directamente si el bot no está disponible
-      logger.warn('⚠️ Scheduler ejecutado - el bot se obtendrá del contexto cuando sea necesario');
+      logger.info('🔔 Scheduler de recordatorios ejecutado');
     });
 
     logger.info('✅ Servidor iniciado correctamente', {
       port: PORT,
-      packageManager: 'pnpm',
-      provider: 'Aurik3 Baileys Custom',
+      provider: 'SendWave',
       environment: process.env.NODE_ENV || 'development'
     });
-    
-    console.log("✅ Server running on port", PORT);
-    console.log("📦 Package Manager: pnpm");
-    console.log("🔌 Provider: Aurik3 Baileys Custom");
-    
-    // Mantener el proceso vivo
-    // El servidor HTTP y el provider mantendrán el proceso activo
   } catch (error) {
     console.error("❌ Error starting server:", error);
     console.error("Stack:", error instanceof Error ? error.stack : 'No stack available');

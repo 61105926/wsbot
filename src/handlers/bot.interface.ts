@@ -4,8 +4,8 @@ import {
   DispatchFn,
   DynamicBlacklist,
 } from "@builderbot/bot/dist/types";
-import type { BaileysProvider as ProviderType } from 'aurik3-builderbot-baileys-custom';
-import { BaileysProvider as Provider } from 'aurik3-builderbot-baileys-custom';
+import type { SendWaveProvider as ProviderType } from '@gamastudio/sendwave-provider';
+import { SendWaveProvider as Provider } from '@gamastudio/sendwave-provider';
 
 
 export type Bot =

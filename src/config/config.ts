@@ -45,3 +45,18 @@ export const IS_DEVELOPMENT = NODE_ENV === 'development';
 
 // Logging
 export const LOG_LEVEL = process.env.LOG_LEVEL || (IS_PRODUCTION ? 'info' : 'debug');
+
+// SendWave Configuration
+export const SENDWAVE_CONFIG = {
+  API_KEY: process.env.SENDWAVE_API_KEY || "",
+  BOT_NAME: process.env.SENDWAVE_BOT_NAME || "RRHH-MINOIL",
+  PORT: PORT,
+  DELAY: parseInt(process.env.SENDWAVE_DELAY || "1000"),
+  LINK_PREVIEW: process.env.SENDWAVE_LINK_PREVIEW !== 'false',
+  QUEUE_FLOW: {
+    ENABLED: process.env.SENDWAVE_QUEUE_FLOW_ENABLED !== 'false',
+    WARNING_TIMEOUT: parseInt(process.env.SENDWAVE_WARNING_TIMEOUT || String(30 * 60 * 1000)), // 30 minutos
+    END_TIMEOUT: parseInt(process.env.SENDWAVE_END_TIMEOUT || String(2 * 60 * 1000)), // 2 minutos
+    WARNING_MESSAGE: process.env.SENDWAVE_WARNING_MESSAGE || "⏳ Parece que estás inactivo. ¿Sigues ahí?",
+  },
+} as const;

@@ -5479,3 +5479,8 @@
 {"level":"info","message":"Mensaje recibido en conversación natural Me ayudas con mi boleta","metadata":{"phone":"59161105926","timestamp":"2026-01-15 11:57:13","userName":"Gabriel"}}
 {"level":"info","message":"✅ Modelo gemini-3-flash-preview funcionó correctamente","metadata":{"hasText":true,"model":"gemini-3-flash-preview","rawTextLength":179,"textLength":179,"textPreview":"{\n  \"intention\": \"boleta\",\n  \"response\": \"¡Hola Gabriel! Claro, con gusto. ¿De qué mes necesitas que te la pase? Avisame y te la mando ahorita.\",\n  \"month\": null,\n  \"year\": 2025\n}","timestamp":"2026-01-15 11:57:22"}}
 {"level":"info","message":"✅✅✅ Modelo gemini-3-flash-preview funcionó y tiene texto válido","metadata":{"textLength":179,"timestamp":"2026-01-15 11:57:22"}}
+{"level":"info","message":"🚀 Iniciando aplicación","metadata":{"nodeVersion":"v22.20.0","provider":"Aurik3 Baileys Custom","timestamp":"2026-01-15 17:49:42"}}
+{"level":"info","message":"Iniciando auto-limpieza de archivos temporales cada 30 minutos","metadata":{"timestamp":"2026-01-15 17:49:42"}}
+{"level":"info","message":"✅ Scheduler de recordatorios mensuales iniciado (día 1 de cada mes a las 9:00 AM)","metadata":{"timestamp":"2026-01-15 17:49:42"}}
+{"level":"info","message":"✅ Servidor iniciado correctamente","metadata":{"environment":"production","port":3005,"provider":"Aurik3 Baileys Custom","timestamp":"2026-01-15 17:49:42"}}
+{"level":"info","message":"WhatsApp conectado exitosamente","metadata":{"timestamp":"2026-01-15 17:49:52"}}

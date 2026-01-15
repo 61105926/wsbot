@@ -20,6 +20,9 @@
   "dependencies": {
     "@builderbot/bot": "v1.3.5-alpha.9",
     "@builderbot/database-json": "1.2.9",
+    "@gamastudio/sendwave-provider": "^0.0.22",
+    "@google/generative-ai": "^0.21.0",
+    "aurik3-builderbot-baileys-custom": "0.0.8",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -30,9 +33,7 @@
     "path": "^0.12.7",
     "sharp": "^0.30.5",
     "winston": "^3.18.3",
-    "zod": "^4.1.12",
-    "aurik3-builderbot-baileys-custom": "0.0.8",
-    "@google/generative-ai": "^0.21.0"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
