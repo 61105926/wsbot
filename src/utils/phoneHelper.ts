@@ -45,54 +45,183 @@ export function getPhoneForEnvironment(realPhone: string | undefined | null): st
 async function resolveLidToPhone(lid: string, provider: any): Promise<string | null> {
   if (!provider || !lid) return null;
   
+  // Limpiar el LID: quitar @lid si existe
+  const cleanLid = lid.replace('@lid', '').trim();
+  if (!cleanLid) return null;
+  
+  const logger = (await import('./logger')).logger;
+  
   try {
-    // Intentar usar onWhatsApp del vendor de SendWave
+    logger.debug('Intentando resolver LID a número real', { lid, cleanLid });
+    
+    // Método 1: Intentar usar onWhatsApp del vendor de SendWave
     if (provider.vendor && typeof provider.vendor.onWhatsApp === 'function') {
-      const lidJid = lid.includes('@') ? lid : `${lid}@lid`;
-      const result = await provider.vendor.onWhatsApp([lidJid]);
-      
-      if (result && Array.isArray(result) && result.length > 0) {
-        const contact = result[0];
+      try {
+        const lidJid = lid.includes('@') ? lid : `${cleanLid}@lid`;
+        logger.debug('Llamando onWhatsApp con LID', { lidJid });
         
-        // Intentar desde jid
-        if (contact?.jid) {
-          const jid = contact.jid;
-          if (jid.endsWith('@s.whatsapp.net')) {
-            const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
-            if (match && match[1]) {
-              return match[1];
+        const result = await provider.vendor.onWhatsApp([lidJid]);
+        logger.debug('Resultado de onWhatsApp', { result });
+        
+        if (result && Array.isArray(result) && result.length > 0) {
+          const contact = result[0];
+          logger.debug('Contacto obtenido de onWhatsApp', { contact });
+          
+          // Intentar desde jid
+          if (contact?.jid) {
+            const jid = contact.jid;
+            if (jid.endsWith('@s.whatsapp.net')) {
+              const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
+              if (match && match[1]) {
+                logger.info('✅ Número real obtenido desde onWhatsApp.jid', { 
+                  lid, 
+                  phone: match[1] 
+                });
+                return match[1];
+              }
+            }
+          }
+          
+          // Intentar desde exists (puede tener el número)
+          if (contact?.exists && contact?.jid) {
+            const jid = contact.jid;
+            if (jid.endsWith('@s.whatsapp.net')) {
+              const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
+              if (match && match[1]) {
+                logger.info('✅ Número real obtenido desde onWhatsApp.exists', { 
+                  lid, 
+                  phone: match[1] 
+                });
+                return match[1];
+              }
             }
           }
         }
-        
-        // Intentar desde exists (puede tener el número)
-        if (contact?.exists && contact?.jid) {
-          const jid = contact.jid;
-          if (jid.endsWith('@s.whatsapp.net')) {
-            const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
-            if (match && match[1]) {
-              return match[1];
-            }
-          }
-        }
+      } catch (e: any) {
+        logger.warn('Error al usar onWhatsApp para resolver LID', {
+          error: e.message,
+          lid
+        });
       }
     }
     
-    // Intentar usar getBusinessProfile si está disponible
+    // Método 2: Intentar usar getBusinessProfile si está disponible
     if (provider.vendor && typeof provider.vendor.getBusinessProfile === 'function') {
       try {
-        const lidJid = lid.includes('@') ? lid : `${lid}@lid`;
+        const lidJid = lid.includes('@') ? lid : `${cleanLid}@lid`;
+        logger.debug('Llamando getBusinessProfile con LID', { lidJid });
+        
         const profile = await provider.vendor.getBusinessProfile(lidJid);
+        logger.debug('Perfil obtenido de getBusinessProfile', { profile });
+        
         if (profile?.phone) {
-          return String(profile.phone);
+          const phone = String(profile.phone);
+          logger.info('✅ Número real obtenido desde getBusinessProfile', { 
+            lid, 
+            phone 
+          });
+          return phone;
         }
-      } catch (e) {
-        // Silenciar error
+      } catch (e: any) {
+        logger.warn('Error al usar getBusinessProfile para resolver LID', {
+          error: e.message,
+          lid
+        });
       }
     }
-  } catch (error) {
-    // Silenciar errores, retornar null
-    console.debug('Error al resolver LID:', error);
+    
+    // Método 3: Intentar usar getContact si está disponible
+    if (provider.vendor && typeof provider.vendor.getContact === 'function') {
+      try {
+        const lidJid = lid.includes('@') ? lid : `${cleanLid}@lid`;
+        logger.debug('Llamando getContact con LID', { lidJid });
+        
+        const contact = await provider.vendor.getContact(lidJid);
+        logger.debug('Contacto obtenido de getContact', { contact });
+        
+        if (contact?.id) {
+          const contactId = String(contact.id);
+          if (contactId.endsWith('@s.whatsapp.net')) {
+            const match = contactId.match(/^(\d+)@s\.whatsapp\.net$/);
+            if (match && match[1]) {
+              logger.info('✅ Número real obtenido desde getContact', { 
+                lid, 
+                phone: match[1] 
+              });
+              return match[1];
+            }
+          }
+        }
+      } catch (e: any) {
+        logger.warn('Error al usar getContact para resolver LID', {
+          error: e.message,
+          lid
+        });
+      }
+    }
+    
+    // Método 4: Intentar acceder directamente al vendor.store si existe
+    if (provider.vendor?.store) {
+      try {
+        logger.debug('Intentando obtener número desde vendor.store', { 
+          storeKeys: Object.keys(provider.vendor.store || {}) 
+        });
+        
+        // Buscar en contacts del store
+        if (provider.vendor.store.contacts) {
+          const contacts = provider.vendor.store.contacts;
+          const lidJid = lid.includes('@') ? lid : `${cleanLid}@lid`;
+          
+          // Buscar el contacto por LID
+          const contact = contacts.get?.(lidJid) || contacts[lidJid];
+          if (contact) {
+            logger.debug('Contacto encontrado en store', { contact });
+            
+            // Intentar obtener el número desde diferentes campos del contacto
+            const possiblePhoneFields = ['id', 'jid', 'phone', 'number'];
+            for (const field of possiblePhoneFields) {
+              if (contact[field]) {
+                const value = String(contact[field]);
+                if (value.endsWith('@s.whatsapp.net')) {
+                  const match = value.match(/^(\d+)@s\.whatsapp\.net$/);
+                  if (match && match[1]) {
+                    logger.info('✅ Número real obtenido desde vendor.store', { 
+                      lid, 
+                      phone: match[1],
+                      field
+                    });
+                    return match[1];
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (e: any) {
+        logger.warn('Error al acceder a vendor.store', {
+          error: e.message,
+          lid
+        });
+      }
+    }
+    
+    logger.warn('❌ No se pudo resolver LID a número real', { 
+      lid,
+      cleanLid,
+      vendorMethods: {
+        onWhatsApp: typeof provider.vendor?.onWhatsApp === 'function',
+        getBusinessProfile: typeof provider.vendor?.getBusinessProfile === 'function',
+        getContact: typeof provider.vendor?.getContact === 'function',
+        hasStore: !!provider.vendor?.store
+      }
+    });
+    
+  } catch (error: any) {
+    logger.error('Error general al resolver LID', {
+      error: error.message,
+      stack: error.stack,
+      lid
+    });
   }
   
   return null;
@@ -225,14 +354,62 @@ export async function extractRealPhoneFromContext(
       }
     }
     
-    // 7. Si no encontramos número real y tenemos un LID, intentar resolverlo con el provider
-    if (!realPhone && lid.includes('@lid') && provider) {
+    // 7. Si no encontramos número real y tenemos un LID, SIEMPRE intentar resolverlo con el provider
+    if (!realPhone && (lid.includes('@lid') || !lid.includes('@s.whatsapp.net')) && provider) {
+      const logger = (await import('./logger')).logger;
+      logger.info('🔍 Intentando resolver LID a número real', { lid });
       realPhone = await resolveLidToPhone(lid, provider);
+      
+      if (realPhone) {
+        logger.info('✅ LID resuelto exitosamente a número real', { 
+          lid, 
+          phone: realPhone 
+        });
+      } else {
+        logger.warn('⚠️ No se pudo resolver LID a número real usando provider', { lid });
+        
+        // Fallback: Intentar buscar en la base de datos de usuarios por nombre si está disponible
+        try {
+          const userName = ctx.pushName || ctx.notify || ctx.name;
+          if (userName && userName !== 'Sin nombre' && userName !== 'Usuario') {
+            logger.debug('Intentando buscar número en BD por nombre', { userName });
+            const { getAllUsers } = await import('../services/getAllUsers');
+            const allUsers = await getAllUsers();
+            
+            // Buscar usuario por nombre (puede ser aproximado)
+            const user = allUsers.find(u => 
+              u.fullName?.toLowerCase().includes(userName.toLowerCase()) ||
+              userName.toLowerCase().includes(u.fullName?.toLowerCase() || '')
+            );
+            
+            if (user && user.phone) {
+              const foundPhone = user.phone.replace('591', '');
+              logger.info('✅ Número encontrado en BD por nombre', { 
+                lid,
+                userName,
+                phone: user.phone,
+                foundPhone
+              });
+              realPhone = user.phone.startsWith('591') ? user.phone : `591${user.phone}`;
+            }
+          }
+        } catch (dbError: any) {
+          logger.debug('Error al buscar en BD como fallback', {
+            error: dbError.message,
+            lid
+          });
+        }
+      }
     }
     
-  } catch (error) {
-    // Si hay algún error al extraer, continuar con el LID
-    console.debug('Error al extraer número real del contexto:', error);
+  } catch (error: any) {
+    // Si hay algún error al extraer, loguear pero continuar
+    const logger = (await import('./logger')).logger;
+    logger.error('Error al extraer número real del contexto', {
+      error: error.message,
+      stack: error.stack,
+      lid
+    });
   }
   
   // Normalizar el número (quitar prefijo 591) para usar en APIs
@@ -248,7 +425,15 @@ export async function extractRealPhoneFromContext(
     };
   }
   
-  // Si no, devolver el LID con una nota
+  // Si no, devolver el LID pero loguear una advertencia
+  const logger = (await import('./logger')).logger;
+  logger.warn('⚠️ No se pudo obtener número real, usando LID', {
+    lid,
+    normalizedPhone,
+    contextKeys: Object.keys(ctx || {}),
+    hasProvider: !!provider
+  });
+  
   return {
     phone: lid,
     lid: lid,
