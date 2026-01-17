@@ -77,6 +77,7 @@ function setupAutoReconnection(provider: any) {
           error: lastDisconnect.error?.message
         });
 
+        
         // Mapear razones de desconexión
         let disconnectReason = reason;
         if (typeof reason === 'number') {
