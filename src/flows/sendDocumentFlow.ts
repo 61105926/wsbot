@@ -11,11 +11,12 @@ import { extractRealPhoneFromContext } from "../utils/phoneHelper";
  */
 export const sendDocumentFlow = addKeyword(EVENTS.ACTION)
   .addAnswer(FLOW_MESSAGES.PROMPTS.SENDING_IMAGE, null, async (ctx) => {
-    const phoneInfo = extractRealPhoneFromContext(ctx);
+    const phoneInfo = await extractRealPhoneFromContext(ctx);
     
     logger.info('Enviando documento de ejemplo', {
       flow: 'sendDocument',
       phone: phoneInfo.phone,
+      normalizedPhone: phoneInfo.normalizedPhone,
       lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid
     });
 

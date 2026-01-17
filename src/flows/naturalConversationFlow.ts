@@ -57,7 +57,8 @@ const typingSimulation = (messageLength: number) => {
  */
 export const naturalConversationFlow = addKeyword([EVENTS.WELCOME])
   .addAction(async (ctx, { flowDynamic, gotoFlow }) => {
-    const phoneInfo = extractRealPhoneFromContext(ctx);
+    const phoneInfo = await extractRealPhoneFromContext(ctx);
+    const normalizedPhone = phoneInfo.normalizedPhone || phoneInfo.phone.replace(/^591/, '');
     const userMessage = ctx.body?.trim() || '';
     const userName = ctx.pushName || 'Usuario';
 
@@ -67,6 +68,8 @@ export const naturalConversationFlow = addKeyword([EVENTS.WELCOME])
 
     logger.info('Mensaje recibido en conversación natural', {
       phone: phoneInfo.phone,
+      normalizedPhone: normalizedPhone,
+      isRealPhone: phoneInfo.isRealPhone,
       message: userMessage,
       userName
     });
@@ -76,10 +79,12 @@ export const naturalConversationFlow = addKeyword([EVENTS.WELCOME])
       let userInfo: any = null;
       try {
         const allUsers = await getAllUsers();
-        const searchPhone = phoneInfo.phone.replace('591', '');
+        // Usar el número normalizado (sin 591) para buscar
+        const searchPhone = normalizedPhone;
         userInfo = allUsers.find(u => 
           u.phone.replace('591', '') === searchPhone ||
-          u.phone === phoneInfo.phone
+          u.phone === phoneInfo.phone ||
+          u.phone.replace('591', '') === phoneInfo.phone.replace(/^591/, '')
         );
       } catch (e) {
         // Continuar sin información del usuario

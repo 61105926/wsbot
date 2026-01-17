@@ -325,3 +325,5 @@
 {"level":"error","message":"❌ Uncaught Exception","metadata":{"error":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of PayloadTooLargeError","timestamp":"2026-01-17 10:51:37"}}
 {"level":"error","message":"❌ Uncaught Exception","metadata":{"error":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of PayloadTooLargeError","timestamp":"2026-01-17 10:55:13"}}
 {"level":"error","message":"Error de autenticación SendWave","metadata":{"error":{"instructions":"Error al autenticar: Unauthorized"},"timestamp":"2026-01-17 10:59:33"}}
+{"level":"error","message":"❌ Uncaught Exception","metadata":{"error":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of PayloadTooLargeError","timestamp":"2026-01-17 11:04:39"}}
+{"level":"error","message":"❌ Uncaught Exception","metadata":{"error":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of PayloadTooLargeError","timestamp":"2026-01-17 11:06:08"}}

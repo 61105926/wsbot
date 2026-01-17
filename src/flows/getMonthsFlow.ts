@@ -28,11 +28,13 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
   .addAnswer(monthsAnswer)
   .addAction({ capture: true }, async (ctx, { flowDynamic, gotoFlow }) => {
     const input = ctx.body.trim();
-    const phoneInfo = extractRealPhoneFromContext(ctx);
+    const phoneInfo = await extractRealPhoneFromContext(ctx);
+    const normalizedPhone = phoneInfo.normalizedPhone || phoneInfo.phone.replace(/^591/, '');
 
     logger.info('Usuario seleccionando mes', {
       flow: 'getMonths',
       phone: phoneInfo.phone,
+      normalizedPhone: normalizedPhone,
       lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
       input
     });
@@ -93,8 +95,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
 
       // Construir URL usando servicio
-      // Usar el número real si está disponible, sino usar el LID
-      const phoneForApi = phoneInfo.isRealPhone ? phoneInfo.phone : phoneInfo.lid;
+      // Usar el número normalizado (sin 591) para la API
+      const phoneForApi = normalizedPhone;
       const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
         API_CONFIG.PAYSLIP_API_BASE,
         phoneForApi,

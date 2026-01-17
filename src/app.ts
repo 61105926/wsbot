@@ -60,9 +60,9 @@ const main = async () => {
     
     // Configuración de SendWave
     const sendWaveConfig: Partial<GlobalVendorArgs> = {
-      name: 'wsbots-produccion',
-      apiKey: '4F4C527D-41E4-4041-893A-002B62D73B0F',
-      port: 3005,
+      name: 'wsbot',
+      apiKey: 'F0EE9493-FF01-48AE-8936-0CEE429C5B3C',
+      port: 3005, 
       delay: SENDWAVE_CONFIG.DELAY,
       linkPreview: SENDWAVE_CONFIG.LINK_PREVIEW,
       message: {
@@ -102,16 +102,27 @@ const main = async () => {
       logger.error('Error de autenticación SendWave', { error });
     });
 
-    provider.on('message', (ctx: any) => {
+    provider.on('message', async (ctx: any) => {
       try {
-        const phoneInfo = extractRealPhoneFromContext(ctx);
+        // Log detallado del contexto para debugging
+        logger.debug('Contexto completo del mensaje', {
+          from: ctx.from,
+          key: ctx.key,
+          pushName: ctx.pushName,
+          body: ctx.body?.substring(0, 50),
+          allKeys: Object.keys(ctx)
+        });
+        
+        const phoneInfo = await extractRealPhoneFromContext(ctx, provider);
         const phoneNumber = phoneInfo.phone;
+        const normalizedPhone = phoneInfo.normalizedPhone || phoneNumber.replace(/^591/, '');
         const userName = ctx.pushName || ctx.notify || 'Sin nombre';
         const messageBody = ctx.body || ctx.message?.conversation || ctx.message?.extendedTextMessage?.text || '';
         const messagePreview = messageBody.length > 100 ? messageBody.substring(0, 100) + '...' : messageBody;
         
-        logger.info(`📱 Mensaje recibido de ${phoneNumber}`, { 
+        logger.info(`📱 Mensaje recibido de ${phoneInfo.isRealPhone ? phoneNumber : 'LID: ' + phoneNumber}`, { 
           telefono: phoneNumber,
+          telefonoNormalizado: normalizedPhone, // Para usar en APIs (sin 591)
           numeroCompleto: phoneInfo.isRealPhone ? phoneNumber : `LID: ${phoneInfo.lid}`,
           esNumeroReal: phoneInfo.isRealPhone,
           nombre: userName,
@@ -122,21 +133,33 @@ const main = async () => {
       } catch (error: any) {
         logger.error('Error al procesar log de mensaje', {
           error: error.message,
+          stack: error.stack,
           ctx: ctx.from || 'Desconocido'
         });
       }
     });
 
-    provider.on('user-message', (data: any) => {
+    provider.on('user-message', async (data: any) => {
       try {
-        const phoneInfo = extractRealPhoneFromContext(data);
+        // Log detallado del contexto para debugging
+        logger.debug('Contexto completo del mensaje de usuario', {
+          from: data.from,
+          key: data.key,
+          pushName: data.pushName,
+          body: data.body?.substring(0, 50),
+          allKeys: Object.keys(data)
+        });
+        
+        const phoneInfo = await extractRealPhoneFromContext(data, provider);
         const phoneNumber = phoneInfo.phone;
+        const normalizedPhone = phoneInfo.normalizedPhone || phoneNumber.replace(/^591/, '');
         const userName = data.pushName || data.notify || 'Sin nombre';
         const messageBody = data.body || data.message?.conversation || data.message?.extendedTextMessage?.text || '';
         const messagePreview = messageBody.length > 100 ? messageBody.substring(0, 100) + '...' : messageBody;
         
-        logger.info(`💬 Usuario ${phoneNumber} escribió`, { 
+        logger.info(`💬 Usuario ${phoneInfo.isRealPhone ? phoneNumber : 'LID: ' + phoneNumber} escribió`, { 
           telefono: phoneNumber,
+          telefonoNormalizado: normalizedPhone, // Para usar en APIs (sin 591)
           numeroCompleto: phoneInfo.isRealPhone ? phoneNumber : `LID: ${phoneInfo.lid}`,
           esNumeroReal: phoneInfo.isRealPhone,
           nombre: userName,
@@ -148,6 +171,7 @@ const main = async () => {
       } catch (error: any) {
         logger.error('Error al procesar log de mensaje de usuario', {
           error: error.message,
+          stack: error.stack,
           data: data.from || 'Desconocido'
         });
       }

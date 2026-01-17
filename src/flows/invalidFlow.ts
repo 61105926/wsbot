@@ -34,13 +34,14 @@ const typingSimulation = (messageLength: number) => {
  */
 export const invalidFlow = addKeyword(EVENTS.ACTION).addAction(
   async (ctx, { flowDynamic, gotoFlow, endFlow }) => {
-    const phoneInfo = extractRealPhoneFromContext(ctx);
+    const phoneInfo = await extractRealPhoneFromContext(ctx);
     const userMessage = ctx.body?.trim() || '';
     const userName = ctx.pushName || 'Usuario';
     
     logger.info('Mensaje no reconocido, usando conversación natural', {
       flow: 'invalid',
       phone: phoneInfo.phone,
+      normalizedPhone: phoneInfo.normalizedPhone,
       message: userMessage
     });
 

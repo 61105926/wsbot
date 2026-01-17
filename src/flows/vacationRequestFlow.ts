@@ -33,31 +33,19 @@ const typingSimulation = (messageLength: number) => {
  */
 export const vacationRequestFlow = addKeyword([EVENTS.ACTION])
   .addAction(async (ctx, { flowDynamic }) => {
-    const phoneInfo = extractRealPhoneFromContext(ctx);
-    const userPhone = phoneInfo.phone;
+    const phoneInfo = await extractRealPhoneFromContext(ctx);
+    const normalizedPhone = phoneInfo.normalizedPhone || phoneInfo.phone.replace(/^591/, '');
 
     logger.info('Usuario solicitando vacaciones', {
       flow: 'vacationRequest',
       phone: phoneInfo.phone,
+      normalizedPhone: normalizedPhone,
       lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid
     });
 
     try {
-      // Extraer solo el número sin el prefijo 591
-      // Si es un LID, intentar extraer solo los dígitos numéricos
-      let phoneNumber = userPhone.replace('591', '');
-      
-      // Si es un LID (contiene @lid), intentar usar solo los dígitos antes del @
-      if (phoneNumber.includes('@lid')) {
-        const lidMatch = phoneNumber.match(/^(\d+)/);
-        if (lidMatch) {
-          phoneNumber = lidMatch[1];
-        } else {
-          // Si no hay dígitos, usar el LID completo como fallback
-          phoneNumber = phoneNumber.replace('@lid', '');
-        }
-      }
-      phoneNumber = String(phoneNumber);
+      // Usar el número normalizado (sin 591) para las APIs
+      const phoneNumber = String(normalizedPhone);
       // Codificar el teléfono en base64
       const encodedPhone = Buffer.from(phoneNumber).toString('base64');
 
@@ -66,6 +54,7 @@ export const vacationRequestFlow = addKeyword([EVENTS.ACTION])
 
       logger.info('URL de vacaciones generada', {
         phone: phoneInfo.phone,
+        normalizedPhone: normalizedPhone,
         lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         phoneNumber: phoneNumber,
         encodedPhone: encodedPhone,

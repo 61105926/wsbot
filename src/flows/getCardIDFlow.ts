@@ -14,11 +14,12 @@ export const getCardIDFlow = addKeyword(EVENTS.ACTION)
     { capture: true },
     async (ctx, { flowDynamic, endFlow }) => {
       const empID = ctx.body.trim();
-      const phoneInfo = extractRealPhoneFromContext(ctx);
+      const phoneInfo = await extractRealPhoneFromContext(ctx);
 
       logger.info('Usuario consultando por ID', {
         flow: 'getCardID',
         phone: phoneInfo.phone,
+        normalizedPhone: phoneInfo.normalizedPhone,
         lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         empID
       });
