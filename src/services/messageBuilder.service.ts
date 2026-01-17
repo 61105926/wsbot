@@ -119,8 +119,27 @@ export class MessageBuilderService {
     phone: string,
     monthCode: string
   ): string {
-    // Quitar prefijo 591 - la API espera solo 8 dígitos
-    const phoneNumber = phone.substring(3);
+    // Normalizar número: quitar prefijo 591 si existe, la API espera solo 8 dígitos
+    let phoneNumber = phone;
+    
+    // Quitar cualquier sufijo de WhatsApp (@s.whatsapp.net, @lid, etc.)
+    phoneNumber = phoneNumber.replace(/@.*$/, '');
+    
+    // Quitar prefijo 591 si existe
+    if (phoneNumber.startsWith('591')) {
+      phoneNumber = phoneNumber.substring(3);
+    }
+    
+    // Asegurar que solo tenga 8 dígitos (tomar los últimos 8 si tiene más)
+    if (phoneNumber.length > 8 && /^\d+$/.test(phoneNumber)) {
+      phoneNumber = phoneNumber.substring(phoneNumber.length - 8);
+    }
+    
+    // Validar que sea un número válido de 8 dígitos
+    if (!/^\d{8}$/.test(phoneNumber)) {
+      throw new Error(`Número de teléfono inválido para API: ${phone} -> ${phoneNumber}. Se esperan 8 dígitos.`);
+    }
+    
     return `${baseUrl}?numero=${phoneNumber}&fecha=${monthCode}`;
   }
 }

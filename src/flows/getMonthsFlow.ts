@@ -97,6 +97,14 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       // Construir URL usando servicio
       // Usar el número normalizado (sin 591) para la API
       const phoneForApi = normalizedPhone;
+      
+      logger.info('Construyendo URL de boleta', {
+        phone: phoneInfo.phone,
+        normalizedPhone: normalizedPhone,
+        phoneForApi: phoneForApi,
+        monthCode: monthCode
+      });
+      
       const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
         API_CONFIG.PAYSLIP_API_BASE,
         phoneForApi,
@@ -117,7 +125,9 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
 
       logger.http('Descargando PDF desde API', {
         url: payslipUrl,
-        fileName
+        fileName,
+        phoneForApi: phoneForApi,
+        normalizedPhone: normalizedPhone
       });
 
       // Descargar PDF con timeout
