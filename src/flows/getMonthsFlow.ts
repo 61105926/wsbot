@@ -120,8 +120,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
 
       // Construir nombre de archivo
       const fileName = `${getStringDate(selectedDate)}.pdf`;
-      const tmpDir = path.join(__dirname, `../../${PATHS.TMP_DIR}`);
-      const tmpPath = path.join(tmpDir, fileName);
+      const tmpDir = path.resolve(__dirname, `../../${PATHS.TMP_DIR}`);
+      const tmpPath = path.resolve(tmpDir, fileName);
 
       // Asegurar que existe el directorio temporal
       try {
@@ -133,6 +133,7 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       logger.http('Descargando PDF desde API', {
         url: payslipUrl,
         fileName,
+        tmpPath: tmpPath,
         phoneForApi: phoneForApi
       });
 
@@ -145,16 +146,26 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
 
       logger.info('PDF descargado exitosamente', {
         size: pdfData.length,
-        fileName
+        fileName,
+        tmpPath: tmpPath
       });
 
       // Guardar temporalmente
       await fs.writeFile(tmpPath, pdfData);
+      
+      // Verificar que el archivo se guardó correctamente
+      const fileStats = await fs.stat(tmpPath);
+      logger.info('Archivo guardado correctamente', {
+        path: tmpPath,
+        size: fileStats.size,
+        exists: true
+      });
 
       logger.info('Enviando PDF al usuario', {
         phone: phoneInfo.phone,
         lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
-        fileName
+        fileName,
+        tmpPath: tmpPath
       });
 
       // Mensajes de éxito variados
@@ -168,7 +179,40 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-      await flowDynamic([{ media: tmpPath }]);
+      
+      // Enviar PDF usando la ruta absoluta
+      // Verificar que el archivo existe antes de enviarlo
+      const fileExists = await fs.access(tmpPath).then(() => true).catch(() => false);
+      
+      if (!fileExists) {
+        throw new Error(`El archivo no existe: ${tmpPath}`);
+      }
+      
+      logger.debug('Enviando archivo', {
+        media: tmpPath,
+        pathType: typeof tmpPath,
+        pathLength: tmpPath.length,
+        fileExists: fileExists,
+        isAbsolute: path.isAbsolute(tmpPath)
+      });
+      
+      // Obtener bot del contexto global o del contexto
+      const bot = (global as any).bot || ctx.bot;
+      
+      if (bot && typeof bot.sendMessage === 'function') {
+        // Usar bot.sendMessage directamente (más confiable que flowDynamic para archivos)
+        logger.debug('Enviando PDF usando bot.sendMessage', {
+          from: ctx.from,
+          tmpPath: tmpPath
+        });
+        await bot.sendMessage(ctx.from, '', { media: tmpPath });
+      } else {
+        // Fallback: usar flowDynamic
+        logger.debug('Enviando PDF usando flowDynamic', {
+          tmpPath: tmpPath
+        });
+        await flowDynamic([{ media: tmpPath }]);
+      }
       
       // Delay antes del mensaje de confirmación
       await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
