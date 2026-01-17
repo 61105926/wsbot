@@ -177,15 +177,40 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
       
-      // Asegurar que tmpPath es una ruta absoluta y válida
+      // Obtener provider para enviar el archivo directamente
+      const { connectionStatus } = await import('../services/connectionStatus');
+      const provider = connectionStatus.getProvider();
+      
+      if (!provider) {
+        throw new Error('Provider no disponible para enviar el archivo');
+      }
+      
+      // Usar ctx.from directamente (puede ser LID o número real)
+      const recipientPhone = ctx.from || phoneInfo.phone;
       const absolutePath = path.resolve(tmpPath);
-      logger.debug('Enviando PDF con flowDynamic', {
-        media: absolutePath,
+      
+      logger.debug('Enviando PDF con provider', {
+        recipientPhone: recipientPhone,
+        filePath: absolutePath,
         exists: true,
-        size: fileStats.size
+        size: fileStats.size,
+        hasSendFile: typeof provider.sendFile === 'function',
+        hasSendMessage: typeof provider.sendMessage === 'function'
       });
       
-      await flowDynamic([{ media: absolutePath }]);
+      // Intentar usar sendFile si está disponible, sino usar sendMessage
+      if (typeof provider.sendFile === 'function') {
+        await provider.sendFile(recipientPhone, absolutePath, { mimetype: 'application/pdf', filename: fileName });
+      } else if (typeof provider.sendMessage === 'function') {
+        await provider.sendMessage(recipientPhone, '', { media: absolutePath });
+      } else {
+        throw new Error('No se encontró método sendFile ni sendMessage en el provider');
+      }
+      
+      logger.info('PDF enviado exitosamente con provider', {
+        recipientPhone: recipientPhone,
+        fileName: fileName
+      });
       
       // Delay antes del mensaje de confirmación
       await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
