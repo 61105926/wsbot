@@ -187,11 +187,32 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Usar ctx.from directamente (puede ser LID o número real)
       const recipientPhone = ctx.from || phoneInfo.phone;
+      
+      // Verificar que tmpPath está definido
+      if (!tmpPath || typeof tmpPath !== 'string') {
+        throw new Error(`tmpPath no está definido o no es válido: ${tmpPath}`);
+      }
+      
+      // Asegurar que tmpPath es una ruta absoluta válida
       const absolutePath = path.resolve(tmpPath);
+      
+      // Verificar que la ruta es válida
+      if (!absolutePath || typeof absolutePath !== 'string' || absolutePath.length === 0) {
+        throw new Error(`Ruta de archivo inválida después de resolve: ${absolutePath} (tmpPath original: ${tmpPath})`);
+      }
+      
+      // Verificar que el archivo existe
+      try {
+        await fs.access(absolutePath);
+      } catch (error) {
+        throw new Error(`El archivo no existe: ${absolutePath} (tmpPath original: ${tmpPath})`);
+      }
       
       logger.debug('Enviando PDF con provider', {
         recipientPhone: recipientPhone,
         filePath: absolutePath,
+        tmpPath: tmpPath,
+        fileName: fileName,
         exists: true,
         size: fileStats.size,
         hasSendFile: typeof provider.sendFile === 'function',
@@ -199,18 +220,40 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       });
       
       // Intentar usar sendFile si está disponible, sino usar sendMessage
-      if (typeof provider.sendFile === 'function') {
-        await provider.sendFile(recipientPhone, absolutePath, { mimetype: 'application/pdf', filename: fileName });
-      } else if (typeof provider.sendMessage === 'function') {
-        await provider.sendMessage(recipientPhone, '', { media: absolutePath });
-      } else {
-        throw new Error('No se encontró método sendFile ni sendMessage en el provider');
+      try {
+        if (typeof provider.sendFile === 'function') {
+          logger.debug('Usando provider.sendFile', {
+            recipientPhone: recipientPhone,
+            filePath: absolutePath,
+            fileName: fileName
+          });
+          await provider.sendFile(recipientPhone, absolutePath, { mimetype: 'application/pdf', filename: fileName });
+        } else if (typeof provider.sendMessage === 'function') {
+          logger.debug('Usando provider.sendMessage con media', {
+            recipientPhone: recipientPhone,
+            filePath: absolutePath
+          });
+          await provider.sendMessage(recipientPhone, '', { media: absolutePath });
+        } else {
+          throw new Error('No se encontró método sendFile ni sendMessage en el provider');
+        }
+        
+        logger.info('PDF enviado exitosamente con provider', {
+          recipientPhone: recipientPhone,
+          fileName: fileName,
+          filePath: absolutePath
+        });
+      } catch (sendError: any) {
+        logger.error('Error al enviar PDF con provider', {
+          error: sendError.message,
+          errorStack: sendError.stack,
+          recipientPhone: recipientPhone,
+          filePath: absolutePath,
+          tmpPath: tmpPath,
+          fileName: fileName
+        });
+        throw sendError;
       }
-      
-      logger.info('PDF enviado exitosamente con provider', {
-        recipientPhone: recipientPhone,
-        fileName: fileName
-      });
       
       // Delay antes del mensaje de confirmación
       await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
