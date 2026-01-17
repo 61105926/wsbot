@@ -29,12 +29,10 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
   .addAction({ capture: true }, async (ctx, { flowDynamic, gotoFlow }) => {
     const input = ctx.body.trim();
     const phoneInfo = await extractRealPhoneFromContext(ctx);
-    const normalizedPhone = phoneInfo.normalizedPhone || phoneInfo.phone.replace(/^591/, '');
 
     logger.info('Usuario seleccionando mes', {
       flow: 'getMonths',
       phone: phoneInfo.phone,
-      normalizedPhone: normalizedPhone,
       lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
       input
     });
@@ -75,13 +73,6 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       month: monthCode
     });
 
-    // Obtener número desde ctx.remoteJid (viene en phoneInfo.phone) y quitar el 591
-    // Ejemplo: 59177711124 -> 77711124
-    let phoneForApi = phoneInfo.phone;
-    if (phoneForApi.startsWith('591')) {
-      phoneForApi = phoneForApi.substring(3);
-    }
-
     try {
       // Mensajes variados mientras busca
       const searchingMessages = [
@@ -100,28 +91,25 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Simular tiempo de búsqueda
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
-      
-      logger.info('Construyendo URL de boleta', {
-        phone: phoneInfo.phone,
-        phoneForApi: phoneForApi,
-        monthCode: monthCode
-      });
-      
+
+      // Obtener número desde ctx.remoteJid (viene en phoneInfo.phone) y quitar el 591
+      // Ejemplo: 59177711124 -> 77711124
+      let phoneForApi = phoneInfo.phone;
+      if (phoneForApi.startsWith('591')) {
+        phoneForApi = phoneForApi.substring(3);
+      }
+
+      // Construir URL usando servicio
       const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
         API_CONFIG.PAYSLIP_API_BASE,
         phoneForApi,
         monthCode
       );
-      
-      logger.info('URL de boleta construida exitosamente', {
-        url: payslipUrl,
-        phoneForApi: phoneForApi
-      });
 
       // Construir nombre de archivo
       const fileName = `${getStringDate(selectedDate)}.pdf`;
-      const tmpDir = path.resolve(__dirname, `../../${PATHS.TMP_DIR}`);
-      const tmpPath = path.resolve(tmpDir, fileName);
+      const tmpDir = path.join(__dirname, `../../${PATHS.TMP_DIR}`);
+      const tmpPath = path.join(tmpDir, fileName);
 
       // Asegurar que existe el directorio temporal
       try {
@@ -133,7 +121,6 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       logger.http('Descargando PDF desde API', {
         url: payslipUrl,
         fileName,
-        tmpPath: tmpPath,
         phoneForApi: phoneForApi
       });
 
@@ -144,22 +131,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
       });
 
-      logger.info('PDF descargado exitosamente', {
-        size: pdfData.length,
-        fileName,
-        tmpPath: tmpPath
-      });
-
       // Guardar temporalmente
       await fs.writeFile(tmpPath, pdfData);
-      
-      // Verificar que el archivo se guardó correctamente
-      const fileStats = await fs.stat(tmpPath);
-      logger.info('Archivo guardado correctamente', {
-        path: tmpPath,
-        size: fileStats.size,
-        exists: true
-      });
 
       logger.info('Enviando PDF al usuario', {
         phone: phoneInfo.phone,
@@ -179,109 +152,13 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+      await flowDynamic([{ media: tmpPath }]);
       
-      // Enviar PDF usando la ruta absoluta
-      // Verificar que el archivo existe antes de enviarlo
-      const fileExists = await fs.access(tmpPath).then(() => true).catch(() => false);
-      
-      if (!fileExists) {
-        throw new Error(`El archivo no existe: ${tmpPath}`);
-      }
-      
-      logger.debug('Enviando archivo', {
-        media: tmpPath,
-        pathType: typeof tmpPath,
-        pathLength: tmpPath.length,
-        fileExists: fileExists,
-        isAbsolute: path.isAbsolute(tmpPath)
-      });
-      
-      // Usar ctx.from directamente (puede ser LID o número real)
-      // El provider de SendWave puede manejar ambos formatos
-      const recipientPhone = ctx.from || phoneInfo.phone;
-      
-      // Usar el provider directamente para enviar el archivo (más confiable que flowDynamic)
-      const { connectionStatus } = await import('../services/connectionStatus');
-      const provider = connectionStatus.getProvider();
-      
-      let messageSent = false;
-      
-      if (provider) {
-        try {
-          const fileStats = await fs.stat(tmpPath);
-          logger.info('Enviando PDF', {
-            recipientPhone: recipientPhone,
-            phoneInfoPhone: phoneInfo.phone,
-            tmpPath: tmpPath,
-            fileExists: fileExists,
-            fileSize: fileStats.size,
-            isAbsolute: path.isAbsolute(tmpPath),
-            hasProviderSendMessage: typeof provider.sendMessage === 'function',
-            hasVendorSendMessage: provider.vendor && typeof provider.vendor.sendMessage === 'function'
-          });
-          
-          // Intentar primero con provider.sendMessage
-          if (typeof provider.sendMessage === 'function') {
-            logger.debug('Intentando enviar con provider.sendMessage');
-            const sendResult = await provider.sendMessage(recipientPhone, '', { media: tmpPath });
-            logger.info('PDF enviado exitosamente con provider.sendMessage', {
-              recipientPhone: recipientPhone,
-              result: sendResult ? 'OK' : 'No result'
-            });
-            messageSent = true;
-          } 
-          // Si no funciona, intentar con vendor.sendMessage
-          else if (provider.vendor && typeof provider.vendor.sendMessage === 'function') {
-            logger.debug('Intentando enviar con provider.vendor.sendMessage');
-            const sendResult = await provider.vendor.sendMessage(recipientPhone, '', { media: tmpPath });
-            logger.info('PDF enviado exitosamente con vendor.sendMessage', {
-              recipientPhone: recipientPhone,
-              result: sendResult ? 'OK' : 'No result'
-            });
-            messageSent = true;
-          } else {
-            throw new Error('No se encontró método sendMessage en provider ni vendor');
-          }
-        } catch (sendError: any) {
-          logger.error('Error al enviar PDF', {
-            error: sendError.message,
-            errorCode: sendError.code,
-            stack: sendError.stack,
-            recipientPhone: recipientPhone,
-            tmpPath: tmpPath
-          });
-          throw sendError; // Re-lanzar para que se capture en el catch principal
-        }
-      } else {
-        // Fallback: usar flowDynamic (puede fallar con archivos)
-        logger.warn('Provider no disponible, usando flowDynamic', {
-          tmpPath: tmpPath
-        });
-        
-        try {
-          await flowDynamic([{ media: tmpPath }]);
-          messageSent = true;
-        } catch (flowError: any) {
-          logger.error('Error al enviar PDF con flowDynamic', {
-            error: flowError.message,
-            stack: flowError.stack,
-            tmpPath: tmpPath
-          });
-          throw flowError;
-        }
-      }
-      
-      // Solo continuar si el mensaje se envió correctamente
-      if (messageSent) {
-        // Delay antes del mensaje de confirmación
-        await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-        await flowDynamic([{ body: successMessage }]);
-      }
+      // Delay antes del mensaje de confirmación
+      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+      await flowDynamic([{ body: successMessage }]);
 
-      // ✅ CRÍTICO: Limpiar archivo temporal SOLO después de enviar
-      // Esperar un poco más para asegurar que el envío se complete
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // ✅ CRÍTICO: Limpiar archivo temporal
       try {
         await fs.unlink(tmpPath);
         logger.debug('Archivo temporal eliminado', { path: tmpPath });
@@ -302,12 +179,9 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       logger.error('Error al procesar boleta en flow', {
         flow: 'getMonths',
         phone: phoneInfo.phone,
-        phoneForApi: phoneInfo.phone.startsWith('591') ? phoneInfo.phone.substring(3) : phoneInfo.phone,
+        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
         month: monthCode,
         error: error.message || error,
-        errorCode: error.code,
-        errorStatus: error.response?.status,
-        errorData: error.response?.data,
         stack: error.stack
       });
 
