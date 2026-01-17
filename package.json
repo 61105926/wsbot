@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@builderbot/bot": "v1.2.9",
+    "@builderbot/bot": "v1.3.5-alpha.9",
     "@builderbot/database-json": "1.2.9",
     "@gamastudio/sendwave-provider": "^0.0.22",
     "@google/generative-ai": "^0.21.0",

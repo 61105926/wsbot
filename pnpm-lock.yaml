@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@builderbot/bot':
-        specifier: v1.2.9
-        version: 1.2.9
+        specifier: v1.3.5-alpha.9
+        version: 1.3.5-alpha.9
       '@builderbot/database-json':
         specifier: 1.2.9
         version: 1.2.9
@@ -240,6 +240,9 @@ packages:
 
   '@builderbot/bot@1.2.9':
     resolution: {integrity: sha512-jxHXsjq+uwW5COMpDmu3Iy7Vh7SoPOJ6TaKM0waPdOnwKmKNO6iO80YbuktoJbi60bgsRwQduCTzmeblGqglsw==}
+
+  '@builderbot/bot@1.3.5-alpha.9':
+    resolution: {integrity: sha512-cMja0O2s+1FLTXS8qEazbUqEkiBsdsa4AxmYUhdHEWlVH+qeYp0hLlC/DPKcXvXBTUUlJiMaKCoGv/lsFpYCTQ==}
 
   '@builderbot/database-json@1.2.9':
     resolution: {integrity: sha512-lfVGotyqA0CoRgU0OYipVd7p5SSYKBFNMj24jitTubwv3H6FG8NWasu7qbeR/iZ9RVyTsQajQfE0YcCRiNbwdA==}
@@ -3061,6 +3064,22 @@ snapshots:
   '@borewit/text-codec@0.2.0': {}
 
   '@builderbot/bot@1.2.9':
+    dependencies:
+      '@ffmpeg-installer/ffmpeg': 1.1.0
+      body-parser: 1.20.3
+      cors: 2.8.5
+      fluent-ffmpeg: 2.1.3
+      follow-redirects: 1.15.11
+      mime-types: 2.1.35
+      picocolors: 1.1.1
+      polka: 0.5.2
+    optionalDependencies:
+      sharp: 0.33.3
+    transitivePeerDependencies:
+      - debug
+      - supports-color
+
+  '@builderbot/bot@1.3.5-alpha.9':
     dependencies:
       '@ffmpeg-installer/ffmpeg': 1.1.0
       body-parser: 1.20.3

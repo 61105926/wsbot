@@ -92,8 +92,8 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       // Simular tiempo de búsqueda
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
 
-      // Obtener número desde ctx.remoteJid (viene en phoneInfo.phone) y quitar el 591
-      // Ejemplo: 59177711124 -> 77711124
+      // Obtener número desde ctx.remoteJid → viene en phoneInfo.phone (ej: 59177711124)
+      // Quitar el 591 → resultado: 77711124
       let phoneForApi = phoneInfo.phone;
       if (phoneForApi.startsWith('591')) {
         phoneForApi = phoneForApi.substring(3);
@@ -131,29 +131,13 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
       });
 
-      logger.info('PDF descargado exitosamente', {
-        size: pdfData.length,
-        fileName
-      });
-
-      // Guardar temporalmente con nombre simple (sin caracteres especiales)
-      // Usar solo el nombre del archivo sin ruta completa para evitar problemas
-      const simpleFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+      // Guardar temporalmente
       await fs.writeFile(tmpPath, pdfData);
-      
-      // Verificar que el archivo se guardó
-      const fileStats = await fs.stat(tmpPath);
-      logger.info('Archivo guardado correctamente', {
-        path: tmpPath,
-        size: fileStats.size,
-        fileName: simpleFileName
-      });
 
       logger.info('Enviando PDF al usuario', {
         phone: phoneInfo.phone,
         lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
-        fileName: simpleFileName,
-        tmpPath: tmpPath
+        fileName
       });
 
       // Mensajes de éxito variados
@@ -167,14 +151,6 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-      
-      // Enviar PDF usando la ruta
-      logger.debug('Enviando con flowDynamic', {
-        media: tmpPath,
-        pathExists: true,
-        pathLength: tmpPath.length
-      });
-      
       await flowDynamic([{ media: tmpPath }]);
       
       // Delay antes del mensaje de confirmación
