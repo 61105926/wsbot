@@ -1,6 +1,7 @@
 import { addKeyword, EVENTS } from "@builderbot/bot";
 import axios from "axios";
 import fs from "fs/promises";
+import fsSync from "fs";
 import path from "path";
 import { API_CONFIG } from "../config/config";
 import { TIMEOUTS, PATHS } from "../config/constants";
@@ -126,20 +127,42 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         fileName
       });
 
-      // Descargar PDF con timeout
-      const { data: pdfData } = await axios.get(payslipUrl, {
-        responseType: 'arraybuffer',
+      // Descargar PDF con timeout usando stream para evitar cargar todo en memoria
+      const writer = fsSync.createWriteStream(tmpPath);
+      const pdfResponse = await axios.get(payslipUrl, {
+        responseType: 'stream',
         headers: { 'Accept': 'application/pdf' },
         timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
       });
 
-      // Guardar temporalmente
-      await fs.writeFile(tmpPath, pdfData);
+      // Esperar a que el stream termine de escribir
+      await new Promise<void>((resolve, reject) => {
+        pdfResponse.data.pipe(writer);
+        writer.on('finish', () => {
+          logger.info('PDF descargado y guardado exitosamente', {
+            fileName,
+            path: tmpPath
+          });
+          resolve();
+        });
+        writer.on('error', (error: Error) => {
+          logger.error('Error al escribir PDF', { error: error.message });
+          reject(error);
+        });
+      });
+
+      // Verificar que el archivo existe y tiene contenido
+      const fileStats = await fs.stat(tmpPath);
+      if (fileStats.size === 0) {
+        throw new Error('El archivo PDF está vacío');
+      }
 
       logger.info('Enviando PDF al usuario', {
         phone: phoneInfo.phone,
         lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
-        fileName
+        fileName,
+        fileSize: fileStats.size,
+        filePath: tmpPath
       });
 
       // Mensajes de éxito variados
@@ -153,7 +176,16 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-      await flowDynamic([{ media: tmpPath }]);
+      
+      // Asegurar que tmpPath es una ruta absoluta y válida
+      const absolutePath = path.resolve(tmpPath);
+      logger.debug('Enviando PDF con flowDynamic', {
+        media: absolutePath,
+        exists: true,
+        size: fileStats.size
+      });
+      
+      await flowDynamic([{ media: absolutePath }]);
       
       // Delay antes del mensaje de confirmación
       await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
