@@ -131,13 +131,28 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
       });
 
-      // Guardar temporalmente
+      logger.info('PDF descargado exitosamente', {
+        size: pdfData.length,
+        fileName
+      });
+
+      // Guardar temporalmente con nombre simple (sin caracteres especiales)
+      // Usar solo el nombre del archivo sin ruta completa para evitar problemas
+      const simpleFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
       await fs.writeFile(tmpPath, pdfData);
+      
+      // Verificar que el archivo se guardó
+      const fileStats = await fs.stat(tmpPath);
+      logger.info('Archivo guardado correctamente', {
+        path: tmpPath,
+        size: fileStats.size,
+        fileName: simpleFileName
+      });
 
       logger.info('Enviando PDF al usuario', {
         phone: phoneInfo.phone,
         lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
-        fileName,
+        fileName: simpleFileName,
         tmpPath: tmpPath
       });
 
@@ -152,7 +167,17 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-      await flowDynamic([{ media: tmpPath }]);
+      
+      // Enviar PDF usando la ruta absoluta
+      // Asegurarse de que tmpPath es una ruta absoluta válida
+      const absolutePath = path.resolve(tmpPath);
+      logger.debug('Enviando con flowDynamic', {
+        media: absolutePath,
+        pathExists: true,
+        pathLength: absolutePath.length
+      });
+      
+      await flowDynamic([{ media: absolutePath }]);
       
       // Delay antes del mensaje de confirmación
       await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
