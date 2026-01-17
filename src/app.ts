@@ -107,7 +107,9 @@ const main = async () => {
         // Log detallado del contexto para debugging
         logger.debug('Contexto completo del mensaje', {
           from: ctx.from,
+          remoteJid: ctx.remoteJid, // SendWave puede tener el número aquí
           key: ctx.key,
+          keyRemoteJid: ctx.key?.remoteJid,
           pushName: ctx.pushName,
           body: ctx.body?.substring(0, 50),
           allKeys: Object.keys(ctx)
@@ -144,7 +146,9 @@ const main = async () => {
         // Log detallado del contexto para debugging
         logger.debug('Contexto completo del mensaje de usuario', {
           from: data.from,
+          remoteJid: data.remoteJid, // SendWave puede tener el número aquí
           key: data.key,
+          keyRemoteJid: data.key?.remoteJid,
           pushName: data.pushName,
           body: data.body?.substring(0, 50),
           allKeys: Object.keys(data)

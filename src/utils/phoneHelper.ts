@@ -260,8 +260,37 @@ export async function extractRealPhoneFromContext(
   let realPhone: string | null = null;
   
   try {
+    // 0. PRIMERO: Intentar desde ctx.remoteJid directamente (SendWave puede tenerlo aquí)
+    if (ctx?.remoteJid) {
+      const jid = String(ctx.remoteJid);
+      
+      // Verificar si es un número real (termina en @s.whatsapp.net)
+      if (jid.endsWith('@s.whatsapp.net')) {
+        const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
+        if (match && match[1]) {
+          realPhone = match[1];
+          const logger = (await import('./logger')).logger;
+          logger.info('✅ Número real obtenido desde ctx.remoteJid', { 
+            phone: realPhone,
+            remoteJid: jid
+          });
+        }
+      } else if (jid.endsWith('@c.us')) {
+        // Formato alternativo: número@c.us
+        const match = jid.match(/^(\d+)@c\.us$/);
+        if (match && match[1]) {
+          realPhone = match[1];
+          const logger = (await import('./logger')).logger;
+          logger.info('✅ Número real obtenido desde ctx.remoteJid (@c.us)', { 
+            phone: realPhone,
+            remoteJid: jid
+          });
+        }
+      }
+    }
+    
     // 1. Intentar desde ctx.key?.remoteJid (formato estándar)
-    if (ctx?.key?.remoteJid) {
+    if (!realPhone && ctx?.key?.remoteJid) {
       const jid = ctx.key.remoteJid;
       
       // Verificar si es un número real (termina en @s.whatsapp.net)
@@ -269,12 +298,22 @@ export async function extractRealPhoneFromContext(
         const match = jid.match(/^(\d+)@s\.whatsapp\.net$/);
         if (match && match[1]) {
           realPhone = match[1];
+          const logger = (await import('./logger')).logger;
+          logger.info('✅ Número real obtenido desde ctx.key.remoteJid', { 
+            phone: realPhone,
+            remoteJid: jid
+          });
         }
       } else if (jid.endsWith('@c.us')) {
         // Formato alternativo: número@c.us
         const match = jid.match(/^(\d+)@c\.us$/);
         if (match && match[1]) {
           realPhone = match[1];
+          const logger = (await import('./logger')).logger;
+          logger.info('✅ Número real obtenido desde ctx.key.remoteJid (@c.us)', { 
+            phone: realPhone,
+            remoteJid: jid
+          });
         }
       }
     }
