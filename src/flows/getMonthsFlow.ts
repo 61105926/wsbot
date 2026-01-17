@@ -196,19 +196,23 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         isAbsolute: path.isAbsolute(tmpPath)
       });
       
-      // Obtener bot del contexto global o del contexto
-      const bot = (global as any).bot || ctx.bot;
+      // Obtener número del usuario desde ctx.remoteJid (ya tenemos phoneInfo.phone)
+      const userPhone = phoneInfo.phone;
       
-      if (bot && typeof bot.sendMessage === 'function') {
-        // Usar bot.sendMessage directamente (más confiable que flowDynamic para archivos)
-        logger.debug('Enviando PDF usando bot.sendMessage', {
-          from: ctx.from,
-          tmpPath: tmpPath
+      // Usar el provider directamente para enviar el archivo (más confiable que flowDynamic)
+      const { connectionStatus } = await import('../services/connectionStatus');
+      const provider = connectionStatus.getProvider();
+      
+      if (provider && typeof provider.sendMessage === 'function') {
+        logger.debug('Enviando PDF usando provider.sendMessage', {
+          userPhone: userPhone,
+          tmpPath: tmpPath,
+          fileExists: fileExists
         });
-        await bot.sendMessage(ctx.from, '', { media: tmpPath });
+        await provider.sendMessage(userPhone, '', { media: tmpPath });
       } else {
-        // Fallback: usar flowDynamic
-        logger.debug('Enviando PDF usando flowDynamic', {
+        // Fallback: usar flowDynamic (puede fallar con archivos)
+        logger.warn('Provider no disponible, usando flowDynamic', {
           tmpPath: tmpPath
         });
         await flowDynamic([{ media: tmpPath }]);
