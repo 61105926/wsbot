@@ -35,6 +35,7 @@ import { startMonthlyReminderScheduler } from "./services/monthlyReminderSchedul
 import { processMonthlyReminders } from "./handlers/monthlyVacationReminder";
 import { logger } from "./utils/logger";
 import { sendJSON } from "./utils/response";
+import { extractRealPhoneFromContext } from "./utils/phoneHelper";
 import cors from "cors";
 
 import { createSendWaveProvider, type GlobalVendorArgs } from "@gamastudio/sendwave-provider";
@@ -66,7 +67,7 @@ const main = async () => {
       linkPreview: SENDWAVE_CONFIG.LINK_PREVIEW,
       message: {
         mergeMessage: false,
-        timeMergeMessage: 3,
+        timeMergeMessage: 2,
       },
       queueFlow: {
         enabled: SENDWAVE_CONFIG.QUEUE_FLOW.ENABLED,
@@ -102,18 +103,54 @@ const main = async () => {
     });
 
     provider.on('message', (ctx: any) => {
-      logger.debug('Mensaje recibido', { 
-        from: ctx.from, 
-        body: ctx.body?.substring(0, 50) 
-      });
+      try {
+        const phoneInfo = extractRealPhoneFromContext(ctx);
+        const phoneNumber = phoneInfo.phone;
+        const userName = ctx.pushName || ctx.notify || 'Sin nombre';
+        const messageBody = ctx.body || ctx.message?.conversation || ctx.message?.extendedTextMessage?.text || '';
+        const messagePreview = messageBody.length > 100 ? messageBody.substring(0, 100) + '...' : messageBody;
+        
+        logger.info(`📱 Mensaje recibido de ${phoneNumber}`, { 
+          telefono: phoneNumber,
+          numeroCompleto: phoneInfo.isRealPhone ? phoneNumber : `LID: ${phoneInfo.lid}`,
+          esNumeroReal: phoneInfo.isRealPhone,
+          nombre: userName,
+          mensaje: messagePreview,
+          longitudMensaje: messageBody.length,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error: any) {
+        logger.error('Error al procesar log de mensaje', {
+          error: error.message,
+          ctx: ctx.from || 'Desconocido'
+        });
+      }
     });
 
     provider.on('user-message', (data: any) => {
-      logger.debug('Mensaje de usuario', { 
-        from: data.from, 
-        body: data.body?.substring(0, 50) 
-      });
-      // El timeout se resetea automáticamente si queueFlow está habilitado
+      try {
+        const phoneInfo = extractRealPhoneFromContext(data);
+        const phoneNumber = phoneInfo.phone;
+        const userName = data.pushName || data.notify || 'Sin nombre';
+        const messageBody = data.body || data.message?.conversation || data.message?.extendedTextMessage?.text || '';
+        const messagePreview = messageBody.length > 100 ? messageBody.substring(0, 100) + '...' : messageBody;
+        
+        logger.info(`💬 Usuario ${phoneNumber} escribió`, { 
+          telefono: phoneNumber,
+          numeroCompleto: phoneInfo.isRealPhone ? phoneNumber : `LID: ${phoneInfo.lid}`,
+          esNumeroReal: phoneInfo.isRealPhone,
+          nombre: userName,
+          mensaje: messagePreview,
+          longitudMensaje: messageBody.length,
+          timestamp: new Date().toISOString()
+        });
+        // El timeout se resetea automáticamente si queueFlow está habilitado
+      } catch (error: any) {
+        logger.error('Error al procesar log de mensaje de usuario', {
+          error: error.message,
+          data: data.from || 'Desconocido'
+        });
+      }
     });
 
     // Los eventos de Queue Flow se configuran dinámicamente por usuario

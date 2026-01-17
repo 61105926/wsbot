@@ -15,7 +15,7 @@ const logContactInfo = async (ctx: any, bot?: any) => {
     const phoneInfo = extractRealPhoneFromContext(ctx);
     const contactName = ctx.pushName || ctx.name || ctx.key?.remoteJid?.split('@')[0] || 'Sin nombre';
     const remoteJid = ctx.key?.remoteJid || ctx.from || 'N/A';
-    
+    console.log(phoneInfo);
     // Intentar obtener número real desde el provider si es LID
     let realPhoneFromProvider: string | null = null;
     if (!phoneInfo.isRealPhone && bot?.provider) {
