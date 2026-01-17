@@ -75,6 +75,13 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       month: monthCode
     });
 
+    // Obtener número desde ctx.remoteJid (viene en phoneInfo.phone) y quitar el 591
+    // Ejemplo: 59177711124 -> 77711124
+    let phoneForApi = phoneInfo.phone;
+    if (phoneForApi.startsWith('591')) {
+      phoneForApi = phoneForApi.substring(3);
+    }
+
     try {
       // Mensajes variados mientras busca
       const searchingMessages = [
@@ -93,14 +100,9 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       
       // Simular tiempo de búsqueda
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
-
-      // Construir URL usando servicio
-      // Usar el número normalizado (sin 591) para la API
-      const phoneForApi = normalizedPhone;
       
       logger.info('Construyendo URL de boleta', {
         phone: phoneInfo.phone,
-        normalizedPhone: normalizedPhone,
         phoneForApi: phoneForApi,
         monthCode: monthCode
       });
@@ -110,6 +112,11 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         phoneForApi,
         monthCode
       );
+      
+      logger.info('URL de boleta construida exitosamente', {
+        url: payslipUrl,
+        phoneForApi: phoneForApi
+      });
 
       // Construir nombre de archivo
       const fileName = `${getStringDate(selectedDate)}.pdf`;
@@ -126,8 +133,7 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       logger.http('Descargando PDF desde API', {
         url: payslipUrl,
         fileName,
-        phoneForApi: phoneForApi,
-        normalizedPhone: normalizedPhone
+        phoneForApi: phoneForApi
       });
 
       // Descargar PDF con timeout
@@ -135,6 +141,11 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         responseType: 'arraybuffer',
         headers: { 'Accept': 'application/pdf' },
         timeout: TIMEOUTS.DOWNLOAD_PDF_TIMEOUT
+      });
+
+      logger.info('PDF descargado exitosamente', {
+        size: pdfData.length,
+        fileName
       });
 
       // Guardar temporalmente
@@ -184,9 +195,12 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       logger.error('Error al procesar boleta en flow', {
         flow: 'getMonths',
         phone: phoneInfo.phone,
-        lid: phoneInfo.isRealPhone ? undefined : phoneInfo.lid,
+        phoneForApi: phoneInfo.phone.startsWith('591') ? phoneInfo.phone.substring(3) : phoneInfo.phone,
         month: monthCode,
         error: error.message || error,
+        errorCode: error.code,
+        errorStatus: error.response?.status,
+        errorData: error.response?.data,
         stack: error.stack
       });
 
