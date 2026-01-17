@@ -59,8 +59,8 @@ const main = async () => {
     
     // Configuración de SendWave
     const sendWaveConfig: Partial<GlobalVendorArgs> = {
-      name: 'wsbot',
-      apiKey: 'F0EE9493-FF01-48AE-8936-0CEE429C5B3C',
+      name: 'wsbots-produccion',
+      apiKey: '4F4C527D-41E4-4041-893A-002B62D73B0F',
       port: 3005,
       delay: SENDWAVE_CONFIG.DELAY,
       linkPreview: SENDWAVE_CONFIG.LINK_PREVIEW,
