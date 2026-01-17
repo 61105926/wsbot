@@ -168,16 +168,14 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       // Delay antes de enviar
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
       
-      // Enviar PDF usando la ruta absoluta
-      // Asegurarse de que tmpPath es una ruta absoluta válida
-      const absolutePath = path.resolve(tmpPath);
+      // Enviar PDF usando la ruta
       logger.debug('Enviando con flowDynamic', {
-        media: absolutePath,
+        media: tmpPath,
         pathExists: true,
-        pathLength: absolutePath.length
+        pathLength: tmpPath.length
       });
       
-      await flowDynamic([{ media: absolutePath }]);
+      await flowDynamic([{ media: tmpPath }]);
       
       // Delay antes del mensaje de confirmación
       await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
