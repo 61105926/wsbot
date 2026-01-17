@@ -196,33 +196,92 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         isAbsolute: path.isAbsolute(tmpPath)
       });
       
-      // Obtener número del usuario desde ctx.remoteJid (ya tenemos phoneInfo.phone)
-      const userPhone = phoneInfo.phone;
+      // Usar ctx.from directamente (puede ser LID o número real)
+      // El provider de SendWave puede manejar ambos formatos
+      const recipientPhone = ctx.from || phoneInfo.phone;
       
       // Usar el provider directamente para enviar el archivo (más confiable que flowDynamic)
       const { connectionStatus } = await import('../services/connectionStatus');
       const provider = connectionStatus.getProvider();
       
-      if (provider && typeof provider.sendMessage === 'function') {
-        logger.debug('Enviando PDF usando provider.sendMessage', {
-          userPhone: userPhone,
-          tmpPath: tmpPath,
-          fileExists: fileExists
-        });
-        await provider.sendMessage(userPhone, '', { media: tmpPath });
+      let messageSent = false;
+      
+      if (provider) {
+        try {
+          const fileStats = await fs.stat(tmpPath);
+          logger.info('Enviando PDF', {
+            recipientPhone: recipientPhone,
+            phoneInfoPhone: phoneInfo.phone,
+            tmpPath: tmpPath,
+            fileExists: fileExists,
+            fileSize: fileStats.size,
+            isAbsolute: path.isAbsolute(tmpPath),
+            hasProviderSendMessage: typeof provider.sendMessage === 'function',
+            hasVendorSendMessage: provider.vendor && typeof provider.vendor.sendMessage === 'function'
+          });
+          
+          // Intentar primero con provider.sendMessage
+          if (typeof provider.sendMessage === 'function') {
+            logger.debug('Intentando enviar con provider.sendMessage');
+            const sendResult = await provider.sendMessage(recipientPhone, '', { media: tmpPath });
+            logger.info('PDF enviado exitosamente con provider.sendMessage', {
+              recipientPhone: recipientPhone,
+              result: sendResult ? 'OK' : 'No result'
+            });
+            messageSent = true;
+          } 
+          // Si no funciona, intentar con vendor.sendMessage
+          else if (provider.vendor && typeof provider.vendor.sendMessage === 'function') {
+            logger.debug('Intentando enviar con provider.vendor.sendMessage');
+            const sendResult = await provider.vendor.sendMessage(recipientPhone, '', { media: tmpPath });
+            logger.info('PDF enviado exitosamente con vendor.sendMessage', {
+              recipientPhone: recipientPhone,
+              result: sendResult ? 'OK' : 'No result'
+            });
+            messageSent = true;
+          } else {
+            throw new Error('No se encontró método sendMessage en provider ni vendor');
+          }
+        } catch (sendError: any) {
+          logger.error('Error al enviar PDF', {
+            error: sendError.message,
+            errorCode: sendError.code,
+            stack: sendError.stack,
+            recipientPhone: recipientPhone,
+            tmpPath: tmpPath
+          });
+          throw sendError; // Re-lanzar para que se capture en el catch principal
+        }
       } else {
         // Fallback: usar flowDynamic (puede fallar con archivos)
         logger.warn('Provider no disponible, usando flowDynamic', {
           tmpPath: tmpPath
         });
-        await flowDynamic([{ media: tmpPath }]);
+        
+        try {
+          await flowDynamic([{ media: tmpPath }]);
+          messageSent = true;
+        } catch (flowError: any) {
+          logger.error('Error al enviar PDF con flowDynamic', {
+            error: flowError.message,
+            stack: flowError.stack,
+            tmpPath: tmpPath
+          });
+          throw flowError;
+        }
       }
       
-      // Delay antes del mensaje de confirmación
-      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-      await flowDynamic([{ body: successMessage }]);
+      // Solo continuar si el mensaje se envió correctamente
+      if (messageSent) {
+        // Delay antes del mensaje de confirmación
+        await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+        await flowDynamic([{ body: successMessage }]);
+      }
 
-      // ✅ CRÍTICO: Limpiar archivo temporal
+      // ✅ CRÍTICO: Limpiar archivo temporal SOLO después de enviar
+      // Esperar un poco más para asegurar que el envío se complete
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       try {
         await fs.unlink(tmpPath);
         logger.debug('Archivo temporal eliminado', { path: tmpPath });
