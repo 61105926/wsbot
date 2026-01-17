@@ -92,19 +92,22 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
       // Simular tiempo de búsqueda
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
 
+      // TEMPORAL: Usar PDF de prueba desde URL externa
+      const payslipUrl = 'https://www.edu.xunta.gal/centros/iesastelleiras/?q=system/files/Matriz+de+Valoraci%C3%B3n+de+Exposiciones+Orales.pdf';
+      
       // Obtener número desde ctx.remoteJid → viene en phoneInfo.phone (ej: 59177711124)
       // Quitar el 591 → resultado: 77711124
-      let phoneForApi = phoneInfo.phone;
-      if (phoneForApi.startsWith('591')) {
-        phoneForApi = phoneForApi.substring(3);
-      }
+      // let phoneForApi = phoneInfo.phone;
+      // if (phoneForApi.startsWith('591')) {
+      //   phoneForApi = phoneForApi.substring(3);
+      // }
 
-      // Construir URL usando servicio
-      const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
-        API_CONFIG.PAYSLIP_API_BASE,
-        phoneForApi,
-        monthCode
-      );
+      // Construir URL usando servicio (comentado temporalmente para prueba)
+      // const payslipUrl = MessageBuilderService.buildPayslipApiUrl(
+      //   API_CONFIG.PAYSLIP_API_BASE,
+      //   phoneForApi,
+      //   monthCode
+      // );
 
       // Construir nombre de archivo
       const fileName = `${getStringDate(selectedDate)}.pdf`;
@@ -118,10 +121,9 @@ export const getMonthsFlow = addKeyword([EVENTS.ACTION])
         // Directorio ya existe
       }
 
-      logger.http('Descargando PDF desde API', {
+      logger.http('Descargando PDF desde URL', {
         url: payslipUrl,
-        fileName,
-        phoneForApi: phoneForApi
+        fileName
       });
 
       // Descargar PDF con timeout
