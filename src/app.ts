@@ -29,6 +29,7 @@ import { getVacationConfigHandler, updateVacationConfigHandler, toggleVacationCo
 import { storeVacationHandler } from "./handlers/storeVacation";
 import { vacationNotificationHandler } from "./handlers/vacationNotification";
 import { getVacationDataHandler } from "./handlers/getVacationData";
+import { webhookHandler } from "./handlers/webhook";
 import { tmpCleanupService } from "./services/tmpCleanup.service";
 import { startMonthlyReminderScheduler } from "./services/monthlyReminderScheduler";
 import { processMonthlyReminders } from "./handlers/monthlyVacationReminder";
@@ -58,9 +59,9 @@ const main = async () => {
     
     // Configuración de SendWave
     const sendWaveConfig: Partial<GlobalVendorArgs> = {
-      name: SENDWAVE_CONFIG.BOT_NAME,
-      apiKey: SENDWAVE_CONFIG.API_KEY,
-      port: SENDWAVE_CONFIG.PORT,
+      name: 'wsbot',
+      apiKey: 'F0EE9493-FF01-48AE-8936-0CEE429C5B3C',
+      port: 3005,
       delay: SENDWAVE_CONFIG.DELAY,
       linkPreview: SENDWAVE_CONFIG.LINK_PREVIEW,
       message: {
@@ -140,8 +141,8 @@ const main = async () => {
     });
 
     // SendWave maneja la reconexión automáticamente, no necesitamos setupAutoReconnection
-
-    httpServer(PORT);
+    // NOTA: No llamamos httpServer(PORT) porque provider.initAll() ya inicia el servidor
+    // El servidor ya está escuchando en el puerto configurado en sendWaveConfig.port
 
     // Configurar CORS para permitir peticiones desde el frontend
     provider.server.use(cors({
@@ -243,6 +244,18 @@ const main = async () => {
     // Notificaciones de vacaciones (aprobación/rechazo)
     provider.server.post("/api/vacation-notification", handleCtx(vacationNotificationHandler));
     provider.server.get("/api/vacation-data/:id", handleCtx(getVacationDataHandler));
+
+    // Webhook genérico para recibir eventos externos
+    provider.server.post("/webhook", handleCtx(webhookHandler));
+    provider.server.get("/webhook", handleCtx(async (bot: any, req: any, res: any) => {
+      // Endpoint GET para verificación de webhook (usado por algunos servicios)
+      return sendJSON(res, 200, {
+        success: true,
+        message: 'Webhook endpoint activo',
+        method: 'GET',
+        timestamp: new Date().toISOString()
+      });
+    }));
 
     tmpCleanupService.startAutoCleanup(30, 60);
 
